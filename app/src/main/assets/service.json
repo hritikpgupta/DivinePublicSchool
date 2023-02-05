@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "divine-public-school-e196f",
+  "private_key_id": "a98046ca2e7884f446f35df0a7aed87ffb658120",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDDfKuNaMGFacoe\nbBakX/NtBglRLWCgUQnYyQZ6UCCsEpRhX8fn2AZwFubDK/OeFecLLxJ/0pzOOlCO\n5pm08hSh4Abjqpzfctq5X0ZMiOuHP7ABGfGr7/S90+02xYP9SMDzXxqHpDPsDSpO\n71ULttL0AnCw+w7CTS9siaSxFtJVvEEGLrMkOZnA9eT5Tqal06hld8DOiL2lxS0q\nGVUYs81HSxAGZUZQp4GLzzRE8ULfE3Ovx+cNuO6GELax0s89g4QBuvDUVNV9jCub\nLFWjUqpSx8baocaPw6y7wLedVecWRngYztR0+9CkWRMiwRMbgEDaBgltjuPtmlsY\npu1+JNA7AgMBAAECggEAVTeOrUlCOz9fnZ1uzV8KhbdA7oNCgQBys28GhOFTLM+4\noS4Yved8/vXsyJ3rSDmyCz0M6m3Mb1YacgDydl+lQN+hATQJyJqP4Ik44vo4+i94\nMTK3GEW1Qd8VpG+71vkVK8KElSauf7NJgzlvsHiVQ0uhBnWa/HabOsxR3+Tb8gUn\n0S+40kJx9UbwM8gpRe4tsPtlJk5ncKv0wDrjDOOOe1Dvo9d0qFraBzk6fscL7XN0\ntkOH4kKLnyIEhpVyME7HVQtxnA7ELqxk5OxXVIjdXQfmlLFPCLKZ1BSXLXFRyuo3\n8SM4eRywr+SLKjQdgrpRBWjh8WUmJVK5pv896GVhGQKBgQD1SgHVYaUx0fEWWZC+\nfs3Sk9J60u4XBJkp4Y2sC7q7urdSiKoTb3/GBMyMXtiDerIBcUzQRwjCtFvUvLRx\nlgSXfVqayZmQcOzLoa1B6R/23+imw3Ot2/Tzce9n0kZ4W1tFNQBQYDFj+a/kL9eI\nymXnvbyCCJhXU+IbEbGvxjI89QKBgQDMBfHC0LMRWSs8TBlMErRnOUj1W0g7adOj\nVHLdCLhXdk5NvAjZJeyrMPU3nIhtoTGjntDXljKYmw7g7jphFFn2x1wp2hbR1jwK\nLnGEZGEMBI/vAdPa6K3lUwsfzI+tRi/SU1S080ISA6zNkxVX0wbMRtMncKfzFJmM\n/l/gAE2abwKBgQCZz/amX7y/KO8NHMzvJ4TZb2ilLG+wb2m8IXw9Tn2iCsu6LYi4\n90ogWhIKU89hYycMUIficyjDL2YGWO6t62ylsi2GsrRhJu7WImQK2Kz6mh3BtP5t\nH2jS37dIW0tlXaQ2Ga5AuJFAJ+psJLP7Sy/rycbTo6Aj4q3+W3IYzyfhoQKBgDR3\n2uK09Tgi7GGHWIId1VMugjrHDN5qqsi4MQny8iVcAWswTj456JFl98ojcVpwN+nS\nL/chY0Wnqr3hxhWtPC2gu2zv7ypro+kiZIMdpW+HxNQ8bhU//WiaYKP+4Xw4Lpgy\nYfhfDsC/PTNo/fYmCPuDw03DRQ3YYFzIFjPvIAX1AoGAbulitKa6j+6ltDOpTfb0\nxbdbXoK/DhRNrzcNBHSBu3O2Dtw0q5D2rDOlCTEvmpoQPJLWFyXS64i0jydzOxCc\nr2AMtoBXfsPSxMma4kZVCqUZDVZIjFnL/jA0DYK8+szkPTnd9nWsX2ZUW7VsA9La\nRanXoQ7If89qsuRIbhjdYt4=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-r0120@divine-public-school-e196f.iam.gserviceaccount.com",
+  "client_id": "105166282357137239231",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-r0120%40divine-public-school-e196f.iam.gserviceaccount.com"
+}
