@@ -11,8 +11,9 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,7 +22,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.geometry.center
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RadialGradientShader
+import androidx.compose.ui.graphics.Shader
+import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -58,51 +62,71 @@ fun HomeScreen() {
         }
     }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color.LightGray),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
     ) {
-        Image(
-            contentScale = ContentScale.Crop,
-            painter = painterResource(id = R.drawable.logo),
-            contentDescription = "Logo",
+        Card(
             modifier = Modifier
-                .requiredSize(150.dp)
-                .clip(CircleShape)
-        )
-        OutlinedTextField(value = email, onValueChange = { email = it }, label = {
-            Text(text = "Email", style = TextStyle(fontSize = 16.sp))
-        }, modifier = Modifier.onFocusEvent {
-            if (it.isFocused) {
-                coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
+                .requiredWidth(400.dp)
+                .requiredHeight(400.dp)
+                .align(Alignment.Center),
+            elevation = CardDefaults.elevatedCardElevation(4.dp),
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Image(
+                    contentScale = ContentScale.Crop,
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = "Logo",
+                    modifier = Modifier
+                        .requiredSize(150.dp)
+                        .clip(CircleShape)
+                )
+                OutlinedTextField(value = email, onValueChange = { email = it }, label = {
+                    Text(text = "Email", style = TextStyle(fontSize = 16.sp))
+                }, modifier = Modifier
+                    .padding(top = 8.dp)
+                    .onFocusEvent {
+                        if (it.isFocused) {
+                            coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
+                        }
+                    }, keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.None,
+                    autoCorrect = false,
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Next
+                )
+                )
+                OutlinedTextField(value = password, onValueChange = { password = it }, label = {
+                    Text(text = "Password", style = TextStyle(fontSize = 16.sp))
+                }, modifier = Modifier
+                    .padding(top = 8.dp)
+                    .onFocusEvent {
+                        if (it.isFocused) {
+                            coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
+                        }
+                    }, keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.None,
+                    autoCorrect = false,
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ), keyboardActions = KeyboardActions(onDone = {
+                    focusManager.clearFocus()
+                }), visualTransformation = PasswordVisualTransformation()
+                )
+                Button(
+                    onClick = { },
+                    shape = CutCornerShape(10),
+                    modifier = Modifier.padding(top = 14.dp)
+                ) {
+                    Text(text = "Proceed", style = TextStyle(color = Color.White))
+                }
             }
-        }, keyboardOptions = KeyboardOptions(
-            capitalization = KeyboardCapitalization.None,
-            autoCorrect = false,
-            keyboardType = KeyboardType.Email,
-            imeAction = ImeAction.Next
-        )
-        )
-        OutlinedTextField(value = password, onValueChange = { password = it }, label = {
-            Text(text = "Password", style = TextStyle(fontSize = 16.sp))
-        }, modifier = Modifier.onFocusEvent {
-            if (it.isFocused) {
-                coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
-            }
-        }, keyboardOptions = KeyboardOptions(
-            capitalization = KeyboardCapitalization.None,
-            autoCorrect = false,
-            keyboardType = KeyboardType.Password,
-            imeAction = ImeAction.Done
-        ), keyboardActions = KeyboardActions(onDone = {
-            focusManager.clearFocus()
-        }), visualTransformation = PasswordVisualTransformation()
-        )
-        Button(onClick = { }, shape = CutCornerShape(10)) {
-            Text(text = "Proceed", style = TextStyle(color = Color.White))
         }
     }
 
