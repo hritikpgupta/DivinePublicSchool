@@ -1,173 +1,116 @@
 package hg.divineschool.admin.ui.home
 
-import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.relocation.BringIntoViewRequester
-import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material.TextButton
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.geometry.center
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
-import androidx.navigation.NavController
-import androidx.compose.material3.*
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import hg.divineschool.admin.R
-import hg.divineschool.admin.ui.auth.AuthHeader
-import hg.divineschool.admin.ui.auth.AuthViewModel
-import hg.divineschool.admin.ui.theme.spacing
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, viewModel : AuthViewModel) {
+fun HomeScreen() {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
     val bringIntoViewRequester = BringIntoViewRequester()
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
+    val largeRadialGradient = object : ShaderBrush() {
+        override fun createShader(size: Size): Shader {
+            val biggerDimension = maxOf(size.height, size.width)
+            return RadialGradientShader(
+                colors = listOf(Color(0xFF2be4dc), Color(0xFF243484)),
+                center = size.center,
+                radius = biggerDimension / 2f,
+                colorStops = listOf(0f, 0.95f)
+            )
+        }
+    }
 
-    ConstraintLayout(
+    Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(color = Color.LightGray),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-
-        val (refHeader, refEmail, refPassword, refButtonLogin, refTextSignup, refLoader) = createRefs()
-        val spacing = androidx.compose.material3.MaterialTheme.spacing
-
-        Box(
+        Image(
+            contentScale = ContentScale.Crop,
+            painter = painterResource(id = R.drawable.logo),
+            contentDescription = "Logo",
             modifier = Modifier
-                .constrainAs(refHeader) {
-                    top.linkTo(parent.top, spacing.xLarge)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    width = Dimension.fillToConstraints
-                }
-                .wrapContentSize()
-        ) {
-            AuthHeader()
-        }
-
-
-        TextField(
-            value = email,
-            onValueChange = {
-                email = it
-            },
-            label = {
-                Text(text = stringResource(id = R.string.email))
-            },
-            modifier = Modifier
-                .constrainAs(refEmail) {
-                    top.linkTo(refHeader.bottom, spacing.xLarge)
-                    start.linkTo(parent.start, spacing.large)
-                    end.linkTo(parent.end, spacing.large)
-                    width = Dimension.fillToConstraints
-                }
-                .onFocusEvent {
-                    if (it.isFocused) {
-                        coroutineScope.launch {
-                            bringIntoViewRequester.bringIntoView()
-                        }
-                    }
-                },
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.None,
-                autoCorrect = false,
-                keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next
-            )
+                .requiredSize(150.dp)
+                .clip(CircleShape)
         )
-
-        TextField(
-            value = password,
-            onValueChange = {
-                password = it
-            },
-            label = {
-                Text(text = stringResource(id = R.string.password))
-            },
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier
-                .constrainAs(refPassword) {
-                    top.linkTo(refEmail.bottom, spacing.medium)
-                    start.linkTo(parent.start, spacing.large)
-                    end.linkTo(parent.end, spacing.large)
-                    width = Dimension.fillToConstraints
-                }
-                .onFocusEvent {
-                    if (it.isFocused) {
-                        coroutineScope.launch {
-                            bringIntoViewRequester.bringIntoView()
-                        }
-                    }
-                },
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.None,
-                autoCorrect = false,
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    focusManager.clearFocus()
-                }
-            )
-        )
-
-        Button(
-            onClick = {
-                viewModel.login(email.trim(), password.trim())
-            },
-            modifier = Modifier.constrainAs(refButtonLogin) {
-                top.linkTo(refPassword.bottom, spacing.large)
-                start.linkTo(parent.start, spacing.xLarge)
-                end.linkTo(parent.end, spacing.xLarge)
-                width = Dimension.fillToConstraints
+        OutlinedTextField(value = email, onValueChange = { email = it }, label = {
+            Text(text = "Email", style = TextStyle(fontSize = 16.sp))
+        }, modifier = Modifier.onFocusEvent {
+            if (it.isFocused) {
+                coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
             }
-        ) {
-            Text(
-                text = stringResource(id = R.string.login),
-                style = MaterialTheme.typography.h4
-            )
-        }
-
-
-        Text(
-            modifier = Modifier
-                .constrainAs(refTextSignup) {
-                    top.linkTo(refButtonLogin.bottom, spacing.medium)
-                    start.linkTo(parent.start, spacing.xLarge)
-                    end.linkTo(parent.end, spacing.xLarge)
-                }
-                .clickable {
-//                    navController.navigate(AppScreen.Auth.Signup.route) {
-//                        popUpTo(AppScreen.Auth.Login.route) { inclusive = true }
-//                    }
-                }
-                .bringIntoViewRequester(bringIntoViewRequester),
-            text = stringResource(id = R.string.dont_have_account),
-            style = MaterialTheme.typography.body2,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colors.onPrimary
+        }, keyboardOptions = KeyboardOptions(
+            capitalization = KeyboardCapitalization.None,
+            autoCorrect = false,
+            keyboardType = KeyboardType.Email,
+            imeAction = ImeAction.Next
         )
-
-
+        )
+        OutlinedTextField(value = password, onValueChange = { password = it }, label = {
+            Text(text = "Password", style = TextStyle(fontSize = 16.sp))
+        }, modifier = Modifier.onFocusEvent {
+            if (it.isFocused) {
+                coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
+            }
+        }, keyboardOptions = KeyboardOptions(
+            capitalization = KeyboardCapitalization.None,
+            autoCorrect = false,
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Done
+        ), keyboardActions = KeyboardActions(onDone = {
+            focusManager.clearFocus()
+        }), visualTransformation = PasswordVisualTransformation()
+        )
+        Button(onClick = { }, shape = CutCornerShape(10)) {
+            Text(text = "Proceed", style = TextStyle(color = Color.White))
+        }
     }
+
+
+}
+
+@Preview(device = "spec:width=1280dp,height=800dp,dpi=480")
+@Composable
+fun show() {
+    HomeScreen()
 }
