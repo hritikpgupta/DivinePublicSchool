@@ -3,6 +3,7 @@ package hg.divineschool.admin
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -11,6 +12,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import hg.divineschool.admin.data.auth.AuthRepository
+import hg.divineschool.admin.data.auth.AuthRepositoryImpl
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -23,10 +26,12 @@ object AppModule {
     fun provideApplicationContext(application: Application): Context = application
 
     @Provides
-    @Singleton
-    fun provideFirestore(): FirebaseFirestore {
-        return Firebase.firestore
-    }
+    fun provideFirebaseDb(): FirebaseFirestore = FirebaseFirestore.getInstance()
+    @Provides
+    fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
+
+    @Provides
+    fun provideAuthRepository(impl: AuthRepositoryImpl): AuthRepository = impl
 
 }
 

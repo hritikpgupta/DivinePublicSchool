@@ -1,42 +1,41 @@
 package hg.divineschool.admin.ui.auth
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
+import hg.divineschool.admin.data.Resource
+import hg.divineschool.admin.data.auth.AuthRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val firestore: FirebaseFirestore
+    private val repository: AuthRepository
 ) : ViewModel() {
+    private val _loginFlow = MutableStateFlow<Resource<FirebaseUser>?>(null)
+    val loginFlow: StateFlow<Resource<FirebaseUser>?> = _loginFlow
 
-    fun loadValue() = viewModelScope.launch {
-        firestore.collection("classes").document("classOne").collection("students").document("1480")
-            .get()
-            .addOnSuccessListener { result ->
-                Log.i("TEST", "@@@@@@@@@")
-                Log.i("TEST", result.data.toString())
-                Log.i("TEST", "@@@@@@@@@")
+    val currentUser: FirebaseUser?
+        get() = repository.currentUser
 
-            }
-            .addOnFailureListener { exception ->
-                Log.e("TEST", "@@@@@@@@@")
-                exception.message?.let { Log.e("TEST", it) }
-                Log.e("TEST", "@@@@@@@@@")
-
-            }
-
+    init {
+        if (repository.currentUser != null) {
+            _loginFlow.value = Resource.Success(repository.currentUser!!)
+        }
     }
 
     fun login(email: String, password: String) = viewModelScope.launch {
-        val auth = Firebase.auth
-        val response = auth.signInWithEmailAndPassword(email, password).await()
+        _loginFlow.value = Resource.Loading
+        val result = repository.login(email, password)
+        _loginFlow.value = result
+    }
+
+    fun logout() {
+        repository.logout()
+        _loginFlow.value = null
     }
 
 }

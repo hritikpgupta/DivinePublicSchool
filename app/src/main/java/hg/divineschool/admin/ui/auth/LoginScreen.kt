@@ -1,4 +1,4 @@
-package hg.divineschool.admin.ui.home
+package hg.divineschool.admin.ui.auth
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -11,10 +11,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,17 +36,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hg.divineschool.admin.R
+import hg.divineschool.admin.data.Resource
+import hg.divineschool.admin.ui.home.HomeActivity
+import hg.divineschool.admin.ui.utils.startNewActivity
+import hg.divineschool.admin.ui.utils.toast
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun LoginScreen(viewModel: AuthViewModel) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
     val bringIntoViewRequester = BringIntoViewRequester()
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
+    val loginFlow = viewModel.loginFlow.collectAsState()
+
     val largeRadialGradient = object : ShaderBrush() {
         override fun createShader(size: Size): Shader {
             val biggerDimension = maxOf(size.height, size.width)
@@ -65,7 +68,7 @@ fun HomeScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color.LightGray),
+            .background(largeRadialGradient),
     ) {
         Card(
             modifier = Modifier
@@ -120,11 +123,32 @@ fun HomeScreen() {
                 }), visualTransformation = PasswordVisualTransformation()
                 )
                 Button(
-                    onClick = { },
+                    onClick = { viewModel.login(email.trim(), password.trim()) },
                     shape = CutCornerShape(10),
                     modifier = Modifier.padding(top = 14.dp)
                 ) {
                     Text(text = "Proceed", style = TextStyle(color = Color.White))
+                }
+            }
+        }
+    }
+
+    loginFlow.value?.let {
+        when (it) {
+            is Resource.Failure -> {
+                it.exception.message?.let { it1 -> context.toast(it1) }
+            }
+            is Resource.Success -> {
+                LaunchedEffect(Unit) {
+                    context.startNewActivity(HomeActivity::class.java)
+                }
+            }
+            is Resource.Loading -> {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    CircularProgressIndicator()
                 }
             }
         }
@@ -136,5 +160,5 @@ fun HomeScreen() {
 @Preview(device = "spec:width=1280dp,height=800dp,dpi=480")
 @Composable
 fun show() {
-    HomeScreen()
+    //HomeScreen(navController, hiltViewModel())
 }
