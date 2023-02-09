@@ -1,5 +1,6 @@
 package hg.divineschool.admin.ui.auth
 
+import android.content.Intent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,6 +28,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -35,14 +37,17 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import hg.divineschool.admin.R
 import hg.divineschool.admin.data.Resource
+import hg.divineschool.admin.faker.FakeViewModelProvider
 import hg.divineschool.admin.ui.home.HomeActivity
 import hg.divineschool.admin.ui.utils.startNewActivity
 import hg.divineschool.admin.ui.utils.toast
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LoginScreen(viewModel: AuthViewModel) {
     var email by remember { mutableStateOf("") }
@@ -80,18 +85,21 @@ fun LoginScreen(viewModel: AuthViewModel) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = Color.Red.copy(0.7f))
+
             ) {
                 Image(
                     contentScale = ContentScale.Crop,
                     painter = painterResource(id = R.drawable.logo),
-                    contentDescription = "Logo",
+                    contentDescription = stringResource(id = R.string.logo),
                     modifier = Modifier
                         .requiredSize(150.dp)
                         .clip(CircleShape)
                 )
                 OutlinedTextField(value = email, onValueChange = { email = it }, label = {
-                    Text(text = "Email", style = TextStyle(fontSize = 16.sp))
+                    Text(text = stringResource(id = R.string.logo), style = TextStyle(fontSize = 16.sp))
                 }, modifier = Modifier
                     .padding(top = 8.dp)
                     .onFocusEvent {
@@ -106,7 +114,7 @@ fun LoginScreen(viewModel: AuthViewModel) {
                 )
                 )
                 OutlinedTextField(value = password, onValueChange = { password = it }, label = {
-                    Text(text = "Password", style = TextStyle(fontSize = 16.sp))
+                    Text(text = stringResource(id = R.string.password), style = TextStyle(fontSize = 16.sp))
                 }, modifier = Modifier
                     .padding(top = 8.dp)
                     .onFocusEvent {
@@ -127,7 +135,7 @@ fun LoginScreen(viewModel: AuthViewModel) {
                     shape = CutCornerShape(10),
                     modifier = Modifier.padding(top = 14.dp)
                 ) {
-                    Text(text = "Proceed", style = TextStyle(color = Color.White))
+                    Text(text = stringResource(id = R.string.login_btn_text), style = TextStyle(color = Color.White))
                 }
             }
         }
@@ -139,9 +147,7 @@ fun LoginScreen(viewModel: AuthViewModel) {
                 it.exception.message?.let { it1 -> context.toast(it1) }
             }
             is Resource.Success -> {
-                LaunchedEffect(Unit) {
-                    context.startNewActivity(HomeActivity::class.java)
-                }
+                context.startNewActivity(HomeActivity::class.java)
             }
             is Resource.Loading -> {
                 Box(
@@ -159,6 +165,6 @@ fun LoginScreen(viewModel: AuthViewModel) {
 
 @Preview(device = "spec:width=1280dp,height=800dp,dpi=480")
 @Composable
-fun show() {
-    //HomeScreen(navController, hiltViewModel())
+fun Show() {
+    LoginScreen(hiltViewModel())
 }
