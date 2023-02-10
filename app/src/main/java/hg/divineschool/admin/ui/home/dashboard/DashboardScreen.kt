@@ -14,7 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun HomeScreen() {
+fun DashboardScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()

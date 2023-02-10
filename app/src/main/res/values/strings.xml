@@ -4,7 +4,7 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="login_btn_text">Proceed</string>
-    <string name="bottom_nav_home">Home</string>
+    <string name="bottom_nav_home">Dashboard</string>
     <string name="bottom_nav_attendance">Attendance</string>
     <string name="bottom_nav_notification">Notification</string>
     <string name="bottom_nav_invoice">Invoice</string>

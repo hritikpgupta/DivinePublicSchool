@@ -14,6 +14,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import hg.divineschool.admin.data.auth.AuthRepository
 import hg.divineschool.admin.data.auth.AuthRepositoryImpl
+import hg.divineschool.admin.data.dashboard.DashboardRepository
+import hg.divineschool.admin.data.dashboard.DashboardRepositoryImpl
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -32,6 +34,9 @@ object AppModule {
 
     @Provides
     fun provideAuthRepository(impl: AuthRepositoryImpl): AuthRepository = impl
+
+    @Provides
+    fun provideDashboardRepository(impl: DashboardRepositoryImpl): DashboardRepository = impl
 
 }
 

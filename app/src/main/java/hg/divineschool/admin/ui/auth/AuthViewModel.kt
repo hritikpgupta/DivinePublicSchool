@@ -1,11 +1,13 @@
 package hg.divineschool.admin.ui.auth
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.auth.AuthRepository
+import hg.divineschool.admin.data.models.SchoolInformation
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -32,6 +34,7 @@ class AuthViewModel @Inject constructor(
         val result = repository.login(email, password)
         _loginFlow.value = result
     }
+
 
     fun logout() {
         repository.logout()

@@ -51,7 +51,6 @@ fun LoginScreen(viewModel: AuthViewModel) {
     val context = LocalContext.current
     val loginFlow = viewModel.loginFlow.collectAsState()
 
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -151,7 +150,6 @@ fun LoginScreen(viewModel: AuthViewModel) {
             }
         }
     }
-
 
 }
 

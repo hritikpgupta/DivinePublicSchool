@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import hg.divineschool.admin.BottomNavItem
 import hg.divineschool.admin.ui.home.attendance.AttendanceScreen
-import hg.divineschool.admin.ui.home.dashboard.HomeScreen
+import hg.divineschool.admin.ui.home.dashboard.DashboardScreen
 import hg.divineschool.admin.ui.home.invoice.InvoiceScreen
 import hg.divineschool.admin.ui.home.notification.NotificationScreen
 
@@ -15,7 +15,7 @@ import hg.divineschool.admin.ui.home.notification.NotificationScreen
 fun AppNavigationGraph(navController: NavHostController, modifier: Modifier) {
     NavHost(navController = navController, startDestination = BottomNavItem.Home.route) {
         composable(BottomNavItem.Home.route) {
-            HomeScreen()
+            DashboardScreen()
         }
         composable(BottomNavItem.Invoice.route) {
             InvoiceScreen()

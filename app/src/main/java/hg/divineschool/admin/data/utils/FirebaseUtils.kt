@@ -15,3 +15,17 @@ suspend fun <T> Task<T>.await(): T {
         }
     }
 }
+
+suspend fun <T> Task<T>.awaitDocument(): T {
+    return suspendCancellableCoroutine { cont ->
+        addOnSuccessListener { doc ->
+            if (doc != null) {
+                cont.resume(doc, null)
+            } else {
+                cont.resumeWithException(NullPointerException())
+            }
+        }.addOnFailureListener {
+            cont.resumeWithException(it)
+        }
+    }
+}
