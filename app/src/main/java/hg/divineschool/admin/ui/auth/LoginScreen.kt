@@ -87,7 +87,7 @@ fun LoginScreen(viewModel: AuthViewModel) {
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(color = Color.Red.copy(0.7f))
+                    .background(color = Color.White.copy(0.7f))
 
             ) {
                 Image(
@@ -99,7 +99,7 @@ fun LoginScreen(viewModel: AuthViewModel) {
                         .clip(CircleShape)
                 )
                 OutlinedTextField(value = email, onValueChange = { email = it }, label = {
-                    Text(text = stringResource(id = R.string.logo), style = TextStyle(fontSize = 16.sp))
+                    Text(text = stringResource(id = R.string.email), style = TextStyle(fontSize = 16.sp))
                 }, modifier = Modifier
                     .padding(top = 8.dp)
                     .onFocusEvent {

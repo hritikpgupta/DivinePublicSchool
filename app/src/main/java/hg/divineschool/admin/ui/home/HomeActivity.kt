@@ -14,10 +14,8 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import hg.divineschool.admin.ui.theme.DivinePublicSchoolTheme
 
-
 @AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

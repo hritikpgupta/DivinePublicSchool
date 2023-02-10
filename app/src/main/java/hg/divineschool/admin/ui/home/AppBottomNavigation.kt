@@ -1,15 +1,22 @@
 package hg.divineschool.admin.ui.home
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -26,15 +33,14 @@ fun AppBottomNavigation(navController: NavController) {
         BottomNavItem.Notification
     )
     BottomAppBar(
-        backgroundColor = colorResource(id = R.color.purple_500),
-        elevation = 0.dp,
-        cutoutShape = MaterialTheme.shapes.small.copy(CornerSize(percent = 100))
-    ) {
+        backgroundColor = MaterialTheme.colors.background,
+        elevation = 10.dp, contentPadding = PaddingValues(0.dp)
+    )
+    {
         BottomNavigation(
-            elevation = 0.dp,
-            modifier = Modifier.padding(0.dp, 0.dp, 60.dp, 0.dp),
-            backgroundColor = colorResource(id = R.color.purple_500),
-            contentColor = Color.Black
+            modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 0.dp),
+            backgroundColor = MaterialTheme.colors.background,
+
         ) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route
@@ -43,12 +49,13 @@ fun AppBottomNavigation(navController: NavController) {
                     icon = {
                         Icon(
                             painter = painterResource(id = item.icon),
-                            contentDescription = stringResource(id = item.title)
+                            contentDescription = stringResource(id = item.title),
+                            modifier = Modifier.requiredSize(width = 24.dp, height = 24.dp)
                         )
                     },
-                    label = { Text(text = stringResource(id = item.title), fontSize = 9.sp) },
-                    selectedContentColor = Color.Black,
-                    unselectedContentColor = Color.Black.copy(0.4f),
+                    label = { Text(text = stringResource(id = item.title), fontSize = 17.sp) },
+                    selectedContentColor = MaterialTheme.colors.onBackground,
+                    unselectedContentColor = MaterialTheme.colors.onBackground.copy(0.4f),
                     alwaysShowLabel = true,
                     onClick = {
                         navController.navigate(item.route) {
@@ -65,4 +72,20 @@ fun AppBottomNavigation(navController: NavController) {
 
         }
     }
+}
+
+@Preview()
+@Composable
+fun ShowBottomNavigation() {
+    Card(
+        modifier = Modifier
+            .requiredSize(50.dp)
+            .border(BorderStroke(1.dp, Color.Black), CircleShape)
+            .clip(CircleShape)
+            .background(color = Color.White)
+
+    ) {
+
+    }
+
 }
