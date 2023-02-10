@@ -1,6 +1,5 @@
 package hg.divineschool.admin.ui.auth
 
-import android.content.Intent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,20 +9,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
-import androidx.compose.material3.*
+import androidx.compose.material.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusEvent
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.geometry.center
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RadialGradientShader
-import androidx.compose.ui.graphics.Shader
-import androidx.compose.ui.graphics.ShaderBrush
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -40,7 +34,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import hg.divineschool.admin.R
 import hg.divineschool.admin.data.Resource
-import hg.divineschool.admin.faker.FakeViewModelProvider
 import hg.divineschool.admin.ui.home.HomeActivity
 import hg.divineschool.admin.ui.utils.startNewActivity
 import hg.divineschool.admin.ui.utils.toast
@@ -58,36 +51,27 @@ fun LoginScreen(viewModel: AuthViewModel) {
     val context = LocalContext.current
     val loginFlow = viewModel.loginFlow.collectAsState()
 
-    val largeRadialGradient = object : ShaderBrush() {
-        override fun createShader(size: Size): Shader {
-            val biggerDimension = maxOf(size.height, size.width)
-            return RadialGradientShader(
-                colors = listOf(Color(0xFF2be4dc), Color(0xFF243484)),
-                center = size.center,
-                radius = biggerDimension / 2f,
-                colorStops = listOf(0f, 0.95f)
-            )
-        }
-    }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(largeRadialGradient),
+            .background(color = MaterialTheme.colors.background),
     ) {
         Card(
             modifier = Modifier
                 .requiredWidth(400.dp)
                 .requiredHeight(400.dp)
-                .align(Alignment.Center),
-            elevation = CardDefaults.elevatedCardElevation(4.dp),
+                .align(Alignment.Center)
+                .background(color = MaterialTheme.colors.background.copy(0.78f)),
+            elevation = CardDefaults.elevatedCardElevation(8.dp),
+            shape = RectangleShape
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(color = Color.White.copy(0.7f))
+                    .background(color = MaterialTheme.colors.background.copy(0.78f))
 
             ) {
                 Image(
@@ -99,7 +83,10 @@ fun LoginScreen(viewModel: AuthViewModel) {
                         .clip(CircleShape)
                 )
                 OutlinedTextField(value = email, onValueChange = { email = it }, label = {
-                    Text(text = stringResource(id = R.string.email), style = TextStyle(fontSize = 16.sp))
+                    Text(
+                        text = stringResource(id = R.string.email),
+                        style = TextStyle(fontSize = 16.sp)
+                    )
                 }, modifier = Modifier
                     .padding(top = 8.dp)
                     .onFocusEvent {
@@ -114,7 +101,10 @@ fun LoginScreen(viewModel: AuthViewModel) {
                 )
                 )
                 OutlinedTextField(value = password, onValueChange = { password = it }, label = {
-                    Text(text = stringResource(id = R.string.password), style = TextStyle(fontSize = 16.sp))
+                    Text(
+                        text = stringResource(id = R.string.password),
+                        style = TextStyle(fontSize = 16.sp)
+                    )
                 }, modifier = Modifier
                     .padding(top = 8.dp)
                     .onFocusEvent {
@@ -135,7 +125,10 @@ fun LoginScreen(viewModel: AuthViewModel) {
                     shape = CutCornerShape(10),
                     modifier = Modifier.padding(top = 14.dp)
                 ) {
-                    Text(text = stringResource(id = R.string.login_btn_text), style = TextStyle(color = Color.White))
+                    Text(
+                        text = stringResource(id = R.string.login_btn_text),
+                        style = TextStyle(color = Color.White)
+                    )
                 }
             }
         }
@@ -151,8 +144,7 @@ fun LoginScreen(viewModel: AuthViewModel) {
             }
             is Resource.Loading -> {
                 Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxSize()
+                    contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
                 ) {
                     CircularProgressIndicator()
                 }
