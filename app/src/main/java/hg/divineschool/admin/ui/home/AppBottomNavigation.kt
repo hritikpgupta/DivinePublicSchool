@@ -73,19 +73,3 @@ fun AppBottomNavigation(navController: NavController) {
         }
     }
 }
-
-@Preview()
-@Composable
-fun ShowBottomNavigation() {
-    Card(
-        modifier = Modifier
-            .requiredSize(50.dp)
-            .border(BorderStroke(1.dp, Color.Black), CircleShape)
-            .clip(CircleShape)
-            .background(color = Color.White)
-
-    ) {
-
-    }
-
-}
