@@ -1,9 +1,11 @@
 package hg.divineschool.admin.ui.home.dashboard
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,16 +21,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hg.divineschool.admin.R
+import hg.divineschool.admin.ui.theme.lightFont
+import hg.divineschool.admin.ui.theme.mediumFont
+import hg.divineschool.admin.ui.theme.regularFont
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ClassCard() {
+fun ClassCard(onCardClick: () -> Unit) {
     Card(
         backgroundColor = Color.White.copy(0.6f),
         shape = RoundedCornerShape(4.dp),
         elevation = 4.dp,
         modifier = Modifier
             .requiredSize(270.dp, 150.dp)
-            .clip(RoundedCornerShape(4.dp))
+            .background(color = Color.Green.copy(0.25f))
+            .clip(RoundedCornerShape(4.dp)),
+        onClick = onCardClick
     ) {
         Column(
             modifier = Modifier
@@ -39,7 +47,11 @@ fun ClassCard() {
         ) {
             Text(
                 text = "Play Group",
-                style = TextStyle(color = Color.DarkGray.copy(0.9f), fontSize = 28.sp),
+                style = TextStyle(
+                    color = Color.Black.copy(0.80f),
+                    fontSize = 28.sp,
+                    fontFamily = mediumFont
+                ),
             )
             Spacer(modifier = Modifier.height(26.dp))
             Row(
@@ -62,7 +74,7 @@ fun ClassCard() {
                 horizontalArrangement = Arrangement.Center,
             ) {
                 Column(Modifier.weight(1f)) {
-                    ClassInfo(icon = R.drawable.presentation, text = "120")
+                    ClassInfo(icon = R.drawable.students, text = "120")
                 }
                 Column(Modifier.weight(1f)) {
                     ClassInfo(icon = R.drawable.bus, text = "400")
@@ -78,8 +90,7 @@ fun ClassCard() {
 @Composable
 fun ClassInfo(icon: Int, text: String) {
     Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(2.dp)
+        verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(2.dp)
     ) {
         Image(
             painter = painterResource(id = icon),
@@ -89,7 +100,10 @@ fun ClassInfo(icon: Int, text: String) {
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = text, style = TextStyle(
-                color = Color.DarkGray.copy(0.80f), textAlign = TextAlign.Start, fontSize = 20.sp
+                color = Color.DarkGray.copy(0.80f),
+                fontFamily = regularFont,
+                textAlign = TextAlign.Start,
+                fontSize = 20.sp
             ), overflow = TextOverflow.Clip, maxLines = 1, softWrap = true
         )
     }
@@ -97,19 +111,6 @@ fun ClassInfo(icon: Int, text: String) {
 
 @Preview
 @Composable
-fun ViewClassInfo() {
-    ClassInfo(R.drawable.students, "44")
-}
-
-
-//@Preview(showSystemUi = true, device = Devices.TABLET)
-//@Composable
-//fun ViewCard() {
-//    ClassCard()
-//}
-
-@Preview
-@Composable
-fun ViewCard2() {
-    ClassCard()
+fun ShowCard() {
+    ClassCard(onCardClick = {})
 }

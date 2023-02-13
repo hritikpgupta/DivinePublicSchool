@@ -22,6 +22,8 @@ fun DashboardScreen(viewModel : DashboardViewModel) {
             .background(color = MaterialTheme.colors.background.copy(0.8f))
             .wrapContentSize(Alignment.Center)
     ) {
-        ClassCard()
+        ClassCard{
+
+        }
     }
 }
