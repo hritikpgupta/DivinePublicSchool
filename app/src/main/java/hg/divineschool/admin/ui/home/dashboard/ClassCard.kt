@@ -21,13 +21,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hg.divineschool.admin.R
+import hg.divineschool.admin.data.models.ClassInformation
 import hg.divineschool.admin.ui.theme.lightFont
 import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.theme.regularFont
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ClassCard(onCardClick: () -> Unit) {
+fun ClassCard(classInformation: ClassInformation,onCardClick: () -> Unit) {
     Card(
         backgroundColor = Color.White.copy(0.6f),
         shape = RoundedCornerShape(4.dp),
@@ -46,7 +47,7 @@ fun ClassCard(onCardClick: () -> Unit) {
             verticalArrangement = Arrangement.Top
         ) {
             Text(
-                text = "Play Group",
+                text = classInformation.name,
                 style = TextStyle(
                     color = Color.Black.copy(0.80f),
                     fontSize = 28.sp,
@@ -71,7 +72,7 @@ fun ClassCard(onCardClick: () -> Unit) {
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 Column(Modifier.weight(1f)) {
-                    ClassInfo(icon = R.drawable.class_teacher, text = "Poonam Pandey")
+                    ClassInfo(icon = R.drawable.class_teacher, text = classInformation.classTeacherName)
                 }
             }
             Spacer(modifier = Modifier.height(15.dp))
@@ -83,13 +84,13 @@ fun ClassCard(onCardClick: () -> Unit) {
                 horizontalArrangement = Arrangement.Center,
             ) {
                 Column(Modifier.weight(1f)) {
-                    ClassInfo(icon = R.drawable.presentation, text = "120")
+                    ClassInfo(icon = R.drawable.presentation, text = classInformation.studentsCount.toString())
                 }
                 Column(Modifier.weight(1f)) {
-                    ClassInfo(icon = R.drawable.bus, text = "400")
+                    ClassInfo(icon = R.drawable.bus, text = classInformation.transportStudentsCount.toString())
                 }
                 Column(Modifier.weight(1f)) {
-                    ClassInfo(icon = R.drawable.new_student, text = "200")
+                    ClassInfo(icon = R.drawable.new_student, text = classInformation.newAdmission.toString())
                 }
             }
         }
@@ -118,8 +119,4 @@ fun ClassInfo(icon: Int, text: String) {
     }
 }
 
-@Preview
-@Composable
-fun ShowCard() {
-    ClassCard(onCardClick = {})
-}
+

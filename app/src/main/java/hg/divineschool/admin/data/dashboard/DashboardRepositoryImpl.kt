@@ -1,8 +1,10 @@
 package hg.divineschool.admin.data.dashboard
 
-import com.google.firebase.auth.FirebaseAuth
+import android.util.Log
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import hg.divineschool.admin.data.Resource
+import hg.divineschool.admin.data.models.ClassInformation
 import hg.divineschool.admin.data.models.SchoolInformation
 import hg.divineschool.admin.data.utils.awaitDocument
 import javax.inject.Inject
@@ -10,6 +12,8 @@ import javax.inject.Inject
 class DashboardRepositoryImpl @Inject constructor(
     private val db: FirebaseFirestore
 ) : DashboardRepository {
+
+
     override suspend fun getSchoolInformation(): Resource<SchoolInformation> {
         return try {
             val result = db.collection("school").document("basicInfo").get().awaitDocument()
@@ -35,5 +39,25 @@ class DashboardRepositoryImpl @Inject constructor(
             e.printStackTrace()
             Resource.Failure(e)
         }
+    }
+
+    override suspend fun getAllClasses(): Resource<List<ClassInformation>> {
+        return try {
+            val result = db.collection("classes").get().awaitDocument()
+            val classList = ArrayList<ClassInformation>()
+            result.let {
+                it.forEach { doc ->
+                    classList.add(ClassInformation(transportStudentsCount = doc.get("transportStudentsCount") as Long,
+                        classTeacherName =doc.get("classTeacherName") as String,
+                        name = doc.get("name") as String,
+                        studentsCount = doc.get("studentsCount") as Long, newAdmission = doc.get("newAdmission") as Long  ))
+                }
+            }
+            Resource.Success(classList)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+
     }
 }
