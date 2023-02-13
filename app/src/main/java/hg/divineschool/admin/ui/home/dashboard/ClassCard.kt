@@ -53,7 +53,16 @@ fun ClassCard(onCardClick: () -> Unit) {
                     fontFamily = mediumFont
                 ),
             )
-            Spacer(modifier = Modifier.height(26.dp))
+            Spacer(modifier = Modifier
+                .height(4.dp))
+            Spacer(
+                modifier = Modifier
+                    .height(1.dp)
+                    .fillMaxWidth()
+                    .background(color = Color.Black.copy(0.1f))
+            )
+            Spacer(modifier = Modifier
+                .height(15.dp))
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -65,7 +74,7 @@ fun ClassCard(onCardClick: () -> Unit) {
                     ClassInfo(icon = R.drawable.class_teacher, text = "Poonam Pandey")
                 }
             }
-            Spacer(modifier = Modifier.height(26.dp))
+            Spacer(modifier = Modifier.height(20.dp))
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -100,7 +109,7 @@ fun ClassInfo(icon: Int, text: String) {
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = text, style = TextStyle(
-                color = Color.DarkGray.copy(0.80f),
+                color = Color.Black.copy(0.80f),
                 fontFamily = regularFont,
                 textAlign = TextAlign.Start,
                 fontSize = 20.sp
