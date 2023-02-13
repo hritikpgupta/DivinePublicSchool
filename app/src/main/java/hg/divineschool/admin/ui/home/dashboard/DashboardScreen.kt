@@ -40,10 +40,10 @@ fun DashboardScreen(viewModel: DashboardViewModel) {
                 }
                 is Resource.Success -> {
                     LazyVerticalGrid(
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(24.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         userScrollEnabled = true,
-                        modifier = Modifier.fillMaxSize().padding(top = 10.dp),
+                        modifier = Modifier.fillMaxSize().padding(top = 16.dp),
                         columns = GridCells.Adaptive(270.dp)
                     ) {
                         items(it.result) { classInfo ->

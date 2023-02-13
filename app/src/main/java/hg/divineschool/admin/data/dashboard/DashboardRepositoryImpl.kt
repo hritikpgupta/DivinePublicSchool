@@ -1,8 +1,7 @@
 package hg.divineschool.admin.data.dashboard
 
-import android.util.Log
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.ClassInformation
 import hg.divineschool.admin.data.models.SchoolInformation
@@ -43,14 +42,22 @@ class DashboardRepositoryImpl @Inject constructor(
 
     override suspend fun getAllClasses(): Resource<List<ClassInformation>> {
         return try {
-            val result = db.collection("classes").get().awaitDocument()
+            val result = db.collection("classes")
+                .orderBy("id", Query.Direction.ASCENDING)
+                .get().awaitDocument()
             val classList = ArrayList<ClassInformation>()
             result.let {
                 it.forEach { doc ->
-                    classList.add(ClassInformation(transportStudentsCount = doc.get("transportStudentsCount") as Long,
-                        classTeacherName =doc.get("classTeacherName") as String,
-                        name = doc.get("name") as String,
-                        studentsCount = doc.get("studentsCount") as Long, newAdmission = doc.get("newAdmission") as Long  ))
+                    classList.add(
+                        ClassInformation(
+                            transportStudentsCount = doc.get("transportStudentsCount") as Long,
+                            classTeacherName = doc.get("classTeacherName") as String,
+                            name = doc.get("name") as String,
+                            studentsCount = doc.get("studentsCount") as Long,
+                            newAdmission = doc.get("newAdmission") as Long,
+                            id = doc.get("id") as Long
+                        )
+                    )
                 }
             }
             Resource.Success(classList)
