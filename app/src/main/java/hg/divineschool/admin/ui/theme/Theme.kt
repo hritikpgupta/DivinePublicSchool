@@ -35,24 +35,25 @@ private val LightColorPalette = lightColors(
     onBackground = Color.Black,
     onSurface = Color.Black,
 
-)
+    )
 
 @Composable
 fun DivinePublicSchoolTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
+    darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit
 ) {
+    val systemUiController = rememberSystemUiController()
     val colors = if (darkTheme) {
         DarkColorPalette
     } else {
         LightColorPalette
     }
-
+    if (darkTheme) {
+        systemUiController.setStatusBarColor(color = Color.Black, darkIcons = false)
+    } else {
+        systemUiController.setStatusBarColor(color = Color.White, darkIcons = true)
+    }
 
     MaterialTheme(
-        colors = colors,
-        typography = Typography,
-        shapes = Shapes,
-        content = content
+        colors = colors, typography = Typography, shapes = Shapes, content = content
     )
 }

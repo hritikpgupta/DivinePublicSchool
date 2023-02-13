@@ -74,7 +74,7 @@ fun ClassCard(onCardClick: () -> Unit) {
                     ClassInfo(icon = R.drawable.class_teacher, text = "Poonam Pandey")
                 }
             }
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(15.dp))
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -83,7 +83,7 @@ fun ClassCard(onCardClick: () -> Unit) {
                 horizontalArrangement = Arrangement.Center,
             ) {
                 Column(Modifier.weight(1f)) {
-                    ClassInfo(icon = R.drawable.students, text = "120")
+                    ClassInfo(icon = R.drawable.presentation, text = "120")
                 }
                 Column(Modifier.weight(1f)) {
                     ClassInfo(icon = R.drawable.bus, text = "400")

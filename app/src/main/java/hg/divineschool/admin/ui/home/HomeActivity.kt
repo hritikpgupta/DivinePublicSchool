@@ -10,8 +10,6 @@ import androidx.compose.material.Surface
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
-import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import hg.divineschool.admin.ui.theme.DivinePublicSchoolTheme
@@ -23,10 +21,6 @@ class HomeActivity : ComponentActivity() {
         setContent {
             DivinePublicSchoolTheme {
                 val navController = rememberNavController()
-                val bgArgb = androidx.compose.material.MaterialTheme.colors.background.toArgb()
-                this.window.statusBarColor = bgArgb
-                val wic = WindowCompat.getInsetsController(window, window.decorView)
-                wic.isAppearanceLightStatusBars = true
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
