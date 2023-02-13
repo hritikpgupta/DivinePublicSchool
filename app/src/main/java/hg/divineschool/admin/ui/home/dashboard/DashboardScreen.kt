@@ -14,20 +14,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen(viewModel : DashboardViewModel) {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colors.background.copy(0.8f))
             .wrapContentSize(Alignment.Center)
     ) {
-        Text(
-            text = "Home Screen",
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colors.onBackground,
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            textAlign = TextAlign.Center,
-            fontSize = 20.sp
-        )
+        ClassCard()
     }
 }
