@@ -1,5 +1,6 @@
 package hg.divineschool.admin.ui.home
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import hg.divineschool.admin.ui.theme.DivinePublicSchoolTheme
+import hg.divineschool.admin.ui.utils.LockScreenOrientation
 
 @AndroidEntryPoint
 class HomeActivity : ComponentActivity() {

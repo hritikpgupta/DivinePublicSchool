@@ -1,96 +1,103 @@
 package hg.divineschool.admin.ui.home.dashboard
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hg.divineschool.admin.R
 import hg.divineschool.admin.data.models.ClassInformation
-import hg.divineschool.admin.ui.theme.lightFont
 import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.theme.regularFont
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ClassCard(classInformation: ClassInformation,onCardClick: (id : Long) -> Unit) {
+fun ClassCard(
+    classInformation: ClassInformation, cardColor: Color, onCardClick: (id: Long) -> Unit
+) {
     Card(
-        backgroundColor = Color.White.copy(0.8f),
-        shape = RoundedCornerShape(2.dp),
-        border = BorderStroke(1.dp, Color.Red.copy(0.3f)),
-        elevation = 4.dp,
-        modifier = Modifier
-            .requiredSize(300.dp, 150.dp),
-        onClick = { onCardClick(classInformation.id)}
+        elevation = 6.dp,
+        backgroundColor = MaterialTheme.colors.background,
+        modifier = Modifier.requiredSize(280.dp, 170.dp),
+        onClick = { onCardClick(classInformation.id) },
     ) {
         Column(
-            modifier = Modifier
-                .padding(top = 8.dp, start = 12.dp, bottom = 8.dp, end = 8.dp)
-                .fillMaxSize(),
             horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.Top
+            verticalArrangement = Arrangement.Top,
         ) {
             Text(
-                text = classInformation.name,
+                text = " ${classInformation.name}",
                 style = TextStyle(
                     color = Color.Black.copy(0.80f),
-                    fontSize = 28.sp,
-                    fontFamily = mediumFont
+                    fontSize = 30.sp,
+                    fontFamily = mediumFont, textAlign = TextAlign.Start
                 ),
+                overflow = TextOverflow.Clip,
+                maxLines = 1,
+                softWrap = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = cardColor)
             )
-            Spacer(modifier = Modifier
-                .height(4.dp))
             Spacer(
                 modifier = Modifier
-                    .height(1.dp)
+                    .height(2.dp)
                     .fillMaxWidth()
-                    .background(color = Color.Black.copy(0.1f))
+                    .background(color = Color.Black.copy(0.5f))
             )
-            Spacer(modifier = Modifier
-                .height(15.dp))
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .requiredHeight(50.dp),
+                    .requiredHeight(40.dp)
+                    .padding(start = 2.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 Column(Modifier.weight(1f)) {
-                    ClassInfo(icon = R.drawable.class_teacher, text = classInformation.classTeacherName)
+                    ClassInfo(
+                        icon = R.drawable.class_teacher, text = classInformation.classTeacherName
+                    )
                 }
             }
-            Spacer(modifier = Modifier.height(15.dp))
+            Spacer(modifier = Modifier.height(2.dp))
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .requiredHeight(50.dp),
+                    .requiredHeight(40.dp)
+                    .padding(start = 2.dp),
                 horizontalArrangement = Arrangement.Center,
             ) {
                 Column(Modifier.weight(1f)) {
-                    ClassInfo(icon = R.drawable.presentation, text = classInformation.studentsCount.toString())
+                    ClassInfo(
+                        icon = R.drawable.presentation,
+                        text = classInformation.studentsCount.toString()
+                    )
                 }
                 Column(Modifier.weight(1f)) {
-                    ClassInfo(icon = R.drawable.bus, text = classInformation.transportStudentsCount.toString())
+                    ClassInfo(
+                        icon = R.drawable.bus,
+                        text = classInformation.transportStudentsCount.toString()
+                    )
                 }
                 Column(Modifier.weight(1f)) {
-                    ClassInfo(icon = R.drawable.new_student, text = classInformation.newAdmission.toString())
+                    ClassInfo(
+                        icon = R.drawable.new_student,
+                        text = classInformation.newAdmission.toString()
+                    )
                 }
             }
         }
@@ -105,15 +112,15 @@ fun ClassInfo(icon: Int, text: String) {
         Image(
             painter = painterResource(id = icon),
             contentDescription = stringResource(id = R.string.students_icon_content_description),
-            modifier = Modifier.requiredSize(30.dp)
+            modifier = Modifier.requiredSize(40.dp)
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = text, style = TextStyle(
-                color = Color.Black.copy(0.80f),
+                color = MaterialTheme.colors.onBackground,
                 fontFamily = regularFont,
                 textAlign = TextAlign.Start,
-                fontSize = 20.sp
+                fontSize = 26.sp
             ), overflow = TextOverflow.Clip, maxLines = 1, softWrap = true
         )
     }

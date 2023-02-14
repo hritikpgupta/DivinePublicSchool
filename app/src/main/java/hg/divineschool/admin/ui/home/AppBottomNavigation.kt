@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -48,7 +49,8 @@ fun AppBottomNavigation(navController: NavController) {
                         Text(
                             text = stringResource(id = item.title),
                             fontFamily = lightFont,
-                            fontSize = 15.sp,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold,
                             modifier = Modifier.padding(top = 2.dp)
                         )
                     },

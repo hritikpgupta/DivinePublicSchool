@@ -1,5 +1,6 @@
 package hg.divineschool.admin.ui.auth
 
+import android.content.pm.ActivityInfo
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -35,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import hg.divineschool.admin.R
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.ui.home.HomeActivity
+import hg.divineschool.admin.ui.utils.LockScreenOrientation
 import hg.divineschool.admin.ui.utils.startNewActivity
 import hg.divineschool.admin.ui.utils.toast
 import kotlinx.coroutines.launch
@@ -50,7 +52,6 @@ fun LoginScreen(viewModel: AuthViewModel) {
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
     val loginFlow = viewModel.loginFlow.collectAsState()
-
     Box(
         modifier = Modifier
             .fillMaxSize()
