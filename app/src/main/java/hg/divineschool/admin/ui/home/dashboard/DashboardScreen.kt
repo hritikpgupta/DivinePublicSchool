@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import hg.divineschool.admin.data.Resource
@@ -40,14 +41,23 @@ fun DashboardScreen(viewModel: DashboardViewModel) {
                 }
                 is Resource.Success -> {
                     LazyVerticalGrid(
-                        verticalArrangement = Arrangement.spacedBy(24.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(
+                            4.dp,
+                            Alignment.CenterHorizontally
+                        ),
                         userScrollEnabled = true,
-                        modifier = Modifier.fillMaxSize().padding(top = 16.dp),
-                        columns = GridCells.Adaptive(270.dp)
+                        contentPadding = PaddingValues(8.dp),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(top = 4.dp, start = 2.dp, end = 2.dp, bottom = 60.dp)
+                            .background(color = MaterialTheme.colors.background.copy(0.8f)),
+                        columns = GridCells.Adaptive(300.dp)
                     ) {
                         items(it.result) { classInfo ->
-                            ClassCard(classInformation = classInfo) {}
+                            ClassCard(classInformation = classInfo) {
+                                println("$it Clicked")
+                            }
                         }
                     }
                 }

@@ -1,5 +1,6 @@
 package hg.divineschool.admin.ui.home.dashboard
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -28,20 +29,19 @@ import hg.divineschool.admin.ui.theme.regularFont
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ClassCard(classInformation: ClassInformation,onCardClick: () -> Unit) {
+fun ClassCard(classInformation: ClassInformation,onCardClick: (id : Long) -> Unit) {
     Card(
-        backgroundColor = Color.White.copy(0.6f),
-        shape = RoundedCornerShape(4.dp),
+        backgroundColor = Color.White.copy(0.8f),
+        shape = RoundedCornerShape(2.dp),
+        border = BorderStroke(1.dp, Color.Red.copy(0.3f)),
         elevation = 4.dp,
         modifier = Modifier
-            .requiredSize(270.dp, 150.dp)
-            .background(color = Color.Green.copy(0.25f))
-            .clip(RoundedCornerShape(4.dp)),
-        onClick = onCardClick
+            .requiredSize(300.dp, 150.dp),
+        onClick = { onCardClick(classInformation.id)}
     ) {
         Column(
             modifier = Modifier
-                .padding(10.dp)
+                .padding(top = 8.dp, start = 12.dp, bottom = 8.dp, end = 8.dp)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top
