@@ -42,7 +42,7 @@ fun AppBottomNavigation(navController: NavController) {
                         Icon(
                             painter = painterResource(id = item.icon),
                             contentDescription = stringResource(id = item.title),
-                            modifier = Modifier.requiredSize(width = 24.dp, height = 24.dp)
+                            modifier = Modifier.requiredSize(width = 28.dp, height = 28.dp)
                         )
                     },
                     label = {

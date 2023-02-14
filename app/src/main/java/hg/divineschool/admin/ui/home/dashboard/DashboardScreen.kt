@@ -55,7 +55,7 @@ fun DashboardScreen(viewModel: DashboardViewModel) {
                                 classInformation = classInfo,
                                 cardColors[classInfo.id.toInt()]
                             ) {
-                                context.toast("$it Clicked")
+                                context.toast("${classInfo.name}")
                             }
                         }
                     }
