@@ -26,13 +26,13 @@ import hg.divineschool.admin.ui.theme.regularFont
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ClassCard(
-    classInformation: ClassInformation, cardColor: Color, onCardClick: (id: Long) -> Unit
+    classInformation: ClassInformation, cardColor: Color, onCardClick: (id: Long, name : String) -> Unit
 ) {
     Card(
         elevation = 6.dp,
         backgroundColor = MaterialTheme.colors.background,
         modifier = Modifier.requiredSize(280.dp, 170.dp),
-        onClick = { onCardClick(classInformation.id) },
+        onClick = { onCardClick(classInformation.id, classInformation.name) },
     ) {
         Column(
             horizontalAlignment = Alignment.Start,

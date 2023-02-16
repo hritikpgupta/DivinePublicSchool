@@ -6,7 +6,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import hg.divineschool.admin.AppScreen
 import hg.divineschool.admin.BottomNavItem
 import hg.divineschool.admin.ui.home.attendance.AttendanceScreen
@@ -18,6 +17,7 @@ import hg.divineschool.admin.ui.home.notification.NotificationScreen
 @Composable
 fun AppNavigationGraph(navController: NavHostController, modifier: Modifier) {
     NavHost(navController = navController, startDestination = BottomNavItem.Home.route) {
+
         composable(BottomNavItem.Home.route) {
             DashboardScreen(hiltViewModel(), navController)
         }
@@ -30,8 +30,14 @@ fun AppNavigationGraph(navController: NavHostController, modifier: Modifier) {
         composable(BottomNavItem.Notification.route) {
             NotificationScreen()
         }
-        composable(AppScreen.StudentListScreen.route+"/{id}"){
-            it.arguments!!.getString("id")?.let { it1 -> StudentsList(classID = it1) }
+        composable(AppScreen.StudentListScreen.route + "/{id}/{name}") { it ->
+            it.arguments.let {
+                it?.getString("id")?.let { it1 ->
+                    StudentsList(
+                        classID = it1, className = it.getString("name")!!, navController
+                    )
+                }
+            }
         }
 
     }
