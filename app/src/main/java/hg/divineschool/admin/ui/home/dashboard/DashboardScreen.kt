@@ -13,12 +13,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import hg.divineschool.admin.AppScreen
+import hg.divineschool.admin.BottomNavItem
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.ui.theme.cardColors
 import hg.divineschool.admin.ui.utils.toast
 
 @Composable
-fun DashboardScreen(viewModel: DashboardViewModel) {
+fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController) {
 
     val classListFlow = viewModel.classListFlow.collectAsState()
     val context = LocalContext.current
@@ -55,7 +58,10 @@ fun DashboardScreen(viewModel: DashboardViewModel) {
                                 classInformation = classInfo,
                                 cardColors[classInfo.id.toInt()]
                             ) {
-                                context.toast("${classInfo.name}")
+                                navController.navigate(AppScreen.StudentListScreen.route+"/${classInfo.id.toInt()}"){
+                                    launchSingleTop = true
+                                    popUpTo(BottomNavItem.Home.route)
+                                }
                             }
                         }
                     }
