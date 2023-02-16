@@ -47,10 +47,11 @@ fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController)
                     LazyVerticalGrid(
                         verticalArrangement = Arrangement.spacedBy(18.dp),
                         userScrollEnabled = true,
-                        contentPadding = PaddingValues(top = 15.dp, start = 8.dp, end = 8.dp),
+                        contentPadding = PaddingValues(top = 15.dp, start = 8.dp, end = 8.dp, bottom = 80.dp),
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(color = MaterialTheme.colors.background.copy(0.6f)),
+                            .background(color = MaterialTheme.colors.background.copy(0.6f))
+                        ,
                         columns = GridCells.Adaptive(280.dp)
                     ) {
                         items(it.result) { classInfo ->
