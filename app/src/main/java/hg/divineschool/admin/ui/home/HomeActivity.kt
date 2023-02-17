@@ -28,7 +28,6 @@ class HomeActivity : ComponentActivity() {
                 ) {
                     Scaffold(
                         scaffoldState = rememberScaffoldState(),
-                        //topBar = { DPSAppBar() },
                         bottomBar = {
                             AppBottomNavigation(navController)
                         },

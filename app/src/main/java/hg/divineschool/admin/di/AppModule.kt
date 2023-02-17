@@ -16,6 +16,8 @@ import hg.divineschool.admin.data.auth.AuthRepository
 import hg.divineschool.admin.data.auth.AuthRepositoryImpl
 import hg.divineschool.admin.data.dashboard.DashboardRepository
 import hg.divineschool.admin.data.dashboard.DashboardRepositoryImpl
+import hg.divineschool.admin.data.dashboard.student.StudentListRepository
+import hg.divineschool.admin.data.dashboard.student.StudentListRepositoryImpl
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -37,6 +39,9 @@ object AppModule {
 
     @Provides
     fun provideDashboardRepository(impl: DashboardRepositoryImpl): DashboardRepository = impl
+
+    @Provides
+    fun provideStudentListRepository(impl: StudentListRepositoryImpl): StudentListRepository = impl
 
 }
 

@@ -61,20 +61,11 @@ fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController)
                             columns = GridCells.Adaptive(280.dp)
                         ) {
                             items(it.result) { classInfo ->
-//                                ClassCard(
-//                                    classInformation = classInfo,
-//                                    cardColors[classInfo.id.toInt()]
-//                                ) {
-//                                    navController.navigate(AppScreen.StudentListScreen.route + "/${classInfo.id.toInt()}") {
-//                                        launchSingleTop = true
-//                                        popUpTo(BottomNavItem.Home.route)
-//                                    }
-//                                }
                                 ClassCard(
                                     classInformation = classInfo,
                                     cardColor = cardColors[classInfo.id.toInt()]
                                 ) { id, name ->
-                                    navController.navigate(AppScreen.StudentListScreen.route + "/${classInfo.id.toInt()}/$name") {
+                                    navController.navigate(AppScreen.StudentScreen.StudentList.route + "/${classInfo.id.toInt()}/$name") {
                                         launchSingleTop = true
                                         popUpTo(BottomNavItem.Home.route)
                                     }
