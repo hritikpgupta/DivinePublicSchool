@@ -38,14 +38,12 @@ fun StudentsList(
     navController: NavController,
     viewModel: StudentListViewModel
 ) {
-
     val studentListFlow = viewModel.studentListFlow.collectAsState()
     val context = LocalContext.current
 
     LaunchedEffect(key1 = classID) {
         viewModel.getAllStudents(classID.toLong())
     }
-
 
     Scaffold(scaffoldState = rememberScaffoldState(), topBar = {
         DPSBar(onBackPressed = {
