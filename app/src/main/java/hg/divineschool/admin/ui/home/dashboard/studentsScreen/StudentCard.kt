@@ -26,13 +26,13 @@ fun StudentCard(student: Student) {
     Card(
         elevation = 2.dp,
         backgroundColor = MaterialTheme.colors.background.copy(0.8f),
-        modifier = Modifier.requiredSize(width = 220.dp, height = 170.dp)
+        modifier = Modifier.requiredSize(width = 220.dp, height = 190.dp)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             Row(
                 verticalAlignment = Alignment.Top,
                 horizontalArrangement = Arrangement.Start,
-                modifier = Modifier.padding(4.dp)
+                modifier = Modifier.padding(8.dp)
             ) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
@@ -45,6 +45,7 @@ fun StudentCard(student: Student) {
                             CircleShape
                         )
                 )
+                Spacer(modifier = Modifier.width(10.dp))
                 Column(modifier = Modifier.padding(top = 8.dp)) {
                     Text(
                         text = "Hritik Gupta",
