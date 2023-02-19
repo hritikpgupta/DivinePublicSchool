@@ -9,8 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -19,6 +21,8 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import hg.divineschool.admin.data.models.Student
 import hg.divineschool.admin.ui.theme.boldFont
+import hg.divineschool.admin.ui.theme.lightFont
+import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.theme.regularFont
 
 @Composable
@@ -26,7 +30,6 @@ fun StudentCard(student: Student) {
     Card(
         elevation = 2.dp,
         backgroundColor = MaterialTheme.colors.background.copy(0.8f),
-        modifier = Modifier.requiredSize(width = 220.dp, height = 190.dp)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             Row(
@@ -39,8 +42,9 @@ fun StudentCard(student: Student) {
                         .data(student.image)
                         .crossfade(true)
                         .build(),
+                    contentScale = ContentScale.FillWidth,
                     contentDescription = "Logo", modifier = Modifier
-                        .requiredSize(54.dp)
+                        .requiredSize(90.dp)
                         .clip(
                             CircleShape
                         )
@@ -49,45 +53,16 @@ fun StudentCard(student: Student) {
                 Column(modifier = Modifier.padding(top = 8.dp)) {
                     Text(
                         text = "Hritik Gupta",
-                        style = TextStyle(fontFamily = boldFont, fontSize = 16.sp)
+                        style = TextStyle(fontFamily = boldFont, fontSize = 28.sp),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        softWrap = true
                     )
                     Text(
                         text = "Roll No. 34",
-                        style = TextStyle(fontFamily = regularFont, fontSize = 12.sp)
+                        style = TextStyle(fontFamily = regularFont, fontSize = 26.sp)
                     )
                 }
-            }
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(start = 8.dp)
-            ) {
-                Text(
-                    text = "Manoj Kumar",
-                    style = TextStyle(fontFamily = regularFont, fontSize = 12.sp)
-                )
-                Text(
-                    text = "24th October",
-                    style = TextStyle(fontFamily = regularFont, fontSize = 12.sp)
-                )
-                Text(
-                    text = "7668479477",
-                    style = TextStyle(fontFamily = regularFont, fontSize = 12.sp)
-                )
-                Text(
-                    text = "H.N 115 Satyanganj",
-                    style = TextStyle(fontFamily = regularFont, fontSize = 12.sp)
-                )
-                Text(
-                    text = "Transport Student",
-                    style = TextStyle(fontFamily = regularFont, fontSize = 12.sp)
-                )
-                Text(
-                    text = "Religion",
-                    style = TextStyle(fontFamily = regularFont, fontSize = 12.sp)
-                )
-                Text(text = "Gender", style = TextStyle(fontFamily = regularFont, fontSize = 12.sp))
-
             }
         }
     }

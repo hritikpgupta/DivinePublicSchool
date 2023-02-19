@@ -20,7 +20,6 @@ import hg.divineschool.admin.ui.home.notification.NotificationScreen
 @Composable
 fun AppNavigationGraph(navController: NavHostController, modifier: Modifier) {
     NavHost(navController = navController, startDestination = BottomNavItem.Home.route) {
-
         composable(BottomNavItem.Home.route) {
             DashboardScreen(hiltViewModel(), navController)
         }
@@ -65,5 +64,7 @@ fun NavGraphBuilder.studentListNav(navController: NavHostController) {
                 }
             }
         }
+
     }
 }
+

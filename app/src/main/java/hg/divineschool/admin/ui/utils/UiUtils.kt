@@ -6,9 +6,13 @@ import android.content.ContextWrapper
 import android.content.Intent
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 fun <A : Activity> Context.startNewActivity(activity: Class<A>) {
     Intent(this, activity).also {
@@ -33,6 +37,19 @@ fun Context.findActivity(): Activity? = when (this) {
     is Activity -> this
     is ContextWrapper -> baseContext.findActivity()
     else -> null
+}
+fun Context.getActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.getActivity()
+    else -> null
+}
+
+ suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutine { continuation ->
+    ProcessCameraProvider.getInstance(this).also { cameraProvider ->
+        cameraProvider.addListener({
+            continuation.resume(cameraProvider.get())
+        }, ContextCompat.getMainExecutor(this))
+    }
 }
 
 @Composable
