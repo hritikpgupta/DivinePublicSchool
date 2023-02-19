@@ -17,8 +17,8 @@ class CutOutShape : Shape {
         val outlinePath = Path()
         outlinePath.addRect(Rect(Offset(0f, 0f), size))
 
-        val cutoutHeight = size.height * 0.3f
-        val cutoutWidth = size.width * 0.75f
+        val cutoutHeight = size.height * 0.4f
+        val cutoutWidth = size.width * 0.4f
         //val center = Offset(size.width / 2f, size.height / 2f)
         val center = Offset(size.width / 2f, (size.height / 2f) / 1.8f)
 
