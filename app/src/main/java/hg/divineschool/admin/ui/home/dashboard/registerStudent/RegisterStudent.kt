@@ -5,10 +5,9 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -49,6 +48,7 @@ fun RegisterStudent(
     navController: NavController,
     viewModel: RegisterStudentViewModel
 ) {
+    val scrollState = rememberScrollState()
     val context = LocalContext.current
     val registerState = viewModel.registerStudentFlow.collectAsState()
     val uriString = remember { mutableStateOf("") }
@@ -61,7 +61,6 @@ fun RegisterStudent(
                 showImage.value = true
             }
         }
-
     Scaffold(scaffoldState = rememberScaffoldState(), topBar = {
         DPSBar(onBackPressed = {
             navController.popBackStack()
@@ -99,10 +98,11 @@ fun RegisterStudent(
     }, floatingActionButtonPosition = FabPosition.End
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Top,
             modifier = Modifier
                 .fillMaxSize()
+                .scrollable(scrollState, Orientation.Vertical)
                 .padding(it)
                 .background(color = MaterialTheme.colors.background.copy(0.8f))
         ) {
