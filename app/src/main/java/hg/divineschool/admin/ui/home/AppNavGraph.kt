@@ -56,11 +56,9 @@ fun NavGraphBuilder.studentListNav(navController: NavHostController) {
         }
 
         composable(AppScreen.StudentScreen.RegisterStudent.route + "/{id}/{name}") {
-            it.arguments.let {
-                it?.getString("id")?.let { it1 ->
-                    RegisterStudent(
-                        classID = it1, className = it.getString("name")!!, navController
-                    )
+            it.arguments.let {bundle ->
+                bundle?.getString("id")?.let { it1 ->
+                    RegisterStudent(classID = it1, className = bundle.getString("name")!!, navController, hiltViewModel())
                 }
             }
         }

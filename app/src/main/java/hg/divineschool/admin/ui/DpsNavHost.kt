@@ -10,7 +10,7 @@ import hg.divineschool.admin.ui.auth.LoginScreen
 
 
 @Composable
-fun AppNavHost(navController: NavHostController) {
+fun DpsNavHost(navController: NavHostController) {
     NavHost(navController = navController, startDestination = AppScreen.AuthScreen.route) {
         composable(AppScreen.AuthScreen.route) {
             LoginScreen(hiltViewModel())

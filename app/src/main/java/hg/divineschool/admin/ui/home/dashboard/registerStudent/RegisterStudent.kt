@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,19 +34,23 @@ import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import hg.divineschool.admin.R
+import hg.divineschool.admin.data.Resource
+import hg.divineschool.admin.data.models.Student
 import hg.divineschool.admin.ui.home.DPSBar
 import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.cardColors
+import hg.divineschool.admin.ui.utils.toast
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun RegisterStudent(classID: String, className: String, navController: NavController) {
+fun RegisterStudent(
+    classID: String,
+    className: String,
+    navController: NavController,
+    viewModel: RegisterStudentViewModel
+) {
     val context = LocalContext.current
-//    val defaultImage =
-//        BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.ic_launcher_background)
-//    val imageResult = remember { mutableStateOf<Bitmap>(defaultImage) }
-//    val imageIcon =
-//        remember { mutableStateOf<Icon>(Icon.createWithResource(context, R.drawable.logo)) }
+    val registerState = viewModel.registerStudentFlow.collectAsState()
     val uriString = remember { mutableStateOf("") }
     val showImage = remember { mutableStateOf(false) }
     val clickImage =
@@ -62,7 +67,14 @@ fun RegisterStudent(classID: String, className: String, navController: NavContro
             navController.popBackStack()
         }, className = className)
     }, floatingActionButton = {
-        ExtendedFloatingActionButton(onClick = {},
+        ExtendedFloatingActionButton(onClick = {
+            if (uriString.value.isNotEmpty()) {
+                viewModel.registerStudent(
+                    Student(),
+                    classID, className, uriString.value
+                )
+            }
+        },
             modifier = Modifier.padding(bottom = 70.dp, end = 10.dp),
             elevation = FloatingActionButtonDefaults.elevation(8.dp),
             backgroundColor = cardColors[classID.toInt()],
@@ -127,6 +139,24 @@ fun RegisterStudent(classID: String, className: String, navController: NavContro
                             })
 
                 }
+            }
+        }
+        registerState.value.let { value ->
+            when (value) {
+                is Resource.Failure -> {
+                    value.exception.message?.let { it1 -> context.toast(it1) }
+                }
+                is Resource.Success -> {
+
+                }
+                is Resource.Loading -> {
+                    Box(
+                        contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+                else -> {}
             }
         }
     }

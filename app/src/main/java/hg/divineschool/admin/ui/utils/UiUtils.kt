@@ -90,6 +90,34 @@ fun Long.convertIdToPath(): String {
     } else {
         ""
     }
+}
 
+
+fun String.convertIdToPath(): String {
+    return if (this.toInt() == 0) {
+        "classPlayGroup"
+    } else if (this.toInt() == 1) {
+        "classLowerNursery"
+    } else if (this.toInt() == 2) {
+        "classUpperNursery"
+    } else if (this.toInt() == 3) {
+        "classOne"
+    } else if (this.toInt() == 4) {
+        "classTwo"
+    } else if (this.toInt() == 5) {
+        "classThree"
+    } else if (this.toInt() == 6) {
+        "classFour"
+    } else if (this.toInt() == 7) {
+        "classFive"
+    } else if (this.toInt() == 8) {
+        "classSix"
+    } else if (this.toInt() == 9) {
+        "classSeven"
+    } else if (this.toInt() == 10) {
+        "classEight"
+    } else {
+        ""
+    }
 }
 

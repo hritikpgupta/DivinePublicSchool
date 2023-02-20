@@ -5,6 +5,7 @@ import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,6 +14,8 @@ import hg.divineschool.admin.data.auth.AuthRepository
 import hg.divineschool.admin.data.auth.AuthRepositoryImpl
 import hg.divineschool.admin.data.dashboard.DashboardRepository
 import hg.divineschool.admin.data.dashboard.DashboardRepositoryImpl
+import hg.divineschool.admin.data.dashboard.student.RegisterStudentRepository
+import hg.divineschool.admin.data.dashboard.student.RegisterStudentRepositoryImpl
 import hg.divineschool.admin.data.dashboard.student.StudentListRepository
 import hg.divineschool.admin.data.dashboard.student.StudentListRepositoryImpl
 import javax.inject.Qualifier
@@ -32,6 +35,11 @@ object AppModule {
     fun provideFirebaseStorage(): FirebaseStorage = FirebaseStorage.getInstance()
 
     @Provides
+    fun provideStorageReference(storage: FirebaseStorage): StorageReference {
+        return storage.reference
+    }
+
+    @Provides
     fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
     @Provides
@@ -42,6 +50,8 @@ object AppModule {
 
     @Provides
     fun provideStudentListRepository(impl: StudentListRepositoryImpl): StudentListRepository = impl
+    @Provides
+    fun provideRegisterStudentRepository(impl: RegisterStudentRepositoryImpl): RegisterStudentRepository = impl
 
 }
 

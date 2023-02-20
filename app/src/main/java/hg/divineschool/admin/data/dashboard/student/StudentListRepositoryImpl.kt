@@ -9,7 +9,6 @@ import javax.inject.Inject
 
 class StudentListRepositoryImpl @Inject constructor(
     private val db: FirebaseFirestore
-
 ) : StudentListRepository {
 
     override suspend fun getStudentList(classID: Long): Resource<List<Student>> {
