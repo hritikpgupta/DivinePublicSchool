@@ -66,24 +66,43 @@ fun RegisterStudent(
     navController: NavController,
     viewModel: RegisterStudentViewModel
 ) {
-    var rollNumber by remember { mutableStateOf(TextFieldValue("")) }
-    var enrollmentNumber by remember { mutableStateOf(TextFieldValue("")) }
-    var firstName by remember { mutableStateOf(TextFieldValue("")) }
-    var lastName by remember { mutableStateOf(TextFieldValue("")) }
-    var fathersName by remember { mutableStateOf(TextFieldValue("")) }
-    var mothersName by remember { mutableStateOf(TextFieldValue("")) }
-    var pickedDate by remember {
+    val genderOptions = listOf("Boy", "Girl")
+    var pickedBirthDate by remember {
         mutableStateOf(LocalDate.now())
     }
-    val formattedDate by remember {
+
+
+    var rollNumber by remember { mutableStateOf(TextFieldValue("")) }
+    var enrollmentNumber by remember { mutableStateOf(TextFieldValue("")) }
+
+    var firstName by remember { mutableStateOf(TextFieldValue("")) }
+    var lastName by remember { mutableStateOf(TextFieldValue("")) }
+    val dateOfBirth by remember {
         derivedStateOf {
-            DateTimeFormatter.ofPattern("MMM dd yyyy").format(pickedDate)
+            DateTimeFormatter.ofPattern("MMM dd yyyy").format(pickedBirthDate)
         }
     }
+    var gender by remember { mutableStateOf(genderOptions[0]) }
+
+    var fathersName by remember { mutableStateOf(TextFieldValue("")) }
+    var mothersName by remember { mutableStateOf(TextFieldValue("")) }
+    var guardianOccupation by remember { mutableStateOf(TextFieldValue("")) }
+    // do religion
+
+    var address by remember { mutableStateOf(TextFieldValue("")) }
+    var contactNumber by remember { mutableStateOf(TextFieldValue("")) }
+    var aadharNumber by remember { mutableStateOf(TextFieldValue("")) }
+
+    // do date of admission
+    // do entry class
+    var schoolAttended by remember { mutableStateOf(TextFieldValue("")) }
+
+    var transportStudent by remember { mutableStateOf(false) }
+    var newStudent by remember { mutableStateOf(false) }
+    var isOrphan by remember { mutableStateOf(false) }
+
     val dateDialogState = rememberMaterialDialogState()
-    val genderOptions = listOf("Boy", "Girl")
     var expanded by remember { mutableStateOf(false) }
-    var genderOptionsText by remember { mutableStateOf(genderOptions[0]) }
     val scrollState = rememberScrollState()
     val bringIntoViewRequester = BringIntoViewRequester()
     val coroutineScope = rememberCoroutineScope()
@@ -323,7 +342,7 @@ fun RegisterStudent(
                 modifier = Modifier.padding(top = 24.dp)
             )
             {
-                OutlinedTextField(value = formattedDate,
+                OutlinedTextField(value = dateOfBirth,
                     textStyle = TextStyle(
                         textAlign = TextAlign.Center,
                         fontFamily = regularFont,
@@ -364,7 +383,7 @@ fun RegisterStudent(
                 {
                     TextField(
                         readOnly = true,
-                        value = genderOptionsText,
+                        value = gender,
                         onValueChange = { },
                         label = {
                             Text(
@@ -393,7 +412,7 @@ fun RegisterStudent(
                         onDismissRequest = { expanded = false }) {
                         genderOptions.forEach { selectionOption ->
                             DropdownMenuItem(onClick = {
-                                genderOptionsText = selectionOption
+                                gender = selectionOption
                                 expanded = false
                             }) {
                                 Text(
@@ -409,8 +428,6 @@ fun RegisterStudent(
                         }
                     }
                 }
-
-
             }
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
@@ -489,7 +506,7 @@ fun RegisterStudent(
                 title = "Pick a date",
                 yearRange = IntRange(1950, 2099),
             ) {
-                pickedDate = it
+                pickedBirthDate = it
             }
         }
         registerState.value.let { value ->
