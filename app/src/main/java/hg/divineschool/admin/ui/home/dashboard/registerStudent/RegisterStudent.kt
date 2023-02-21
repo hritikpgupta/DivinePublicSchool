@@ -6,8 +6,6 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.shape.CircleShape
@@ -72,6 +70,8 @@ fun RegisterStudent(
     var enrollmentNumber by remember { mutableStateOf(TextFieldValue("")) }
     var firstName by remember { mutableStateOf(TextFieldValue("")) }
     var lastName by remember { mutableStateOf(TextFieldValue("")) }
+    var fathersName by remember { mutableStateOf(TextFieldValue("")) }
+    var mothersName by remember { mutableStateOf(TextFieldValue("")) }
     var pickedDate by remember {
         mutableStateOf(LocalDate.now())
     }
@@ -100,50 +100,54 @@ fun RegisterStudent(
                 showImage.value = true
             }
         }
-    Scaffold(scaffoldState = rememberScaffoldState(), topBar = {
-        DPSBar(onBackPressed = {
-            navController.popBackStack()
-        }, className = className)
-    }, floatingActionButton = {
-        ExtendedFloatingActionButton(onClick = {
-            if (uriString.value.isNotEmpty()) {
-                viewModel.registerStudent(
-                    Student(), classID, className, uriString.value
-                )
-            }
+    Scaffold(
+        scaffoldState = rememberScaffoldState(), topBar = {
+            DPSBar(onBackPressed = {
+                navController.popBackStack()
+            }, className = className)
         },
-            modifier = Modifier.padding(bottom = 70.dp, end = 10.dp),
-            elevation = FloatingActionButtonDefaults.elevation(8.dp),
-            backgroundColor = cardColors[classID.toInt()],
-            shape = RoundedCornerShape(8.dp),
-            icon = {
-                Icon(
-                    Icons.Filled.Add,
-                    null,
-                    tint = Color.White,
-                    modifier = Modifier.requiredSize(30.dp)
-                )
+        floatingActionButton = {
+            ExtendedFloatingActionButton(onClick = {
+                if (uriString.value.isNotEmpty()) {
+                    viewModel.registerStudent(
+                        Student(), classID, className, uriString.value
+                    )
+                }
             },
-            text = {
-                Text(
-                    text = "Save", style = TextStyle(
-                        fontFamily = boldFont,
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.SemiBold
-                    ), color = Color.White
-                )
-            })
-    }, floatingActionButtonPosition = FabPosition.End
+                modifier = Modifier.padding(bottom = 70.dp, end = 10.dp),
+                elevation = FloatingActionButtonDefaults.elevation(8.dp),
+                backgroundColor = cardColors[classID.toInt()],
+                shape = RoundedCornerShape(8.dp),
+                icon = {
+                    Icon(
+                        Icons.Filled.Add,
+                        null,
+                        tint = Color.White,
+                        modifier = Modifier.requiredSize(30.dp)
+                    )
+                },
+                text = {
+                    Text(
+                        text = "Save", style = TextStyle(
+                            fontFamily = boldFont,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.SemiBold
+                        ), color = Color.White
+                    )
+                })
+        }, floatingActionButtonPosition = FabPosition.End
     ) { paddingValues ->
         Column(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top,
             modifier = Modifier
+                .verticalScroll(scrollState)
                 .fillMaxSize()
-                .scrollable(scrollState, Orientation.Vertical)
                 .padding(paddingValues)
+                .padding(bottom = 70.dp)
                 .background(color = MaterialTheme.colors.background.copy(0.8f))
-        ) {
+        )
+        {
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
@@ -250,7 +254,9 @@ fun RegisterStudent(
             }
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(top = 14.dp)
+
             ) {
                 OutlinedTextField(value = firstName,
                     label = {
@@ -317,7 +323,6 @@ fun RegisterStudent(
                 modifier = Modifier.padding(top = 24.dp)
             )
             {
-
                 OutlinedTextField(value = formattedDate,
                     textStyle = TextStyle(
                         textAlign = TextAlign.Center,
@@ -357,7 +362,8 @@ fun RegisterStudent(
                         .padding(horizontal = 10.dp),
                     onExpandedChange = { expanded = !expanded })
                 {
-                    TextField(readOnly = true,
+                    TextField(
+                        readOnly = true,
                         value = genderOptionsText,
                         onValueChange = { },
                         label = {
@@ -406,11 +412,78 @@ fun RegisterStudent(
 
 
             }
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(top = 24.dp)
+
+            ) {
+                OutlinedTextField(value = fathersName,
+                    label = {
+                        Text(
+                            text = "Enter Father's Name", style = TextStyle(
+                                fontFamily = mediumFont,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        )
+                    },
+                    maxLines = 1,
+                    onValueChange = { fathersName = it },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = cardColors[classID.toInt()],
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Text,
+                        autoCorrect = false,
+                        capitalization = KeyboardCapitalization.None,
+                    ),
+                    modifier = Modifier
+                        .weight(2f)
+                        .padding(horizontal = 10.dp)
+                        .onFocusEvent {
+                            if (it.isFocused) {
+                                coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
+                            }
+                        })
+                OutlinedTextField(value = mothersName,
+                    label = {
+                        Text(
+                            text = "Enter Mother's Name", style = TextStyle(
+                                fontFamily = mediumFont,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        )
+                    },
+                    maxLines = 1,
+                    onValueChange = { mothersName = it },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = cardColors[classID.toInt()],
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Text,
+                        autoCorrect = false,
+                        capitalization = KeyboardCapitalization.None,
+                    ),
+                    modifier = Modifier
+                        .weight(2f)
+                        .padding(horizontal = 10.dp)
+                        .onFocusEvent {
+                            if (it.isFocused) {
+                                coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
+                            }
+                        })
+            }
+
         }
         MaterialDialog(dialogState = dateDialogState, buttons = {
             positiveButton(text = "Ok") {}
             negativeButton(text = "Cancel")
-        }) {
+        })
+        {
             datepicker(
                 initialDate = LocalDate.now(),
                 title = "Pick a date",
