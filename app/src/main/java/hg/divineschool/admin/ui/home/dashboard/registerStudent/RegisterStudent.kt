@@ -67,10 +67,16 @@ fun RegisterStudent(
     viewModel: RegisterStudentViewModel
 ) {
     val genderOptions = listOf("Boy", "Girl")
+    val religionOptions =
+        listOf("Buddhism", "Christianity", "Hinduism", "Islam", "Jainism", "Sikhism")
+    val classEntryOptions =
+        listOf("PLay Group", "Lower Nursery", "Upper Nursery", "Class One", "Class Two", "Class Three", "Class Four", "Class Five", "Class Six", "Class Seven", "Class Eight")
     var pickedBirthDate by remember {
         mutableStateOf(LocalDate.now())
     }
-
+    var pickedAdmissionDate by remember {
+        mutableStateOf(LocalDate.now())
+    }
 
     var rollNumber by remember { mutableStateOf(TextFieldValue("")) }
     var enrollmentNumber by remember { mutableStateOf(TextFieldValue("")) }
@@ -87,22 +93,31 @@ fun RegisterStudent(
     var fathersName by remember { mutableStateOf(TextFieldValue("")) }
     var mothersName by remember { mutableStateOf(TextFieldValue("")) }
     var guardianOccupation by remember { mutableStateOf(TextFieldValue("")) }
-    // do religion
+    var religion by remember { mutableStateOf(religionOptions[0]) }
+
 
     var address by remember { mutableStateOf(TextFieldValue("")) }
     var contactNumber by remember { mutableStateOf(TextFieldValue("")) }
     var aadharNumber by remember { mutableStateOf(TextFieldValue("")) }
 
-    // do date of admission
-    // do entry class
+
+    val dateOfAdmission by remember {
+        derivedStateOf {
+            DateTimeFormatter.ofPattern("MMM dd yyyy").format(pickedAdmissionDate)
+        }
+    }
+    var entryClass by remember { mutableStateOf(classEntryOptions[0]) }
     var schoolAttended by remember { mutableStateOf(TextFieldValue("")) }
 
     var transportStudent by remember { mutableStateOf(false) }
     var newStudent by remember { mutableStateOf(false) }
     var isOrphan by remember { mutableStateOf(false) }
 
-    val dateDialogState = rememberMaterialDialogState()
-    var expanded by remember { mutableStateOf(false) }
+    val birthDateDialogState = rememberMaterialDialogState()
+    val admissionDateDialogState = rememberMaterialDialogState()
+    var genderExpanded by remember { mutableStateOf(false) }
+    var religionExpanded by remember { mutableStateOf(false) }
+    var entryClassExpanded by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     val bringIntoViewRequester = BringIntoViewRequester()
     val coroutineScope = rememberCoroutineScope()
@@ -371,15 +386,15 @@ fun RegisterStudent(
                         .weight(1f)
                         .padding(horizontal = 10.dp)
                         .clickable {
-                            dateDialogState.show()
+                            birthDateDialogState.show()
                         })
 
-                ExposedDropdownMenuBox(expanded = expanded,
+                ExposedDropdownMenuBox(expanded = genderExpanded,
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
                         .padding(horizontal = 10.dp),
-                    onExpandedChange = { expanded = !expanded })
+                    onExpandedChange = { genderExpanded = !genderExpanded })
                 {
                     TextField(
                         readOnly = true,
@@ -398,7 +413,7 @@ fun RegisterStudent(
                         },
                         trailingIcon = {
                             ExposedDropdownMenuDefaults.TrailingIcon(
-                                expanded = expanded
+                                expanded = genderExpanded
                             )
                         },
                         colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(
@@ -408,12 +423,12 @@ fun RegisterStudent(
 
                         )
                     )
-                    ExposedDropdownMenu(expanded = expanded,
-                        onDismissRequest = { expanded = false }) {
+                    ExposedDropdownMenu(expanded = genderExpanded,
+                        onDismissRequest = { genderExpanded = false }) {
                         genderOptions.forEach { selectionOption ->
                             DropdownMenuItem(onClick = {
                                 gender = selectionOption
-                                expanded = false
+                                genderExpanded = false
                             }) {
                                 Text(
                                     text = selectionOption, style = TextStyle(
@@ -433,7 +448,6 @@ fun RegisterStudent(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(top = 24.dp)
-
             ) {
                 OutlinedTextField(value = fathersName,
                     label = {
@@ -494,9 +508,324 @@ fun RegisterStudent(
                             }
                         })
             }
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(top = 24.dp)
+            ) {
+                OutlinedTextField(
+                    value = guardianOccupation,
+                    label = {
+                        Text(
+                            text = "Enter Occupation", style = TextStyle(
+                                fontFamily = mediumFont,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        )
+                    },
+                    maxLines = 1,
+                    onValueChange = { guardianOccupation = it },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = cardColors[classID.toInt()],
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Text,
+                        autoCorrect = false,
+                        capitalization = KeyboardCapitalization.None,
+                    ),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 10.dp)
+                        .onFocusEvent {
+                            if (it.isFocused) {
+                                coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
+                            }
+                        }
+                )
+                ExposedDropdownMenuBox(expanded = religionExpanded,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .padding(horizontal = 10.dp),
+                    onExpandedChange = { religionExpanded = !religionExpanded })
+                {
+                    TextField(
+                        readOnly = true,
+                        value = religion,
+                        onValueChange = { },
+                        label = {
+                            Text(
+                                "Select Religion", style = TextStyle(
+                                    textAlign = TextAlign.Center,
+                                    fontFamily = regularFont,
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colors.onBackground
+                                )
+                            )
+                        },
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(
+                                expanded = religionExpanded
+                            )
+                        },
+                        colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(
+                            unfocusedBorderColor = cardColors[classID.toInt()],
+                            focusedBorderColor = cardColors[classID.toInt()],
+                            backgroundColor = MaterialTheme.colors.onBackground.copy(.05f)
+
+                        )
+                    )
+                    ExposedDropdownMenu(expanded = religionExpanded,
+                        onDismissRequest = { religionExpanded = false }) {
+                        religionOptions.forEach { selectionOption ->
+                            DropdownMenuItem(onClick = {
+                                religion = selectionOption
+                                religionExpanded = false
+                            }) {
+                                Text(
+                                    text = selectionOption, style = TextStyle(
+                                        textAlign = TextAlign.Center,
+                                        fontFamily = regularFont,
+                                        fontSize = 18.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = MaterialTheme.colors.onBackground
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+
+
+            }
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(top = 24.dp)
+            ){
+                OutlinedTextField(value = contactNumber,
+                    label = {
+                        Text(
+                            text = "Enter Contact Number", style = TextStyle(
+                                fontFamily = mediumFont,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        )
+                    },
+                    maxLines = 1,
+                    onValueChange = { contactNumber = it },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = cardColors[classID.toInt()],
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Phone,
+                        autoCorrect = false,
+                        capitalization = KeyboardCapitalization.None,
+                    ),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 10.dp)
+                        .onFocusEvent {
+                            if (it.isFocused) {
+                                coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
+                            }
+                        })
+
+                OutlinedTextField(value = aadharNumber,
+                    label = {
+                        Text(
+                            text = "Enter Aadhar Number", style = TextStyle(
+                                fontFamily = mediumFont,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        )
+                    },
+                    maxLines = 1,
+                    onValueChange = { aadharNumber = it },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = cardColors[classID.toInt()],
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Number,
+                        autoCorrect = false,
+                        capitalization = KeyboardCapitalization.None,
+                    ),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 10.dp)
+                        .onFocusEvent {
+                            if (it.isFocused) {
+                                coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
+                            }
+                        })
+            }
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(top = 24.dp)
+            ){
+                OutlinedTextField(value = address,
+                    label = {
+                        Text(
+                            text = "Enter Address ", style = TextStyle(
+                                fontFamily = mediumFont,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        )
+                    },
+                    maxLines = 1,
+                    onValueChange = { address = it },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = cardColors[classID.toInt()],
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Text,
+                        autoCorrect = false,
+                        capitalization = KeyboardCapitalization.None,
+                    ),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 10.dp)
+                        .onFocusEvent {
+                            if (it.isFocused) {
+                                coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
+                            }
+                        })
+                OutlinedTextField(value = schoolAttended,
+                    label = {
+                        Text(
+                            text = "Enter Previous School  ", style = TextStyle(
+                                fontFamily = mediumFont,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        )
+                    },
+                    maxLines = 1,
+                    onValueChange = { schoolAttended = it },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = cardColors[classID.toInt()],
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Text,
+                        autoCorrect = false,
+                        capitalization = KeyboardCapitalization.None,
+                    ),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 10.dp)
+                        .onFocusEvent {
+                            if (it.isFocused) {
+                                coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
+                            }
+                        })
+            }
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(top = 24.dp)
+            )
+            {
+                OutlinedTextField(value = dateOfAdmission,
+                    textStyle = TextStyle(
+                        textAlign = TextAlign.Center,
+                        fontFamily = regularFont,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colors.onBackground
+                    ),
+                    maxLines = 1,
+                    enabled = false,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = cardColors[classID.toInt()],
+                        focusedLabelColor = cardColors[classID.toInt()],
+                        unfocusedBorderColor = cardColors[classID.toInt()],
+                        unfocusedLabelColor = cardColors[classID.toInt()],
+                        leadingIconColor = cardColors[classID.toInt()]
+                    ),
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Filled.Cake,
+                            contentDescription = "Date of Admission",
+                            modifier = Modifier.requiredSize(34.dp)
+                        )
+                    },
+                    onValueChange = { },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 10.dp)
+                        .clickable {
+                            admissionDateDialogState.show()
+                        })
+
+                ExposedDropdownMenuBox(expanded = entryClassExpanded,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .padding(horizontal = 10.dp),
+                    onExpandedChange = { entryClassExpanded = !entryClassExpanded })
+                {
+                    TextField(
+                        readOnly = true,
+                        value = entryClass,
+                        onValueChange = { },
+                        label = {
+                            Text(
+                                "Select Entry Class", style = TextStyle(
+                                    textAlign = TextAlign.Center,
+                                    fontFamily = regularFont,
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colors.onBackground
+                                )
+                            )
+                        },
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(
+                                expanded = entryClassExpanded
+                            )
+                        },
+                        colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(
+                            unfocusedBorderColor = cardColors[classID.toInt()],
+                            focusedBorderColor = cardColors[classID.toInt()],
+                            backgroundColor = MaterialTheme.colors.onBackground.copy(.05f)
+
+                        )
+                    )
+                    ExposedDropdownMenu(expanded = entryClassExpanded,
+                        onDismissRequest = { entryClassExpanded = false }) {
+                        classEntryOptions.forEach { selectionOption ->
+                            DropdownMenuItem(onClick = {
+                                entryClass = selectionOption
+                                entryClassExpanded = false
+                            }) {
+                                Text(
+                                    text = selectionOption, style = TextStyle(
+                                        textAlign = TextAlign.Center,
+                                        fontFamily = regularFont,
+                                        fontSize = 18.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = MaterialTheme.colors.onBackground
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+            }
 
         }
-        MaterialDialog(dialogState = dateDialogState, buttons = {
+        MaterialDialog(dialogState = birthDateDialogState, buttons = {
             positiveButton(text = "Ok") {}
             negativeButton(text = "Cancel")
         })
@@ -509,6 +838,20 @@ fun RegisterStudent(
                 pickedBirthDate = it
             }
         }
+        MaterialDialog(dialogState = admissionDateDialogState, buttons = {
+            positiveButton(text = "Ok") {}
+            negativeButton(text = "Cancel")
+        })
+        {
+            datepicker(
+                initialDate = LocalDate.now(),
+                title = "Pick a date",
+                yearRange = IntRange(1950, 2099),
+            ) {
+                pickedAdmissionDate = it
+            }
+        }
+
         registerState.value.let { value ->
             when (value) {
                 is Resource.Failure -> {
