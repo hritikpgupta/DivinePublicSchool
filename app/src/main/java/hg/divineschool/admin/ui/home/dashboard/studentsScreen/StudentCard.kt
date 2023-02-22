@@ -52,14 +52,14 @@ fun StudentCard(student: Student) {
                 Spacer(modifier = Modifier.width(10.dp))
                 Column(modifier = Modifier.padding(top = 8.dp)) {
                     Text(
-                        text = "Hritik Gupta",
+                        text = "${student.firstName} ${student.lastName}",
                         style = TextStyle(fontFamily = boldFont, fontSize = 28.sp),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         softWrap = true
                     )
                     Text(
-                        text = "Roll No. 34",
+                        text = student.rollNumber.toString(),
                         style = TextStyle(fontFamily = regularFont, fontSize = 26.sp)
                     )
                 }

@@ -1,5 +1,6 @@
 package hg.divineschool.admin.ui.home.dashboard.studentsScreen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -10,9 +11,8 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +30,7 @@ import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.cardColors
 import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.toast
+import kotlin.random.Random
 
 @Composable
 fun StudentsList(
@@ -40,6 +41,13 @@ fun StudentsList(
 ) {
     val studentListFlow = viewModel.studentListFlow.collectAsState()
     val context = LocalContext.current
+/*    val keyID = remember { mutableStateOf(24) }
+    navController.currentBackStackEntry
+        ?.savedStateHandle?.getStateFlow<Boolean?>("studentAdded", false)?.collectAsState()?.value.let {
+            if (it == true){
+               keyID.value += Random(200).nextInt()
+            }
+        }*/
 
     LaunchedEffect(key1 = classID) {
         viewModel.getAllStudents(classID.toLong())
@@ -54,6 +62,7 @@ fun StudentsList(
             navController.navigate(AppScreen.StudentScreen.RegisterStudent.route + "/${classID}/$className") {
                 launchSingleTop = true
             }
+
         },
             modifier = Modifier.padding(bottom = 70.dp, end = 10.dp),
             elevation = FloatingActionButtonDefaults.elevation(8.dp),

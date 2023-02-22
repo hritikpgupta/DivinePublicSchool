@@ -3,6 +3,7 @@ package hg.divineschool.admin.ui.home.dashboard.registerStudent
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
@@ -153,9 +154,32 @@ fun RegisterStudent(
     }, floatingActionButton = {
         ExtendedFloatingActionButton(onClick = {
             if (uriString.value.isNotEmpty()) {
-                viewModel.registerStudent(
-                    Student(), classID, className, uriString.value
-                )
+                try {
+                    val stu = Student(
+                        rollNumber = rollNumber.text.toLong(),
+                        enrollmentNumber = enrollmentNumber.text.toLong(),
+                        firstName = firstName.text,
+                        lastName = lastName.text,
+                        dateOfBirth = dateOfBirth,
+                        gender = gender,
+                        fathersName = fathersName.text,
+                        mothersName = mothersName.text,
+                        guardianOccupation = guardianOccupation.text,
+                        religion = religion,
+                        address = address.text,
+                        contactNumber = contactNumber.text.toLong(),
+                        aadharNumber = aadharNumber.text.toLong(),
+                        dateOfAdmission = dateOfAdmission,
+                        entryClass = entryClass,
+                        schoolAttended = schoolAttended.text,
+                        transportStudent = transportStudent,
+                        newStudent = newStudent,
+                        orphan = isOrphan,
+                        image = ""
+                    )
+                    viewModel.registerStudent(stu, classID, className, uriString.value)
+                } catch (_: NumberFormatException) {
+                }
             }
         },
             modifier = Modifier.padding(bottom = 70.dp, end = 10.dp),
@@ -431,7 +455,8 @@ fun RegisterStudent(
 
                         )
                     )
-                    ExposedDropdownMenu(expanded = genderExpanded,
+                    ExposedDropdownMenu(
+                        expanded = genderExpanded,
                         onDismissRequest = { genderExpanded = false }) {
                         genderOptions.forEach { selectionOption ->
                             DropdownMenuItem(onClick = {
@@ -584,7 +609,8 @@ fun RegisterStudent(
 
                         )
                     )
-                    ExposedDropdownMenu(expanded = religionExpanded,
+                    ExposedDropdownMenu(
+                        expanded = religionExpanded,
                         onDismissRequest = { religionExpanded = false }) {
                         religionOptions.forEach { selectionOption ->
                             DropdownMenuItem(onClick = {
@@ -932,6 +958,8 @@ fun RegisterStudent(
                     value.exception.message?.let { it1 -> context.toast(it1) }
                 }
                 is Resource.Success -> {
+                    navController.currentBackStackEntry?.savedStateHandle?.set("studentAdded", true)
+                    navController.popBackStack()
 
                 }
                 is Resource.Loading -> {

@@ -2,6 +2,8 @@ package hg.divineschool.admin.data.dashboard.student
 
 import android.net.Uri
 import android.util.Log
+import androidx.compose.ui.text.toLowerCase
+import androidx.compose.ui.text.toUpperCase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -25,13 +27,13 @@ class RegisterStudentRepositoryImpl @Inject constructor(
     ): Resource<Student> {
         return try {
             val fileName =
-                student.enrollmentNumber.toString() + "_" + student.firstName + "_" + student.rollNumber.toString()
+                student.enrollmentNumber.toString() + "-" + student.firstName+ "-" + student.rollNumber.toString()
             val ref = storageReference.child("$className/$fileName.jpg")
             val downloadUrl = ref.putFile(Uri.parse(fileUriString)).uploadFile(ref)
             student.apply {
                 image = downloadUrl.toString()
             }
-            db.collection("classes").document(classId.convertIdToPath()).collection("students").document().set(student).awaitDocument()
+            //db.collection("classes").document(classId.convertIdToPath()).collection("students").document(student.enrollmentNumber.toString()).set(student).awaitDocument()
             Resource.Success(student)
         } catch (e: Exception) {
             e.printStackTrace()

@@ -1,5 +1,6 @@
 package hg.divineschool.admin.data.dashboard.student
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Student
@@ -17,31 +18,32 @@ class StudentListRepositoryImpl @Inject constructor(
                 db.collection("classes").document(classID.convertIdToPath()).collection("students")
                     .get().awaitDocument()
             val studentList = ArrayList<Student>()
-            result.let {
-                if (!it.isEmpty) {
+
+            result.documents.let {
+                if (it.isNotEmpty()) {
                     it.forEach { doc ->
                         studentList.add(
                             Student(
-                                aadharNumber = doc.get("aadharNumber") as Long,
-                                address = doc.get("address") as String,
-                                contactNumber = doc.get("contactNumber") as Long,
-                                dateOfAdmission = doc.get("dateOfAdmission") as String,
-                                dateOfBirth = doc.get("dateOfBirth") as String,
-                                enrollmentNumber = doc.get("enrollmentNumber") as Long,
-                                entryClass = doc.get("entryClass") as String,
-                                fathersName = doc.get("fathersName") as String,
-                                firstName = doc.get("firstName") as String,
-                                gender = doc.get("gender") as String,
-                                guardianOccupation = doc.get("guardianOccupation") as String,
-                                image = doc.get("image") as String,
-                                isOrphan = doc.get("isOrphan") as Boolean,
-                                lastName = doc.get("lastName") as String,
-                                mothersName = doc.get("mothersName") as String,
-                                newStudent = doc.get("newStudent") as Boolean,
-                                religion = doc.get("religion") as String,
-                                rollNumber = doc.get("rollNumber") as Long,
-                                schoolAttended = doc.get("schoolAttended") as String,
-                                transportStudent = doc.get("transportStudent") as Boolean
+                                aadharNumber = doc.getLong("aadharNumber") as Long,
+                                address = doc.getString("address") as String,
+                                contactNumber = doc.getLong("contactNumber") as Long,
+                                dateOfAdmission = doc.getString("dateOfAdmission") as String,
+                                dateOfBirth = doc.getString("dateOfBirth") as String,
+                                enrollmentNumber = doc.getLong("enrollmentNumber") as Long,
+                                entryClass = doc.getString("entryClass") as String,
+                                fathersName = doc.getString("fathersName") as String,
+                                firstName = doc.getString("firstName") as String,
+                                gender = doc.getString("gender") as String,
+                                guardianOccupation = doc.getString("guardianOccupation") as String,
+                                image = doc.getString("image") as String,
+                                orphan = doc.getBoolean("orphan") as Boolean,
+                                lastName = doc.getString("lastName") as String,
+                                mothersName = doc.getString("mothersName") as String,
+                                newStudent = doc.getBoolean("newStudent") as Boolean,
+                                religion = doc.getString("religion") as String,
+                                rollNumber = doc.getLong("rollNumber") as Long,
+                                schoolAttended = doc.getString("schoolAttended") as String,
+                                transportStudent = doc.getBoolean("transportStudent") as Boolean
                             )
                         )
                     }

@@ -29,5 +29,5 @@ data class Student(
 
     var transportStudent: Boolean = false,
     var newStudent: Boolean = false,
-    var isOrphan: Boolean = false,
+    var orphan: Boolean = false,
 )
