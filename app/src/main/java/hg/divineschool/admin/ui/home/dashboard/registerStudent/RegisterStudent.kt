@@ -15,6 +15,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Cake
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -69,8 +70,19 @@ fun RegisterStudent(
     val genderOptions = listOf("Boy", "Girl")
     val religionOptions =
         listOf("Buddhism", "Christianity", "Hinduism", "Islam", "Jainism", "Sikhism")
-    val classEntryOptions =
-        listOf("PLay Group", "Lower Nursery", "Upper Nursery", "Class One", "Class Two", "Class Three", "Class Four", "Class Five", "Class Six", "Class Seven", "Class Eight")
+    val classEntryOptions = listOf(
+        "PLay Group",
+        "Lower Nursery",
+        "Upper Nursery",
+        "Class One",
+        "Class Two",
+        "Class Three",
+        "Class Four",
+        "Class Five",
+        "Class Six",
+        "Class Seven",
+        "Class Eight"
+    )
     var pickedBirthDate by remember {
         mutableStateOf(LocalDate.now())
     }
@@ -108,10 +120,10 @@ fun RegisterStudent(
     }
     var entryClass by remember { mutableStateOf(classEntryOptions[0]) }
     var schoolAttended by remember { mutableStateOf(TextFieldValue("")) }
-
     var transportStudent by remember { mutableStateOf(false) }
     var newStudent by remember { mutableStateOf(false) }
     var isOrphan by remember { mutableStateOf(false) }
+
 
     val birthDateDialogState = rememberMaterialDialogState()
     val admissionDateDialogState = rememberMaterialDialogState()
@@ -134,42 +146,40 @@ fun RegisterStudent(
                 showImage.value = true
             }
         }
-    Scaffold(
-        scaffoldState = rememberScaffoldState(), topBar = {
-            DPSBar(onBackPressed = {
-                navController.popBackStack()
-            }, className = className)
+    Scaffold(scaffoldState = rememberScaffoldState(), topBar = {
+        DPSBar(onBackPressed = {
+            navController.popBackStack()
+        }, className = "Registration Form For $className")
+    }, floatingActionButton = {
+        ExtendedFloatingActionButton(onClick = {
+            if (uriString.value.isNotEmpty()) {
+                viewModel.registerStudent(
+                    Student(), classID, className, uriString.value
+                )
+            }
         },
-        floatingActionButton = {
-            ExtendedFloatingActionButton(onClick = {
-                if (uriString.value.isNotEmpty()) {
-                    viewModel.registerStudent(
-                        Student(), classID, className, uriString.value
-                    )
-                }
+            modifier = Modifier.padding(bottom = 70.dp, end = 10.dp),
+            elevation = FloatingActionButtonDefaults.elevation(8.dp),
+            backgroundColor = cardColors[classID.toInt()],
+            shape = RoundedCornerShape(8.dp),
+            icon = {
+                Icon(
+                    Icons.Filled.Add,
+                    null,
+                    tint = Color.White,
+                    modifier = Modifier.requiredSize(30.dp)
+                )
             },
-                modifier = Modifier.padding(bottom = 70.dp, end = 10.dp),
-                elevation = FloatingActionButtonDefaults.elevation(8.dp),
-                backgroundColor = cardColors[classID.toInt()],
-                shape = RoundedCornerShape(8.dp),
-                icon = {
-                    Icon(
-                        Icons.Filled.Add,
-                        null,
-                        tint = Color.White,
-                        modifier = Modifier.requiredSize(30.dp)
-                    )
-                },
-                text = {
-                    Text(
-                        text = "Save", style = TextStyle(
-                            fontFamily = boldFont,
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.SemiBold
-                        ), color = Color.White
-                    )
-                })
-        }, floatingActionButtonPosition = FabPosition.End
+            text = {
+                Text(
+                    text = "Save", style = TextStyle(
+                        fontFamily = boldFont,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.SemiBold
+                    ), color = Color.White
+                )
+            })
+    }, floatingActionButtonPosition = FabPosition.End
     ) { paddingValues ->
         Column(
             horizontalAlignment = Alignment.Start,
@@ -180,8 +190,7 @@ fun RegisterStudent(
                 .padding(paddingValues)
                 .padding(bottom = 70.dp)
                 .background(color = MaterialTheme.colors.background.copy(0.8f))
-        )
-        {
+        ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
@@ -193,7 +202,7 @@ fun RegisterStudent(
                     modifier = Modifier
                         .weight(1f)
                         .requiredSize(200.dp)
-                        .padding(20.dp)
+                        .padding(10.dp)
                 ) {
                     if (showImage.value) {
                         if (uriString.value.isNotEmpty()) {
@@ -213,11 +222,11 @@ fun RegisterStudent(
                         }
 
                     } else {
-                        Image(painter = painterResource(id = R.drawable.ic_launcher_background),
+                        Image(painter = painterResource(id = R.drawable.add_image),
                             contentDescription = "",
-                            contentScale = ContentScale.Crop,
+                            contentScale = ContentScale.FillBounds,
                             modifier = Modifier
-                                .requiredSize(180.dp)
+                                .requiredSize(120.dp)
                                 .background(color = Color.White)
                                 .clickable {
                                     clickImage.launch(Intent(context, CameraActivity::class.java))
@@ -355,8 +364,7 @@ fun RegisterStudent(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(top = 24.dp)
-            )
-            {
+            ) {
                 OutlinedTextField(value = dateOfBirth,
                     textStyle = TextStyle(
                         textAlign = TextAlign.Center,
@@ -394,11 +402,11 @@ fun RegisterStudent(
                         .fillMaxWidth()
                         .weight(1f)
                         .padding(horizontal = 10.dp),
-                    onExpandedChange = { genderExpanded = !genderExpanded })
-                {
+                    onExpandedChange = { genderExpanded = !genderExpanded }) {
                     TextField(
                         readOnly = true,
                         value = gender,
+                        modifier = Modifier.fillMaxWidth(),
                         onValueChange = { },
                         label = {
                             Text(
@@ -513,8 +521,7 @@ fun RegisterStudent(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(top = 24.dp)
             ) {
-                OutlinedTextField(
-                    value = guardianOccupation,
+                OutlinedTextField(value = guardianOccupation,
                     label = {
                         Text(
                             text = "Enter Occupation", style = TextStyle(
@@ -542,18 +549,17 @@ fun RegisterStudent(
                             if (it.isFocused) {
                                 coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
                             }
-                        }
-                )
+                        })
                 ExposedDropdownMenuBox(expanded = religionExpanded,
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
                         .padding(horizontal = 10.dp),
-                    onExpandedChange = { religionExpanded = !religionExpanded })
-                {
+                    onExpandedChange = { religionExpanded = !religionExpanded }) {
                     TextField(
                         readOnly = true,
                         value = religion,
+                        modifier = Modifier.fillMaxWidth(),
                         onValueChange = { },
                         label = {
                             Text(
@@ -605,7 +611,7 @@ fun RegisterStudent(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(top = 24.dp)
-            ){
+            ) {
                 OutlinedTextField(value = contactNumber,
                     label = {
                         Text(
@@ -670,7 +676,7 @@ fun RegisterStudent(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(top = 24.dp)
-            ){
+            ) {
                 OutlinedTextField(value = address,
                     label = {
                         Text(
@@ -734,9 +740,8 @@ fun RegisterStudent(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(top = 24.dp)
-            )
-            {
-                OutlinedTextField(value = dateOfAdmission,
+            ) {
+                OutlinedTextField(value = "Date of Admission $dateOfAdmission",
                     textStyle = TextStyle(
                         textAlign = TextAlign.Center,
                         fontFamily = regularFont,
@@ -755,7 +760,7 @@ fun RegisterStudent(
                     ),
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Filled.Cake,
+                            imageVector = Icons.Filled.DateRange,
                             contentDescription = "Date of Admission",
                             modifier = Modifier.requiredSize(34.dp)
                         )
@@ -773,11 +778,11 @@ fun RegisterStudent(
                         .fillMaxWidth()
                         .weight(1f)
                         .padding(horizontal = 10.dp),
-                    onExpandedChange = { entryClassExpanded = !entryClassExpanded })
-                {
+                    onExpandedChange = { entryClassExpanded = !entryClassExpanded }) {
                     TextField(
                         readOnly = true,
                         value = entryClass,
+                        modifier = Modifier.fillMaxWidth(),
                         onValueChange = { },
                         label = {
                             Text(
@@ -799,7 +804,6 @@ fun RegisterStudent(
                             unfocusedBorderColor = cardColors[classID.toInt()],
                             focusedBorderColor = cardColors[classID.toInt()],
                             backgroundColor = MaterialTheme.colors.onBackground.copy(.05f)
-
                         )
                     )
                     ExposedDropdownMenu(expanded = entryClassExpanded,
@@ -823,13 +827,84 @@ fun RegisterStudent(
                     }
                 }
             }
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(top = 24.dp)
+            ) {
+                Row(
+                    modifier = Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.bus),
+                        contentDescription = "",
+                        modifier = Modifier.requiredSize(40.dp)
+                    )
+                    Text(
+                        text = "Transport Student",
+                        style = TextStyle(fontFamily = regularFont, fontSize = 30.sp)
+                    )
+                    Checkbox(
+                        checked = transportStudent,
+                        modifier = Modifier.requiredSize(60.dp),
+                        colors = CheckboxDefaults.colors(checkedColor = cardColors[classID.toInt()]),
+                        onCheckedChange = { transportStudent = it },
+                    )
+                }
+                Row(
+                    modifier = Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.new_student),
+                        contentDescription = "",
+                        modifier = Modifier.requiredSize(40.dp)
+                    )
+                    Text(
+                        text = "New Student",
+                        style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp)
+                    )
+                    Checkbox(
+                        checked = newStudent,
+                        modifier = Modifier.requiredSize(60.dp),
+                        colors = CheckboxDefaults.colors(checkedColor = cardColors[classID.toInt()]),
+                        onCheckedChange = { newStudent = it },
+                    )
+                }
+                Row(
+                    modifier = Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.orphan),
+                        contentDescription = "",
+                        modifier = Modifier.requiredSize(40.dp)
+                    )
+                    Text(
+                        text = "Orphan",
+                        style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp)
+                    )
+                    Checkbox(
+                        checked = isOrphan,
+                        modifier = Modifier.requiredSize(60.dp),
+                        colors = CheckboxDefaults.colors(checkedColor = cardColors[classID.toInt()]),
+                        onCheckedChange = { isOrphan = it },
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(70.dp))
 
         }
+
         MaterialDialog(dialogState = birthDateDialogState, buttons = {
             positiveButton(text = "Ok") {}
             negativeButton(text = "Cancel")
-        })
-        {
+        }) {
             datepicker(
                 initialDate = LocalDate.now(),
                 title = "Pick a date",
@@ -841,8 +916,7 @@ fun RegisterStudent(
         MaterialDialog(dialogState = admissionDateDialogState, buttons = {
             positiveButton(text = "Ok") {}
             negativeButton(text = "Cancel")
-        })
-        {
+        }) {
             datepicker(
                 initialDate = LocalDate.now(),
                 title = "Pick a date",
