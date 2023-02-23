@@ -938,28 +938,10 @@ fun RegisterStudent(
                     value.exception.message?.let { it1 -> context.toast(it1) }
                 }
                 is Resource.Success -> {
-/*                    navController.previousBackStackEntry?.savedStateHandle?.set("reload", true)
-                    scope.launch {
-                        navController.currentBackStackEntryFlow.collect{
-                            Log.i(Log_Tag, it.destination.route!!)
-                        }
-                        Log.i(Log_Tag, navController.previousBackStackEntry?.destination?.route!!)
-
-                    }*/
-                    navController.popBackStack()
-                    //navController.popBackStack(AppScreen.StudentScreen.StudentList.route + "/${classID.toInt()}/$className",inclusive = false)
-
-                    //navController.navigate(AppScreen.StudentScreen.StudentList.route + "/${classID.toInt()}/$className")
-
-/*                    navController.navigate(AppScreen.StudentScreen.StudentList.route + "/${classID.toInt()}/$className"){
-                        popUpTo(AppScreen.StudentScreen.RegisterStudent.route+ "/${classID.toInt()}/$className"){inclusive = true}
-                    }*/
-
-
-/*                    navController.navigate(BottomNavItem.Home.route){
-                        popUpTo(AppScreen.StudentScreen.StudentList.route){inclusive = true}
-                    }*/
-
+                    LaunchedEffect(Unit){
+                        Log.i(Log_Tag, "Student Saved")
+                        navController.popBackStack()
+                    }
                 }
                 is Resource.Loading -> {
                     Box(
@@ -971,6 +953,7 @@ fun RegisterStudent(
                 else -> {}
             }
         }
+
 
         MaterialDialog(dialogState = birthDateDialogState, buttons = {
             positiveButton(text = "Ok") {}

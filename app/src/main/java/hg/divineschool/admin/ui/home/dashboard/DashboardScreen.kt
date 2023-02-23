@@ -65,10 +65,7 @@ fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController)
                                     classInformation = classInfo,
                                     cardColor = cardColors[classInfo.id.toInt()]
                                 ) { id, name ->
-                                    navController.navigate(AppScreen.StudentScreen.StudentList.route + "/${classInfo.id.toInt()}/$name") {
-                                        launchSingleTop = true
-                                    }
-
+                                    navController.navigate(AppScreen.StudentScreen.StudentList.route + "/${id.toInt()}/$name")
                                 };
                             }
                         }
@@ -78,6 +75,4 @@ fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController)
             }
         }
     }
-
-
 }

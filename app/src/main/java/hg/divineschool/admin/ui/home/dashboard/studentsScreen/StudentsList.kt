@@ -43,23 +43,9 @@ fun StudentsList(
 ) {
     val studentListFlow = viewModel.studentListFlow.collectAsState()
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    val keyID = remember { mutableStateOf(24) }
 
 
-    val registerResult = navController.currentBackStackEntry
-        ?.savedStateHandle?.getLiveData<Boolean?>("reload", false)?.observeAsState()
-    if (navController.currentBackStackEntry?.savedStateHandle?.contains("reload") == true){
-        val data = navController.currentBackStackEntry?.savedStateHandle!!.get<Boolean>("reload") ?: false
-        if (data){
-            Log.i(Log_Tag, "Data is true")
-            viewModel.getAllStudents(classID.toLong())
-        }else{
-            Log.i(Log_Tag, "Data is False")
-        }
-    }
-
-    LaunchedEffect(key1 = classID ) {
+    LaunchedEffect(Unit) {
         Log.i(Log_Tag, "Loading $className students")
         viewModel.getAllStudents(classID.toLong())
     }
@@ -71,10 +57,7 @@ fun StudentsList(
         }, className = className)
     }, floatingActionButton = {
         ExtendedFloatingActionButton(onClick = {
-            navController.navigate(AppScreen.StudentScreen.RegisterStudent.route + "/${classID}/$className") {
-                launchSingleTop = true
-            }
-
+            navController.navigate(AppScreen.StudentScreen.RegisterStudent.route + "/${classID}/$className")
         },
             modifier = Modifier.padding(bottom = 70.dp, end = 10.dp),
             elevation = FloatingActionButtonDefaults.elevation(8.dp),
@@ -149,17 +132,6 @@ fun StudentsList(
                 }
             }
 
-            registerResult?.value.let {
-                if (it == true){
-                    Log.i(Log_Tag, "Value is true")
-                }else{
-                    Log.i(Log_Tag, "Value is false")
-                }
-/*                if(it == true){
-                    Log.i(Log_Tag, "Launching coroutine")
-                        viewModel.getAllStudents(classID.toLong())
-                }*/
-            }
         }
 
     }

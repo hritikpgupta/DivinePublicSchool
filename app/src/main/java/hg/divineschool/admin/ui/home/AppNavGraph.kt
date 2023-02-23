@@ -59,7 +59,6 @@ fun NavGraphBuilder.studentListNav(navController: NavHostController) {
             it.arguments.let {bundle ->
                 bundle?.getString("id")?.let { it1 ->
                     RegisterStudent(classID = it1, className = bundle.getString("name")!!, navController, hiltViewModel())
-
                 }
             }
         }
