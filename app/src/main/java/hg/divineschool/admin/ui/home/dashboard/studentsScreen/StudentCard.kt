@@ -35,7 +35,7 @@ fun StudentCard(student: Student) {
             Row(
                 verticalAlignment = Alignment.Top,
                 horizontalArrangement = Arrangement.Start,
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(10.dp)
             ) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)

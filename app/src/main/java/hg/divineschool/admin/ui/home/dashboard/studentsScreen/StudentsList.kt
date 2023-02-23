@@ -106,9 +106,10 @@ fun StudentsList(
                         if (it.result.isNotEmpty()) {
                             LazyVerticalGrid(
                                 verticalArrangement = Arrangement.spacedBy(18.dp),
+                                horizontalArrangement = Arrangement.spacedBy(10.dp),
                                 userScrollEnabled = true,
                                 contentPadding = PaddingValues(
-                                    top = 15.dp, start = 8.dp, end = 8.dp, bottom = 80.dp
+                                    top = 15.dp, start = 10.dp, end = 10.dp, bottom = 80.dp
                                 ),
                                 modifier = Modifier
                                     .fillMaxSize()
@@ -128,6 +129,8 @@ fun StudentsList(
                             )
                         }
                     }
+                    is Resource.FailureMessage -> {}
+
                     else -> {}
                 }
             }

@@ -149,6 +149,7 @@ fun LoginScreen(viewModel: AuthViewModel) {
                     CircularProgressIndicator()
                 }
             }
+            is Resource.FailureMessage -> {}
         }
     }
 
