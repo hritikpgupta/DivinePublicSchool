@@ -67,7 +67,6 @@ fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController)
                                 ) { id, name ->
                                     navController.navigate(AppScreen.StudentScreen.StudentList.route + "/${classInfo.id.toInt()}/$name") {
                                         launchSingleTop = true
-                                        popUpTo(BottomNavItem.Home.route)
                                     }
 
                                 };

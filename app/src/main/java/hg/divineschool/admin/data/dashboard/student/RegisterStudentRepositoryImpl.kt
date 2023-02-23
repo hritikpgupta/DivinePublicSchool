@@ -33,7 +33,7 @@ class RegisterStudentRepositoryImpl @Inject constructor(
             student.apply {
                 image = downloadUrl.toString()
             }
-            //db.collection("classes").document(classId.convertIdToPath()).collection("students").document(student.enrollmentNumber.toString()).set(student).awaitDocument()
+            db.collection("classes").document(classId.convertIdToPath()).collection("students").document(student.enrollmentNumber.toString()).set(student).awaitDocument()
             Resource.Success(student)
         } catch (e: Exception) {
             e.printStackTrace()

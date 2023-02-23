@@ -42,6 +42,8 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import hg.divineschool.admin.AppScreen
+import hg.divineschool.admin.BottomNavItem
 import hg.divineschool.admin.R
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Student
@@ -50,7 +52,9 @@ import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.cardColors
 import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.theme.regularFont
+import hg.divineschool.admin.ui.utils.Log_Tag
 import hg.divineschool.admin.ui.utils.toast
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -94,8 +98,8 @@ fun RegisterStudent(
     var rollNumber by remember { mutableStateOf(TextFieldValue("")) }
     var enrollmentNumber by remember { mutableStateOf(TextFieldValue("")) }
 
-    var firstName by remember { mutableStateOf(TextFieldValue("")) }
-    var lastName by remember { mutableStateOf(TextFieldValue("")) }
+    var firstName by remember { mutableStateOf(TextFieldValue("Hritik")) }
+    var lastName by remember { mutableStateOf(TextFieldValue("Gupta")) }
     val dateOfBirth by remember {
         derivedStateOf {
             DateTimeFormatter.ofPattern("MMM dd yyyy").format(pickedBirthDate)
@@ -103,15 +107,15 @@ fun RegisterStudent(
     }
     var gender by remember { mutableStateOf(genderOptions[0]) }
 
-    var fathersName by remember { mutableStateOf(TextFieldValue("")) }
-    var mothersName by remember { mutableStateOf(TextFieldValue("")) }
-    var guardianOccupation by remember { mutableStateOf(TextFieldValue("")) }
+    var fathersName by remember { mutableStateOf(TextFieldValue("Rakesh Kumar Gupta")) }
+    var mothersName by remember { mutableStateOf(TextFieldValue("Pinki Gupta")) }
+    var guardianOccupation by remember { mutableStateOf(TextFieldValue("Farmer")) }
     var religion by remember { mutableStateOf(religionOptions[0]) }
 
 
-    var address by remember { mutableStateOf(TextFieldValue("")) }
-    var contactNumber by remember { mutableStateOf(TextFieldValue("")) }
-    var aadharNumber by remember { mutableStateOf(TextFieldValue("")) }
+    var address by remember { mutableStateOf(TextFieldValue("Ahraura")) }
+    var contactNumber by remember { mutableStateOf(TextFieldValue("7668479477")) }
+    var aadharNumber by remember { mutableStateOf(TextFieldValue("5678345687001234")) }
 
 
     val dateOfAdmission by remember {
@@ -120,7 +124,7 @@ fun RegisterStudent(
         }
     }
     var entryClass by remember { mutableStateOf(classEntryOptions[0]) }
-    var schoolAttended by remember { mutableStateOf(TextFieldValue("")) }
+    var schoolAttended by remember { mutableStateOf(TextFieldValue("None")) }
     var transportStudent by remember { mutableStateOf(false) }
     var newStudent by remember { mutableStateOf(false) }
     var isOrphan by remember { mutableStateOf(false) }
@@ -136,6 +140,7 @@ fun RegisterStudent(
     val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val registerState = viewModel.registerStudentFlow.collectAsState()
     val uriString = remember { mutableStateOf("") }
     val showImage = remember { mutableStateOf(false) }
@@ -214,7 +219,8 @@ fun RegisterStudent(
                 .padding(paddingValues)
                 .padding(bottom = 70.dp)
                 .background(color = MaterialTheme.colors.background.copy(0.8f))
-        ) {
+        )
+        {
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
@@ -926,40 +932,33 @@ fun RegisterStudent(
             Spacer(modifier = Modifier.height(70.dp))
 
         }
-
-        MaterialDialog(dialogState = birthDateDialogState, buttons = {
-            positiveButton(text = "Ok") {}
-            negativeButton(text = "Cancel")
-        }) {
-            datepicker(
-                initialDate = LocalDate.now(),
-                title = "Pick a date",
-                yearRange = IntRange(1950, 2099),
-            ) {
-                pickedBirthDate = it
-            }
-        }
-        MaterialDialog(dialogState = admissionDateDialogState, buttons = {
-            positiveButton(text = "Ok") {}
-            negativeButton(text = "Cancel")
-        }) {
-            datepicker(
-                initialDate = LocalDate.now(),
-                title = "Pick a date",
-                yearRange = IntRange(1950, 2099),
-            ) {
-                pickedAdmissionDate = it
-            }
-        }
-
         registerState.value.let { value ->
             when (value) {
                 is Resource.Failure -> {
                     value.exception.message?.let { it1 -> context.toast(it1) }
                 }
                 is Resource.Success -> {
-                    navController.currentBackStackEntry?.savedStateHandle?.set("studentAdded", true)
+/*                    navController.previousBackStackEntry?.savedStateHandle?.set("reload", true)
+                    scope.launch {
+                        navController.currentBackStackEntryFlow.collect{
+                            Log.i(Log_Tag, it.destination.route!!)
+                        }
+                        Log.i(Log_Tag, navController.previousBackStackEntry?.destination?.route!!)
+
+                    }*/
                     navController.popBackStack()
+                    //navController.popBackStack(AppScreen.StudentScreen.StudentList.route + "/${classID.toInt()}/$className",inclusive = false)
+
+                    //navController.navigate(AppScreen.StudentScreen.StudentList.route + "/${classID.toInt()}/$className")
+
+/*                    navController.navigate(AppScreen.StudentScreen.StudentList.route + "/${classID.toInt()}/$className"){
+                        popUpTo(AppScreen.StudentScreen.RegisterStudent.route+ "/${classID.toInt()}/$className"){inclusive = true}
+                    }*/
+
+
+/*                    navController.navigate(BottomNavItem.Home.route){
+                        popUpTo(AppScreen.StudentScreen.StudentList.route){inclusive = true}
+                    }*/
 
                 }
                 is Resource.Loading -> {
@@ -972,7 +971,35 @@ fun RegisterStudent(
                 else -> {}
             }
         }
+
+        MaterialDialog(dialogState = birthDateDialogState, buttons = {
+            positiveButton(text = "Ok") {}
+            negativeButton(text = "Cancel")
+        })
+        {
+            datepicker(
+                initialDate = LocalDate.now(),
+                title = "Pick a date",
+                yearRange = IntRange(1950, 2099),
+            ) {
+                pickedBirthDate = it
+            }
+        }
+        MaterialDialog(dialogState = admissionDateDialogState, buttons = {
+            positiveButton(text = "Ok") {}
+            negativeButton(text = "Cancel")
+        })
+        {
+            datepicker(
+                initialDate = LocalDate.now(),
+                title = "Pick a date",
+                yearRange = IntRange(1950, 2099),
+            ) {
+                pickedAdmissionDate = it
+            }
+        }
     }
+
 }
 
 

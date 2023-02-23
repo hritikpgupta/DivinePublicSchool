@@ -39,7 +39,7 @@ fun AppNavigationGraph(navController: NavHostController, modifier: Modifier) {
 fun NavGraphBuilder.studentListNav(navController: NavHostController) {
     navigation(
         startDestination = AppScreen.StudentScreen.StudentList.route + "/{id}/{name}",
-        route = AppScreen.StudentScreen.route
+        route = AppScreen.StudentScreen.StudentList.route
     ) {
 
         composable(AppScreen.StudentScreen.StudentList.route + "/{id}/{name}") { it ->
@@ -59,6 +59,7 @@ fun NavGraphBuilder.studentListNav(navController: NavHostController) {
             it.arguments.let {bundle ->
                 bundle?.getString("id")?.let { it1 ->
                     RegisterStudent(classID = it1, className = bundle.getString("name")!!, navController, hiltViewModel())
+
                 }
             }
         }

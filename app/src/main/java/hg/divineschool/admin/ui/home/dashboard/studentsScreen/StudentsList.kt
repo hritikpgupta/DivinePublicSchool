@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import hg.divineschool.admin.AppScreen
 import hg.divineschool.admin.data.Resource
@@ -29,9 +30,10 @@ import hg.divineschool.admin.ui.home.DPSBar
 import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.cardColors
 import hg.divineschool.admin.ui.theme.regularFont
+import hg.divineschool.admin.ui.utils.Log_Tag
 import hg.divineschool.admin.ui.utils.toast
+import kotlinx.coroutines.launch
 import kotlin.random.Random
-
 @Composable
 fun StudentsList(
     classID: String,
@@ -41,17 +43,27 @@ fun StudentsList(
 ) {
     val studentListFlow = viewModel.studentListFlow.collectAsState()
     val context = LocalContext.current
-/*    val keyID = remember { mutableStateOf(24) }
-    navController.currentBackStackEntry
-        ?.savedStateHandle?.getStateFlow<Boolean?>("studentAdded", false)?.collectAsState()?.value.let {
-            if (it == true){
-               keyID.value += Random(200).nextInt()
-            }
-        }*/
+    val scope = rememberCoroutineScope()
+    val keyID = remember { mutableStateOf(24) }
 
-    LaunchedEffect(key1 = classID) {
+
+    val registerResult = navController.currentBackStackEntry
+        ?.savedStateHandle?.getLiveData<Boolean?>("reload", false)?.observeAsState()
+    if (navController.currentBackStackEntry?.savedStateHandle?.contains("reload") == true){
+        val data = navController.currentBackStackEntry?.savedStateHandle!!.get<Boolean>("reload") ?: false
+        if (data){
+            Log.i(Log_Tag, "Data is true")
+            viewModel.getAllStudents(classID.toLong())
+        }else{
+            Log.i(Log_Tag, "Data is False")
+        }
+    }
+
+    LaunchedEffect(key1 = classID ) {
+        Log.i(Log_Tag, "Loading $className students")
         viewModel.getAllStudents(classID.toLong())
     }
+
 
     Scaffold(scaffoldState = rememberScaffoldState(), topBar = {
         DPSBar(onBackPressed = {
@@ -86,13 +98,15 @@ fun StudentsList(
                 )
             })
     }, floatingActionButtonPosition = FabPosition.End
-    ) { paddingValues ->
+    )
+    { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .background(color = MaterialTheme.colors.background.copy(0.8f))
-        ) {
+        )
+        {
             studentListFlow.value.let {
                 when (it) {
                     is Resource.Loading -> {
@@ -134,7 +148,20 @@ fun StudentsList(
                     else -> {}
                 }
             }
+
+            registerResult?.value.let {
+                if (it == true){
+                    Log.i(Log_Tag, "Value is true")
+                }else{
+                    Log.i(Log_Tag, "Value is false")
+                }
+/*                if(it == true){
+                    Log.i(Log_Tag, "Launching coroutine")
+                        viewModel.getAllStudents(classID.toLong())
+                }*/
+            }
         }
+
     }
 
 }
