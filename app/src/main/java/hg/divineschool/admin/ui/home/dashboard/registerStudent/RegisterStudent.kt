@@ -43,8 +43,6 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import hg.divineschool.admin.AppScreen
-import hg.divineschool.admin.BottomNavItem
 import hg.divineschool.admin.R
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Student
@@ -55,7 +53,6 @@ import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.Log_Tag
 import hg.divineschool.admin.ui.utils.toast
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -281,7 +278,7 @@ fun RegisterStudent(
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = cardColors[classID.toInt()],
                         cursorColor = cardColors[classID.toInt()],
-                        ),
+                    ),
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next,
                         keyboardType = KeyboardType.Number,
@@ -310,6 +307,7 @@ fun RegisterStudent(
                     onValueChange = { enrollmentNumber = it },
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = cardColors[classID.toInt()],
+                        cursorColor = cardColors[classID.toInt()],
                     ),
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next,
@@ -347,6 +345,7 @@ fun RegisterStudent(
                     onValueChange = { firstName = it },
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = cardColors[classID.toInt()],
+                        cursorColor = cardColors[classID.toInt()],
                     ),
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next,
@@ -376,6 +375,7 @@ fun RegisterStudent(
                     onValueChange = { lastName = it },
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = cardColors[classID.toInt()],
+                        cursorColor = cardColors[classID.toInt()],
                     ),
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next,
@@ -412,7 +412,8 @@ fun RegisterStudent(
                         focusedLabelColor = cardColors[classID.toInt()],
                         unfocusedBorderColor = cardColors[classID.toInt()],
                         unfocusedLabelColor = cardColors[classID.toInt()],
-                        leadingIconColor = cardColors[classID.toInt()]
+                        leadingIconColor = cardColors[classID.toInt()],
+                        cursorColor = cardColors[classID.toInt()],
                     ),
                     leadingIcon = {
                         Icon(
@@ -504,6 +505,7 @@ fun RegisterStudent(
                     onValueChange = { fathersName = it },
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = cardColors[classID.toInt()],
+                        cursorColor = cardColors[classID.toInt()],
                     ),
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next,
@@ -533,6 +535,7 @@ fun RegisterStudent(
                     onValueChange = { mothersName = it },
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = cardColors[classID.toInt()],
+                        cursorColor = cardColors[classID.toInt()],
                     ),
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next,
@@ -568,6 +571,7 @@ fun RegisterStudent(
                     onValueChange = { guardianOccupation = it },
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = cardColors[classID.toInt()],
+                        cursorColor = cardColors[classID.toInt()],
                     ),
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next,
@@ -660,6 +664,7 @@ fun RegisterStudent(
                     onValueChange = { contactNumber = it },
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = cardColors[classID.toInt()],
+                        cursorColor = cardColors[classID.toInt()],
                     ),
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next,
@@ -690,6 +695,7 @@ fun RegisterStudent(
                     onValueChange = { aadharNumber = it },
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = cardColors[classID.toInt()],
+                        cursorColor = cardColors[classID.toInt()],
                     ),
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next,
@@ -725,6 +731,7 @@ fun RegisterStudent(
                     onValueChange = { address = it },
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = cardColors[classID.toInt()],
+                        cursorColor = cardColors[classID.toInt()],
                     ),
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next,
@@ -754,6 +761,7 @@ fun RegisterStudent(
                     onValueChange = { schoolAttended = it },
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = cardColors[classID.toInt()],
+                        cursorColor = cardColors[classID.toInt()],
                     ),
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next,
@@ -790,7 +798,8 @@ fun RegisterStudent(
                         focusedLabelColor = cardColors[classID.toInt()],
                         unfocusedBorderColor = cardColors[classID.toInt()],
                         unfocusedLabelColor = cardColors[classID.toInt()],
-                        leadingIconColor = cardColors[classID.toInt()]
+                        leadingIconColor = cardColors[classID.toInt()],
+                        cursorColor = cardColors[classID.toInt()],
                     ),
                     leadingIcon = {
                         Icon(
@@ -940,7 +949,7 @@ fun RegisterStudent(
                     value.exception.message?.let { it1 -> context.toast(it1) }
                 }
                 is Resource.Success -> {
-                    LaunchedEffect(Unit){
+                    LaunchedEffect(Unit) {
                         Log.i(Log_Tag, "Student Saved")
                         navController.popBackStack()
                     }
@@ -952,7 +961,7 @@ fun RegisterStudent(
                         CircularProgressIndicator()
                     }
                 }
-                is Resource.FailureMessage ->{
+                is Resource.FailureMessage -> {
                     Toast.makeText(context, value.message, Toast.LENGTH_LONG).show()
                 }
 
