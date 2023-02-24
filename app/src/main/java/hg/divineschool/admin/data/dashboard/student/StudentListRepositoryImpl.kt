@@ -1,6 +1,7 @@
 package hg.divineschool.admin.data.dashboard.student
 
 import android.util.Log
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Student
@@ -12,12 +13,18 @@ class StudentListRepositoryImpl @Inject constructor(
     private val db: FirebaseFirestore
 ) : StudentListRepository {
 
+    private val studentList = ArrayList<Student>()
+
+    override val students: List<Student>
+        get() = studentList
+
+
     override suspend fun getStudentList(classID: Long): Resource<List<Student>> {
+        studentList.clear()
         return try {
             val result =
                 db.collection("classes").document(classID.convertIdToPath()).collection("students")
                     .get().awaitDocument()
-            val studentList = ArrayList<Student>()
 
             result.documents.let {
                 if (it.isNotEmpty()) {

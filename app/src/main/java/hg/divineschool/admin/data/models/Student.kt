@@ -30,4 +30,11 @@ data class Student(
     var transportStudent: Boolean = false,
     var newStudent: Boolean = false,
     var orphan: Boolean = false,
-)
+){
+    fun doesMatchSearchQuery(query:String):Boolean{
+        val matchingCombination = listOf("$firstName$lastName", "$firstName $lastName",
+            "${firstName.first()} ${lastName.first()}",
+            "$rollNumber","$religion","$guardianOccupation")
+        return matchingCombination.any { it.contains(query,ignoreCase = true) }
+    }
+}

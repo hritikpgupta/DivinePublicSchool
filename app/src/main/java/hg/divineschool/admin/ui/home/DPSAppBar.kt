@@ -49,8 +49,10 @@ fun DPSBar(onBackPressed: () -> Unit, className: String) {
         backgroundColor = MaterialTheme.colors.background,
         navigationIcon = {
             IconButton(onClick = onBackPressed) {
-                Icon(Icons.Filled.ArrowBack, null
-                    , modifier = Modifier.requiredSize(28.dp))
+                Icon(
+                    Icons.Filled.ArrowBack, null, modifier = Modifier.requiredSize(28.dp)
+                )
             }
-        })
+        }
+    )
 }

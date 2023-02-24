@@ -7,33 +7,34 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import hg.divineschool.admin.AppScreen
 import hg.divineschool.admin.data.Resource
-import hg.divineschool.admin.ui.home.DPSBar
 import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.cardColors
-import hg.divineschool.admin.ui.theme.regularFont
+import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.utils.Log_Tag
 import hg.divineschool.admin.ui.utils.toast
-import kotlinx.coroutines.launch
-import kotlin.random.Random
+
 @Composable
 fun StudentsList(
     classID: String,
@@ -42,19 +43,85 @@ fun StudentsList(
     viewModel: StudentListViewModel
 ) {
     val studentListFlow = viewModel.studentListFlow.collectAsState()
+    val searchText = viewModel.searchText.collectAsState()
+    val students = viewModel.students.collectAsState()
+    val isSearching = viewModel.isSearching.collectAsState()
     val context = LocalContext.current
-
+    val searchWidth = remember { mutableStateOf(0.0f) }
 
     LaunchedEffect(Unit) {
         Log.i(Log_Tag, "Loading $className students")
         viewModel.getAllStudents(classID.toLong())
     }
 
-
     Scaffold(scaffoldState = rememberScaffoldState(), topBar = {
-        DPSBar(onBackPressed = {
-            navController.popBackStack()
-        }, className = className)
+        TopAppBar(elevation = 4.dp, title = {
+            Text(
+                text = className, style = TextStyle(
+                    fontFamily = boldFont,
+                    fontSize = 26.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            )
+        }, backgroundColor = MaterialTheme.colors.background, navigationIcon = {
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(
+                    Icons.Filled.ArrowBack, null, modifier = Modifier.requiredSize(28.dp)
+                )
+            }
+        }, actions = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(onClick = {
+                    if (searchWidth.value == 0.4f) {
+                        searchWidth.value = 0.0f
+                    } else {
+                        searchWidth.value = 0.4f
+                    }
+
+                }) {
+                    Icon(
+                        Icons.Filled.Search,
+                        null,
+                        modifier = Modifier.requiredSize(30.dp),
+                        tint = cardColors[classID.toInt()],
+                    )
+                }
+                TextField(value = searchText.value,
+                    shape = RoundedCornerShape(2.dp),
+                    textStyle = TextStyle(
+                        fontFamily = mediumFont,
+                        fontSize = 22.sp
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Text,
+                        autoCorrect = false,
+                        capitalization = KeyboardCapitalization.None,
+                    ),
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = MaterialTheme.colors.background.copy(
+                            0.8f
+                        ),
+                        placeholderColor = MaterialTheme.colors.background,
+                        cursorColor = cardColors[classID.toInt()],
+                        focusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent,
+                        ),
+                    onValueChange = viewModel::onSearchTextChange,
+                    modifier = Modifier
+                        .fillMaxWidth(searchWidth.value),
+                    placeholder = {
+                        Text(
+                            text = "Search Student", style = TextStyle(
+                                fontFamily = mediumFont,
+                                fontSize = 22.sp
+                            )
+                        )
+                    })
+            }
+
+
+        })
     }, floatingActionButton = {
         ExtendedFloatingActionButton(onClick = {
             navController.navigate(AppScreen.StudentScreen.RegisterStudent.route + "/${classID}/$className")
@@ -81,15 +148,13 @@ fun StudentsList(
                 )
             })
     }, floatingActionButtonPosition = FabPosition.End
-    )
-    { paddingValues ->
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .background(color = MaterialTheme.colors.background.copy(0.8f))
-        )
-        {
+        ) {
             studentListFlow.value.let {
                 when (it) {
                     is Resource.Loading -> {
@@ -103,7 +168,7 @@ fun StudentsList(
                         it.exception.message?.let { it1 -> context.toast(it1) }
                     }
                     is Resource.Success -> {
-                        if (it.result.isNotEmpty()) {
+                        /*if (it.result.isNotEmpty()) {
                             LazyVerticalGrid(
                                 verticalArrangement = Arrangement.spacedBy(18.dp),
                                 horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -120,18 +185,41 @@ fun StudentsList(
                                     StudentCard(student = studentInfo)
                                 }
                             }
-                        } else {
+                        }
+                        else {
                             Text(
                                 text = "No Student Present in $className",
                                 style = TextStyle(fontFamily = regularFont, fontSize = 20.sp),
                                 textAlign = TextAlign.Justify,
                                 color = MaterialTheme.colors.onBackground
                             )
-                        }
+                        }*/
                     }
                     is Resource.FailureMessage -> {}
 
                     else -> {}
+                }
+            }
+            students.value.let {
+                if (it.isNotEmpty()) {
+                    LazyVerticalGrid(
+                        verticalArrangement = Arrangement.spacedBy(18.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        userScrollEnabled = true,
+                        contentPadding = PaddingValues(
+                            top = 15.dp, start = 10.dp, end = 10.dp, bottom = 80.dp
+                        ),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(color = MaterialTheme.colors.background.copy(0.6f)),
+                        columns = GridCells.Adaptive(280.dp)
+                    ) {
+                        items(it) { studentInfo ->
+                            StudentCard(student = studentInfo) {
+
+                            }
+                        }
+                    }
                 }
             }
 

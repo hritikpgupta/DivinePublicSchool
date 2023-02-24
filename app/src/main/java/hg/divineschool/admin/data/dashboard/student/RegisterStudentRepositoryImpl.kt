@@ -26,9 +26,9 @@ class RegisterStudentRepositoryImpl @Inject constructor(
         fileUriString: String
     ): Resource<Student> {
         val verifiedMessage = validateStudentObjectBeforeUpload(student)
-        if (verifiedMessage != null){
+/*        if (verifiedMessage != null){
             return Resource.FailureMessage(verifiedMessage)
-        }
+        }*/
         return try {
             val fileName =
                 student.enrollmentNumber.toString() + "-" + student.firstName+ "-" + student.rollNumber.toString()
@@ -46,7 +46,7 @@ class RegisterStudentRepositoryImpl @Inject constructor(
     }
 
     fun `validateStudentObjectBeforeUpload`(student: Student): String?{
-        if (student.contactNumber.toString().length != null){
+        if (student.contactNumber.toString().trim().length != null){
             return "Contact Number Must Be Of Length 10."
         }
         if (student.entryClass.trim().isEmpty()){

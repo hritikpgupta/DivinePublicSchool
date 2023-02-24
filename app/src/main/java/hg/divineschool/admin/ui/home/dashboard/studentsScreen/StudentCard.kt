@@ -3,6 +3,7 @@ package hg.divineschool.admin.ui.home.dashboard.studentsScreen
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -25,10 +26,12 @@ import hg.divineschool.admin.ui.theme.lightFont
 import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.theme.regularFont
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun StudentCard(student: Student) {
+fun StudentCard(student: Student, onCardClick : () -> Unit) {
     Card(
         elevation = 2.dp,
+        onClick = onCardClick,
         backgroundColor = MaterialTheme.colors.background.copy(0.8f),
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -66,10 +69,4 @@ fun StudentCard(student: Student) {
             }
         }
     }
-}
-
-@Preview(device = Devices.TABLET)
-@Composable
-fun ShowCard() {
-    StudentCard(student = Student(image = "https://firebasestorage.googleapis.com/v0/b/dpsadmin-339a7.appspot.com/o/studentImages%2F1480.jpg?alt=media&token=6762614c-0d87-4fc1-975f-db2e5d7186fe"))
 }

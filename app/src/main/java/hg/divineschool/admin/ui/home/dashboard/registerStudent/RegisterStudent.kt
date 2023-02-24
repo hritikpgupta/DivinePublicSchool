@@ -280,7 +280,8 @@ fun RegisterStudent(
                     onValueChange = { rollNumber = it },
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = cardColors[classID.toInt()],
-                    ),
+                        cursorColor = cardColors[classID.toInt()],
+                        ),
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next,
                         keyboardType = KeyboardType.Number,
