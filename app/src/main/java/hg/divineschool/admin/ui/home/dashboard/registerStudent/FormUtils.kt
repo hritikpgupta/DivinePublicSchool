@@ -4,12 +4,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cake
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -45,12 +47,32 @@ val dropDownModifier = Modifier
     .padding(horizontal = 10.dp)
 
 @Composable
+fun decideTextFieldColors(b: Boolean, color: Color): TextFieldColors {
+    return if (b) {
+        TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = color,
+            cursorColor = color,
+        )
+    } else {
+        TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = color,
+            focusedLabelColor = color,
+            unfocusedBorderColor = color,
+            unfocusedLabelColor = color,
+            leadingIconColor = color,
+            cursorColor = color,
+        )
+    }
+}
+
+@Composable
 fun FormEditText(
     textValue: TextFieldValue,
     text: String,
     keyboardType: KeyboardType,
     color: Color,
     modifier: Modifier,
+    isEnabled: Boolean,
     onValueChanged: (value: TextFieldValue) -> Unit
 ) {
     OutlinedTextField(
@@ -63,11 +85,9 @@ fun FormEditText(
             )
         },
         maxLines = 1,
+        enabled = isEnabled,
         onValueChange = { onValueChanged(it) },
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = color,
-            cursorColor = color,
-        ),
+        colors = decideTextFieldColors(b = isEnabled, color = color),
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Next,
             keyboardType = keyboardType,

@@ -29,8 +29,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import hg.divineschool.admin.AppScreen
 import hg.divineschool.admin.data.Resource
+import hg.divineschool.admin.data.models.Student
 import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.cardColors
+import hg.divineschool.admin.ui.theme.lightFont
 import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.utils.Log_Tag
 import hg.divineschool.admin.ui.utils.toast
@@ -69,7 +71,8 @@ fun StudentsList(
                     Icons.Filled.ArrowBack, null, modifier = Modifier.requiredSize(28.dp)
                 )
             }
-        }, actions = {
+        },
+            actions = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = {
                     if (searchWidth.value == 0.4f) {
@@ -113,21 +116,23 @@ fun StudentsList(
                     placeholder = {
                         Text(
                             text = "Search Student", style = TextStyle(
-                                fontFamily = mediumFont,
+                                fontFamily = lightFont,
                                 fontSize = 22.sp
                             )
                         )
                     })
             }
-
-
         })
     }, floatingActionButton = {
         ExtendedFloatingActionButton(onClick = {
+            val newStudent = Student()
+            navController.currentBackStackEntry?.arguments?.apply {
+                putSerializable("studentObj", newStudent)
+            }
             navController.navigate(AppScreen.StudentScreen.RegisterStudent.route + "/${classID}/$className")
         },
             modifier = Modifier.padding(bottom = 70.dp, end = 10.dp),
-            elevation = FloatingActionButtonDefaults.elevation(8.dp),
+            elevation = FloatingActionButtonDefaults.elevation(4.dp),
             backgroundColor = cardColors[classID.toInt()],
             shape = RoundedCornerShape(8.dp),
             icon = {
@@ -215,8 +220,11 @@ fun StudentsList(
                         columns = GridCells.Adaptive(280.dp)
                     ) {
                         items(it) { studentInfo ->
-                            StudentCard(student = studentInfo) {
-
+                            StudentCard(student = studentInfo, color = cardColors[classID.toInt()] ) {
+                                navController.currentBackStackEntry?.arguments?.apply {
+                                    putSerializable("studentObj", studentInfo)
+                                }
+                                navController.navigate(AppScreen.StudentScreen.RegisterStudent.route + "/${classID}/$className")
                             }
                         }
                     }

@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
+import android.os.Build
+import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -11,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
+import java.io.Serializable
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -51,6 +54,12 @@ suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutin
             continuation.resume(cameraProvider.get())
         }, ContextCompat.getMainExecutor(this))
     }
+}
+
+@Suppress("DEPRECATION")
+inline fun <reified T : Serializable> Bundle.customGetSerializable(key: String): T? {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) getSerializable(key, T::class.java)
+    else getSerializable(key) as? T
 }
 
 @Composable

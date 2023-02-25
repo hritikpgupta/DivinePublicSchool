@@ -14,7 +14,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Cake
 import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.DateRange
@@ -49,6 +48,7 @@ import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.cardColors
 import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.Log_Tag
+import hg.divineschool.admin.ui.utils.customGetSerializable
 import hg.divineschool.admin.ui.utils.toast
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -65,6 +65,8 @@ fun RegisterStudent(
     navController: NavController,
     viewModel: RegisterStudentViewModel
 ) {
+    val currentStudent =
+        navController.previousBackStackEntry?.arguments?.customGetSerializable<Student>("studentObj")
     val coroutineScope = rememberCoroutineScope()
     val bringIntoViewRequester = BringIntoViewRequester()
     val editTextModifier = Modifier
@@ -81,10 +83,10 @@ fun RegisterStudent(
         mutableStateOf(LocalDate.now())
     }
     val classColor = cardColors[classID.toInt()]
-    var rollNumber by remember { mutableStateOf(TextFieldValue("")) }
-    var enrollmentNumber by remember { mutableStateOf(TextFieldValue("")) }
-    var firstName by remember { mutableStateOf(TextFieldValue("Hritik")) }
-    var lastName by remember { mutableStateOf(TextFieldValue("Gupta")) }
+    var rollNumber by remember { mutableStateOf(TextFieldValue(currentStudent?.rollNumber.toString())) }
+    var enrollmentNumber by remember { mutableStateOf(TextFieldValue(currentStudent?.enrollmentNumber.toString())) }
+    var firstName by remember { mutableStateOf(TextFieldValue(currentStudent?.firstName.toString())) }
+    var lastName by remember { mutableStateOf(TextFieldValue(currentStudent?.lastName.toString())) }
     val dateOfBirth by remember {
         derivedStateOf {
             DateTimeFormatter.ofPattern("MMM dd yyyy").format(pickedBirthDate)
@@ -117,7 +119,13 @@ fun RegisterStudent(
     val context = LocalContext.current
     val registerState = viewModel.registerStudentFlow.collectAsState()
     val uriString = remember { mutableStateOf("") }
-    val showImage = remember { mutableStateOf(false) }
+    val showImage = remember {
+        if (uriString.value.isEmpty()) {
+            mutableStateOf(false)
+        } else {
+            mutableStateOf(true)
+        }
+    }
     val clickImage =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
@@ -170,7 +178,7 @@ fun RegisterStudent(
             }
         },
             modifier = Modifier.padding(bottom = 70.dp, end = 10.dp),
-            elevation = FloatingActionButtonDefaults.elevation(8.dp),
+            elevation = FloatingActionButtonDefaults.elevation(4.dp),
             backgroundColor = classColor,
             shape = RoundedCornerShape(8.dp),
             icon = {
@@ -199,7 +207,7 @@ fun RegisterStudent(
                 .verticalScroll(scrollState)
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(bottom = 70.dp)
+                .padding(bottom = 65.dp, start = 5.dp, end = 5.dp)
                 .background(color = MaterialTheme.colors.background.copy(0.8f))
         ) {
             FormRow(padding = 0) {
@@ -246,15 +254,19 @@ fun RegisterStudent(
                     text = "Enter Roll Number",
                     keyboardType = KeyboardType.Number,
                     color = classColor,
-                    modifier = editTextModifier.weight(2f)
-                ) { rollNumber = it }
+                    modifier = editTextModifier.weight(2f),
+                    isEnabled = true,
+                    onValueChanged = { rollNumber = it }
+                )
                 FormEditText(
                     textValue = enrollmentNumber,
                     text = "Enter Enrollment Number",
                     keyboardType = KeyboardType.Number,
                     color = classColor,
-                    modifier = editTextModifier.weight(2f)
-                ) { enrollmentNumber = it }
+                    modifier = editTextModifier.weight(2f),
+                    isEnabled = true,
+                    onValueChanged = { enrollmentNumber = it }
+                )
             }
             FormRow(padding = 14) {
                 FormEditText(
@@ -262,15 +274,19 @@ fun RegisterStudent(
                     text = "Enter First Name",
                     keyboardType = KeyboardType.Text,
                     color = classColor,
-                    modifier = editTextModifier.weight(2f)
-                ) { firstName = it }
+                    modifier = editTextModifier.weight(2f),
+                    isEnabled = true,
+                    onValueChanged = { firstName = it }
+                )
                 FormEditText(
                     textValue = lastName,
                     text = "Enter Last Name",
                     keyboardType = KeyboardType.Text,
                     color = classColor,
-                    modifier = editTextModifier.weight(2f)
-                ) { lastName = it }
+                    modifier = editTextModifier.weight(2f),
+                    isEnabled = true,
+                    onValueChanged = { lastName = it }
+                )
             }
             FormRow(padding = 24) {
                 OutlinedTextField(value = dateOfBirth,
@@ -326,15 +342,19 @@ fun RegisterStudent(
                     text = "Enter Father's Name",
                     keyboardType = KeyboardType.Text,
                     color = classColor,
-                    modifier = editTextModifier.weight(2f)
-                ) { fathersName = it }
+                    modifier = editTextModifier.weight(2f),
+                    isEnabled = true,
+                    onValueChanged = { fathersName = it }
+                )
                 FormEditText(
                     textValue = mothersName,
                     text = "Enter Mother's Name",
                     keyboardType = KeyboardType.Text,
                     color = classColor,
-                    modifier = editTextModifier.weight(2f)
-                ) { mothersName = it }
+                    modifier = editTextModifier.weight(2f),
+                    isEnabled = true,
+                    onValueChanged = { mothersName = it }
+                )
             }
             FormRow(padding = 24) {
                 FormEditText(
@@ -342,8 +362,10 @@ fun RegisterStudent(
                     text = "Enter Occupation",
                     keyboardType = KeyboardType.Text,
                     color = classColor,
-                    modifier = editTextModifier.weight(1f)
-                ) { guardianOccupation = it }
+                    modifier = editTextModifier.weight(1f),
+                    isEnabled = true,
+                    onValueChanged = { guardianOccupation = it }
+                )
                 DropDown(
                     lableText = "Select Religion",
                     expanded = religionExpanded,
@@ -365,15 +387,19 @@ fun RegisterStudent(
                     text = "Enter Contact Number",
                     keyboardType = KeyboardType.Phone,
                     color = classColor,
-                    modifier = editTextModifier.weight(2f)
-                ) { contactNumber = it }
+                    modifier = editTextModifier.weight(2f),
+                    isEnabled = true,
+                    onValueChanged = { contactNumber = it }
+                )
                 FormEditText(
                     textValue = aadharNumber,
                     text = "Enter Aadhar Number",
                     keyboardType = KeyboardType.Number,
                     color = classColor,
-                    modifier = editTextModifier.weight(2f)
-                ) { aadharNumber = it }
+                    modifier = editTextModifier.weight(2f),
+                    isEnabled = true,
+                    onValueChanged = { aadharNumber = it }
+                )
             }
             FormRow(padding = 24) {
                 FormEditText(
@@ -381,15 +407,19 @@ fun RegisterStudent(
                     text = "Enter Address",
                     keyboardType = KeyboardType.Text,
                     color = classColor,
-                    modifier = editTextModifier.weight(2f)
-                ) { address = it }
+                    modifier = editTextModifier.weight(2f),
+                    isEnabled = true,
+                    onValueChanged = { address = it }
+                )
                 FormEditText(
                     textValue = schoolAttended,
                     text = "Enter Previous School",
                     keyboardType = KeyboardType.Text,
                     color = classColor,
-                    modifier = editTextModifier.weight(2f)
-                ) { schoolAttended = it }
+                    modifier = editTextModifier.weight(2f),
+                    isEnabled = true,
+                    onValueChanged = { schoolAttended = it }
+                )
             }
             FormRow(padding = 24) {
                 OutlinedTextField(value = "Date of Admission $dateOfAdmission",

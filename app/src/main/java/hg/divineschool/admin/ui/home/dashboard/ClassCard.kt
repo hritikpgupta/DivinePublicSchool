@@ -54,7 +54,6 @@ fun ClassCard(
             )
             Spacer(
                 modifier = Modifier
-                    .height(2.dp)
                     .fillMaxWidth()
                     .background(color = Color.Black.copy(0.5f))
             )
