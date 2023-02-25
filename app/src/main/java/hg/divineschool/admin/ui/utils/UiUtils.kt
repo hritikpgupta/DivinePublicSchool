@@ -38,13 +38,14 @@ fun Context.findActivity(): Activity? = when (this) {
     is ContextWrapper -> baseContext.findActivity()
     else -> null
 }
+
 fun Context.getActivity(): Activity? = when (this) {
     is Activity -> this
     is ContextWrapper -> baseContext.getActivity()
     else -> null
 }
 
- suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutine { continuation ->
+suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutine { continuation ->
     ProcessCameraProvider.getInstance(this).also { cameraProvider ->
         cameraProvider.addListener({
             continuation.resume(cameraProvider.get())
@@ -120,4 +121,3 @@ fun String.convertIdToPath(): String {
         ""
     }
 }
-

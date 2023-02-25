@@ -3,6 +3,7 @@ package hg.divineschool.admin.data.utils
 import android.net.Uri
 import com.google.android.gms.tasks.Task
 import com.google.firebase.storage.StorageReference
+import hg.divineschool.admin.data.models.Student
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -45,4 +46,28 @@ suspend fun <T> Task<T>.uploadFile(reference: StorageReference): Uri {
         }
     }
 }
+
+fun `validateStudentObjectBeforeUpload`(student: Student): String?{
+    if (student.contactNumber.toString().trim().length != 10){
+        return "Contact Number Must Be Of Length 10."
+    }
+    if (student.entryClass.trim().isEmpty()){
+        return "Entry Class Must Not Be Empty."
+    }
+    if (student.enrollmentNumber.toString().trim().isEmpty()){
+        return "Enrollment Number Is Required."
+    }
+    if (student.firstName.trim().isEmpty()){
+        return "First name is required."
+    }
+    if (student.lastName.trim().isEmpty()){
+        return "LastName is required."
+    }
+    if (student.rollNumber.toString().trim().isEmpty()){
+        return "Roll number is required."
+    }
+
+    return null
+}
+
 
