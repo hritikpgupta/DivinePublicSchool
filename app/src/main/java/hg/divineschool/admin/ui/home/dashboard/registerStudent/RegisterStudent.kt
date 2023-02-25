@@ -16,6 +16,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Cake
+import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -174,7 +175,7 @@ fun RegisterStudent(
             shape = RoundedCornerShape(8.dp),
             icon = {
                 Icon(
-                    Icons.Filled.Add,
+                    Icons.Filled.CloudUpload,
                     null,
                     tint = Color.White,
                     modifier = Modifier.requiredSize(30.dp)

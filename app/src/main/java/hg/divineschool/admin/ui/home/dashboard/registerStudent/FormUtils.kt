@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.sp
 import hg.divineschool.admin.R
 import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.theme.regularFont
-import kotlinx.coroutines.launch
 
 val genderOptions = listOf("Boy", "Girl")
 val religionOptions = listOf("Buddhism", "Christianity", "Hinduism", "Islam", "Jainism", "Sikhism")
