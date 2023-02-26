@@ -61,7 +61,7 @@ fun StudentCard(student: Student, color: Color, onCardClick: () -> Unit) {
                     Text(
                         text = "${student.firstName} ${student.lastName}",
                         style = TextStyle(fontFamily = boldFont, fontSize = 25.sp),
-                        maxLines = 2,
+                        maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         softWrap = true
                     )

@@ -5,5 +5,5 @@ import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Student
 
 interface RegisterStudentRepository {
-    suspend fun uploadProfileImage(student: Student,classId: String,className: String, fileUriString : String): Resource<Student>
+    suspend fun uploadProfileImage(student: Student,classId: String,className: String, fileUriString : String, isUpdate: Boolean): Resource<Student>
 }

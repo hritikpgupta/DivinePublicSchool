@@ -65,8 +65,12 @@ fun RegisterStudent(
     navController: NavController,
     viewModel: RegisterStudentViewModel
 ) {
-    val currentStudent =
-        navController.previousBackStackEntry?.arguments?.customGetSerializable<Student>("studentObj")
+    var currentStudent =navController.previousBackStackEntry?.arguments?.customGetSerializable<Student>("studentObj")
+    if (currentStudent == null)
+        currentStudent = Student()
+    var isUpdate = navController.previousBackStackEntry?.arguments?.getBoolean("isUpdate",false)
+    if (isUpdate == null)
+        isUpdate = false
     val coroutineScope = rememberCoroutineScope()
     val bringIntoViewRequester = BringIntoViewRequester()
     val editTextModifier = Modifier
@@ -77,10 +81,18 @@ fun RegisterStudent(
             }
         }
     var pickedBirthDate by remember {
-        mutableStateOf(LocalDate.now())
+        if(currentStudent?.dateOfBirth.toString().isEmpty()){
+            mutableStateOf(LocalDate.now())
+        }else{
+            mutableStateOf(currentStudent?.dateOfBirth.toString().toLocalDate())
+        }
     }
-    var pickedAdmissionDate by remember {
-        mutableStateOf(LocalDate.now())
+    var pickedAdmissionDate by remember  {
+        if(currentStudent?.dateOfAdmission.toString().isEmpty()){
+            mutableStateOf(LocalDate.now())
+        }else{
+            mutableStateOf(currentStudent?.dateOfAdmission.toString().toLocalDate())
+        }
     }
     val classColor = cardColors[classID.toInt()]
     var rollNumber by remember { mutableStateOf(TextFieldValue(currentStudent?.rollNumber.toString())) }
@@ -92,24 +104,24 @@ fun RegisterStudent(
             DateTimeFormatter.ofPattern("MMM dd yyyy").format(pickedBirthDate)
         }
     }
-    var gender by remember { mutableStateOf(genderOptions[0]) }
-    var fathersName by remember { mutableStateOf(TextFieldValue("Rakesh Kumar Gupta")) }
-    var mothersName by remember { mutableStateOf(TextFieldValue("Pinki Gupta")) }
-    var guardianOccupation by remember { mutableStateOf(TextFieldValue("Farmer")) }
-    var religion by remember { mutableStateOf(religionOptions[0]) }
-    var address by remember { mutableStateOf(TextFieldValue("Ahraura")) }
-    var contactNumber by remember { mutableStateOf(TextFieldValue("7668479477")) }
-    var aadharNumber by remember { mutableStateOf(TextFieldValue("5678345687001234")) }
+    var gender by remember { mutableStateOf(genderOptions.getValue(currentStudent?.gender.toString())) }
+    var fathersName by remember { mutableStateOf(TextFieldValue(currentStudent?.fathersName.toString())) }
+    var mothersName by remember { mutableStateOf(TextFieldValue(currentStudent?.mothersName.toString())) }
+    var guardianOccupation by remember { mutableStateOf(TextFieldValue(currentStudent?.guardianOccupation.toString())) }
+    var religion by remember { mutableStateOf(religionOptions.getValue(currentStudent?.religion.toString())) }
+    var address by remember { mutableStateOf(TextFieldValue(currentStudent?.address.toString())) }
+    var contactNumber by remember { mutableStateOf(TextFieldValue(currentStudent?.contactNumber.toString())) }
+    var aadharNumber by remember { mutableStateOf(TextFieldValue(currentStudent?.aadharNumber.toString())) }
     val dateOfAdmission by remember {
         derivedStateOf {
             DateTimeFormatter.ofPattern("MMM dd yyyy").format(pickedAdmissionDate)
         }
     }
-    var entryClass by remember { mutableStateOf(classEntryOptions[0]) }
-    var schoolAttended by remember { mutableStateOf(TextFieldValue("None")) }
-    var transportStudent by remember { mutableStateOf(false) }
-    var newStudent by remember { mutableStateOf(false) }
-    var isOrphan by remember { mutableStateOf(false) }
+    var entryClass by remember { mutableStateOf(classEntryOptions.getValue(currentStudent?.entryClass.toString())) }
+    var schoolAttended by remember { mutableStateOf(TextFieldValue(currentStudent?.schoolAttended.toString())) }
+    var transportStudent by remember { mutableStateOf(currentStudent?.transportStudent) }
+    var newStudent by remember { mutableStateOf(currentStudent?.newStudent) }
+    var isOrphan by remember { mutableStateOf(currentStudent?.orphan) }
     val birthDateDialogState = rememberMaterialDialogState()
     val admissionDateDialogState = rememberMaterialDialogState()
     var genderExpanded by remember { mutableStateOf(false) }
@@ -118,7 +130,14 @@ fun RegisterStudent(
     val scrollState = rememberScrollState()
     val context = LocalContext.current
     val registerState = viewModel.registerStudentFlow.collectAsState()
-    val uriString = remember { mutableStateOf("") }
+    val uriString = remember {
+        if (currentStudent?.image.toString().isEmpty() || currentStudent?.image.toString().isBlank()){
+            mutableStateOf("")
+        }else{
+            mutableStateOf(currentStudent?.image.toString())
+        }
+
+        mutableStateOf("") }
     val showImage = remember {
         if (uriString.value.isEmpty()) {
             mutableStateOf(false)
@@ -160,14 +179,14 @@ fun RegisterStudent(
                         dateOfAdmission = dateOfAdmission,
                         entryClass = entryClass,
                         schoolAttended = schoolAttended.text,
-                        transportStudent = transportStudent,
-                        newStudent = newStudent,
-                        orphan = isOrphan,
+                        transportStudent = transportStudent!!,
+                        newStudent = newStudent!!,
+                        orphan = isOrphan!!,
                         image = ""
                     )
                     val formValidation = validateStudentObjectBeforeUpload(stu)
                     if (formValidation == null) {
-                        viewModel.registerStudent(stu, classID, className, uriString.value)
+                        viewModel.registerStudent(stu, classID, className, uriString.value, isUpdate!!)
                     } else {
                         context.toast(formValidation)
                     }
@@ -190,13 +209,24 @@ fun RegisterStudent(
                 )
             },
             text = {
-                Text(
-                    text = "Save", style = TextStyle(
-                        fontFamily = boldFont,
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.SemiBold
-                    ), color = Color.White
-                )
+                if(isUpdate == true){
+                    Text(
+                        text = "Update", style = TextStyle(
+                            fontFamily = boldFont,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.SemiBold
+                        ), color = Color.White
+                    )
+                }else{
+                    Text(
+                        text = "Save", style = TextStyle(
+                            fontFamily = boldFont,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.SemiBold
+                        ), color = Color.White
+                    )
+                }
+
             })
     }, floatingActionButtonPosition = FabPosition.End
     ) { paddingValues ->
@@ -251,7 +281,7 @@ fun RegisterStudent(
 
                 FormEditText(
                     textValue = rollNumber,
-                    text = "Enter Roll Number",
+                    text = "Roll Number",
                     keyboardType = KeyboardType.Number,
                     color = classColor,
                     modifier = editTextModifier.weight(2f),
@@ -260,11 +290,11 @@ fun RegisterStudent(
                 )
                 FormEditText(
                     textValue = enrollmentNumber,
-                    text = "Enter Enrollment Number",
+                    text = "Enrollment Number",
                     keyboardType = KeyboardType.Number,
                     color = classColor,
                     modifier = editTextModifier.weight(2f),
-                    isEnabled = true,
+                    isEnabled = !isUpdate!!,
                     onValueChanged = { enrollmentNumber = it }
                 )
             }
@@ -472,9 +502,9 @@ fun RegisterStudent(
 
             }
             FormCheckboxes(color = classColor,
-                transportStudent = transportStudent,
-                newStudent = newStudent,
-                isOrphan = isOrphan,
+                transportStudent = transportStudent!!,
+                newStudent = newStudent!!,
+                isOrphan = isOrphan!!,
                 onTransportChange = { transportStudent = it },
                 onNewStudentChange = { newStudent = it },
                 onIsOrphanChange = { isOrphan = it })

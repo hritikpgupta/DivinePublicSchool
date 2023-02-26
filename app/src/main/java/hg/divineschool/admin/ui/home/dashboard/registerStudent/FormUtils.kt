@@ -4,14 +4,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Cake
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -25,6 +22,8 @@ import androidx.compose.ui.unit.sp
 import hg.divineschool.admin.R
 import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.theme.regularFont
+import java.time.LocalDate
+import java.time.Month
 
 val genderOptions = listOf("Boy", "Girl")
 val religionOptions = listOf("Buddhism", "Christianity", "Hinduism", "Islam", "Jainism", "Sikhism")
@@ -41,6 +40,69 @@ val classEntryOptions = listOf(
     "Class Seven",
     "Class Eight"
 )
+
+
+fun String.toLocalDate(): LocalDate {
+    return if (this == null || this.isEmpty() || this.isBlank()) {
+        LocalDate.now()
+    } else {
+        var dateList = this.trim().split(" ")
+        LocalDate.of(dateList[2].trim().toInt(),
+            decideMonth(dateList[0].trim()), dateList[1].trim().toInt())
+    }
+}
+fun decideMonth(string: String): Month{
+    return when (string) {
+        "Jan" -> {
+            Month.JANUARY
+        }
+        "Feb" -> {
+            Month.FEBRUARY
+        }
+        "Mar" -> {
+            Month.MARCH
+        }
+        "Apr" -> {
+            Month.APRIL
+        }
+        "May" -> {
+            Month.MAY
+        }
+        "Jun" -> {
+            Month.JUNE
+        }
+        "Jul" -> {
+            Month.JULY
+        }
+        "Aug" -> {
+            Month.AUGUST
+        }
+        "Sep" -> {
+            Month.SEPTEMBER
+        }
+        "Oct" -> {
+            Month.OCTOBER
+        }
+        "Nov" -> {
+            Month.NOVEMBER
+        }
+        else -> {
+            Month.DECEMBER
+        }
+    }
+}
+
+fun List<String>.getValue(value: String): String {
+    return if (value == null || value.isEmpty() || value.isBlank()) {
+        this[0]
+    } else {
+        if (this.indexOf(value) == -1) {
+            this[0]
+        } else {
+            this[this.indexOf(value)]
+        }
+    }
+}
 
 val dropDownModifier = Modifier
     .fillMaxWidth()

@@ -19,9 +19,9 @@ class RegisterStudentViewModel @Inject constructor(
     private val _registerStudentFlow = MutableStateFlow<Resource<Student>?>(null)
     val registerStudentFlow: StateFlow<Resource<Student>?> = _registerStudentFlow
 
-    fun registerStudent(student: Student, classId: String, className: String, fileUriString: String) = viewModelScope.launch {
+    fun registerStudent(student: Student, classId: String, className: String, fileUriString: String, isUpdate: Boolean) = viewModelScope.launch {
         _registerStudentFlow.value = Resource.Loading
-        val result = repository.uploadProfileImage(student, classId,className, fileUriString)
+        val result = repository.uploadProfileImage(student, classId,className, fileUriString, isUpdate)
         _registerStudentFlow.value = result
     }
 

@@ -128,6 +128,7 @@ fun StudentsList(
             val newStudent = Student()
             navController.currentBackStackEntry?.arguments?.apply {
                 putSerializable("studentObj", newStudent)
+                putBoolean("isUpdate", false)
             }
             navController.navigate(AppScreen.StudentScreen.RegisterStudent.route + "/${classID}/$className")
         },
@@ -223,6 +224,7 @@ fun StudentsList(
                             StudentCard(student = studentInfo, color = cardColors[classID.toInt()] ) {
                                 navController.currentBackStackEntry?.arguments?.apply {
                                     putSerializable("studentObj", studentInfo)
+                                    putBoolean("isUpdate", true)
                                 }
                                 navController.navigate(AppScreen.StudentScreen.RegisterStudent.route + "/${classID}/$className")
                             }
