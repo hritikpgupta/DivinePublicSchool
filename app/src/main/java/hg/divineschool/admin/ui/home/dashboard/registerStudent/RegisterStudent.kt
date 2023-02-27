@@ -134,7 +134,7 @@ fun RegisterStudent(
         if (currentStudent?.image.toString().isEmpty() || currentStudent?.image.toString().isBlank()){
             mutableStateOf("")
         }else{
-            mutableStateOf(currentStudent?.image.toString())
+            mutableStateOf(currentStudent.image.toString())
         }
 
         mutableStateOf("") }
