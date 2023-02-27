@@ -21,6 +21,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -34,6 +36,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -65,12 +69,11 @@ fun RegisterStudent(
     navController: NavController,
     viewModel: RegisterStudentViewModel
 ) {
-    var currentStudent =navController.previousBackStackEntry?.arguments?.customGetSerializable<Student>("studentObj")
-    if (currentStudent == null)
-        currentStudent = Student()
-    var isUpdate = navController.previousBackStackEntry?.arguments?.getBoolean("isUpdate",false)
-    if (isUpdate == null)
-        isUpdate = false
+    var currentStudent =
+        navController.previousBackStackEntry?.arguments?.customGetSerializable<Student>("studentObj")
+    if (currentStudent == null) currentStudent = Student()
+    var isUpdate = navController.previousBackStackEntry?.arguments?.getBoolean("isUpdate", false)
+    if (isUpdate == null) isUpdate = false
     val coroutineScope = rememberCoroutineScope()
     val bringIntoViewRequester = BringIntoViewRequester()
     val editTextModifier = Modifier
@@ -81,16 +84,16 @@ fun RegisterStudent(
             }
         }
     var pickedBirthDate by remember {
-        if(currentStudent?.dateOfBirth.toString().isEmpty()){
+        if (currentStudent?.dateOfBirth.toString().isEmpty()) {
             mutableStateOf(LocalDate.now())
-        }else{
+        } else {
             mutableStateOf(currentStudent?.dateOfBirth.toString().toLocalDate())
         }
     }
-    var pickedAdmissionDate by remember  {
-        if(currentStudent?.dateOfAdmission.toString().isEmpty()){
+    var pickedAdmissionDate by remember {
+        if (currentStudent?.dateOfAdmission.toString().isEmpty()) {
             mutableStateOf(LocalDate.now())
-        }else{
+        } else {
             mutableStateOf(currentStudent?.dateOfAdmission.toString().toLocalDate())
         }
     }
@@ -131,13 +134,13 @@ fun RegisterStudent(
     val context = LocalContext.current
     val registerState = viewModel.registerStudentFlow.collectAsState()
     val uriString = remember {
-        if (currentStudent?.image.toString().isEmpty() || currentStudent?.image.toString().isBlank()){
+        if (currentStudent.image.isEmpty() || currentStudent.image.isBlank()
+        ) {
             mutableStateOf("")
-        }else{
-            mutableStateOf(currentStudent.image.toString())
+        } else {
+            mutableStateOf(currentStudent.image)
         }
-
-        mutableStateOf("") }
+    }
     val showImage = remember {
         if (uriString.value.isEmpty()) {
             mutableStateOf(false)
@@ -186,7 +189,9 @@ fun RegisterStudent(
                     )
                     val formValidation = validateStudentObjectBeforeUpload(stu)
                     if (formValidation == null) {
-                        viewModel.registerStudent(stu, classID, className, uriString.value, isUpdate!!)
+                        viewModel.registerStudent(
+                            stu, classID, className, uriString.value, isUpdate!!
+                        )
                     } else {
                         context.toast(formValidation)
                     }
@@ -209,7 +214,7 @@ fun RegisterStudent(
                 )
             },
             text = {
-                if(isUpdate == true){
+                if (isUpdate == true) {
                     Text(
                         text = "Update", style = TextStyle(
                             fontFamily = boldFont,
@@ -217,7 +222,7 @@ fun RegisterStudent(
                             fontWeight = FontWeight.SemiBold
                         ), color = Color.White
                     )
-                }else{
+                } else {
                     Text(
                         text = "Save", style = TextStyle(
                             fontFamily = boldFont,
@@ -252,19 +257,39 @@ fun RegisterStudent(
                 ) {
                     if (showImage.value) {
                         if (uriString.value.isNotEmpty()) {
-                            GlideImage(model = Uri.parse(uriString.value).path,
-                                contentDescription = "Profile Image",
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier
-                                    .requiredSize(180.dp)
-                                    .background(color = Color.White)
-                                    .clickable {
-                                        clickImage.launch(
-                                            Intent(
-                                                context, CameraActivity::class.java
+                            if (isUpdate == true){
+                                AsyncImage(
+                                    model = ImageRequest.Builder(LocalContext.current).data(uriString.value)
+                                        .crossfade(true).build(),
+                                    contentScale = ContentScale.Crop,
+                                    contentDescription = "Profile Image",
+                                    modifier = Modifier
+                                        .requiredSize(180.dp)
+                                        .background(color = Color.White)
+                                        .clickable {
+                                            clickImage.launch(
+                                                Intent(
+                                                    context, CameraActivity::class.java
+                                                )
                                             )
-                                        )
-                                    })
+                                        }
+                                )
+                            }
+                            else{
+                                GlideImage(model = Uri.parse(uriString.value).path,
+                                    contentDescription = "Profile Image",
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier
+                                        .requiredSize(180.dp)
+                                        .background(color = Color.White)
+                                        .clickable {
+                                            clickImage.launch(
+                                                Intent(
+                                                    context, CameraActivity::class.java
+                                                )
+                                            )
+                                        })
+                            }
                         }
                     } else {
                         Image(painter = painterResource(id = R.drawable.add_image),
@@ -279,44 +304,36 @@ fun RegisterStudent(
                     }
                 }
 
-                FormEditText(
-                    textValue = rollNumber,
+                FormEditText(textValue = rollNumber,
                     text = "Roll Number",
                     keyboardType = KeyboardType.Number,
                     color = classColor,
                     modifier = editTextModifier.weight(2f),
                     isEnabled = true,
-                    onValueChanged = { rollNumber = it }
-                )
-                FormEditText(
-                    textValue = enrollmentNumber,
+                    onValueChanged = { rollNumber = it })
+                FormEditText(textValue = enrollmentNumber,
                     text = "Enrollment Number",
                     keyboardType = KeyboardType.Number,
                     color = classColor,
                     modifier = editTextModifier.weight(2f),
                     isEnabled = !isUpdate!!,
-                    onValueChanged = { enrollmentNumber = it }
-                )
+                    onValueChanged = { enrollmentNumber = it })
             }
             FormRow(padding = 14) {
-                FormEditText(
-                    textValue = firstName,
+                FormEditText(textValue = firstName,
                     text = "Enter First Name",
                     keyboardType = KeyboardType.Text,
                     color = classColor,
                     modifier = editTextModifier.weight(2f),
                     isEnabled = true,
-                    onValueChanged = { firstName = it }
-                )
-                FormEditText(
-                    textValue = lastName,
+                    onValueChanged = { firstName = it })
+                FormEditText(textValue = lastName,
                     text = "Enter Last Name",
                     keyboardType = KeyboardType.Text,
                     color = classColor,
                     modifier = editTextModifier.weight(2f),
                     isEnabled = true,
-                    onValueChanged = { lastName = it }
-                )
+                    onValueChanged = { lastName = it })
             }
             FormRow(padding = 24) {
                 OutlinedTextField(value = dateOfBirth,
@@ -367,35 +384,29 @@ fun RegisterStudent(
                 )
             }
             FormRow(padding = 24) {
-                FormEditText(
-                    textValue = fathersName,
+                FormEditText(textValue = fathersName,
                     text = "Enter Father's Name",
                     keyboardType = KeyboardType.Text,
                     color = classColor,
                     modifier = editTextModifier.weight(2f),
                     isEnabled = true,
-                    onValueChanged = { fathersName = it }
-                )
-                FormEditText(
-                    textValue = mothersName,
+                    onValueChanged = { fathersName = it })
+                FormEditText(textValue = mothersName,
                     text = "Enter Mother's Name",
                     keyboardType = KeyboardType.Text,
                     color = classColor,
                     modifier = editTextModifier.weight(2f),
                     isEnabled = true,
-                    onValueChanged = { mothersName = it }
-                )
+                    onValueChanged = { mothersName = it })
             }
             FormRow(padding = 24) {
-                FormEditText(
-                    textValue = guardianOccupation,
+                FormEditText(textValue = guardianOccupation,
                     text = "Enter Occupation",
                     keyboardType = KeyboardType.Text,
                     color = classColor,
                     modifier = editTextModifier.weight(1f),
                     isEnabled = true,
-                    onValueChanged = { guardianOccupation = it }
-                )
+                    onValueChanged = { guardianOccupation = it })
                 DropDown(
                     lableText = "Select Religion",
                     expanded = religionExpanded,
@@ -412,44 +423,36 @@ fun RegisterStudent(
                 )
             }
             FormRow(padding = 24) {
-                FormEditText(
-                    textValue = contactNumber,
+                FormEditText(textValue = contactNumber,
                     text = "Enter Contact Number",
                     keyboardType = KeyboardType.Phone,
                     color = classColor,
                     modifier = editTextModifier.weight(2f),
                     isEnabled = true,
-                    onValueChanged = { contactNumber = it }
-                )
-                FormEditText(
-                    textValue = aadharNumber,
+                    onValueChanged = { contactNumber = it })
+                FormEditText(textValue = aadharNumber,
                     text = "Enter Aadhar Number",
                     keyboardType = KeyboardType.Number,
                     color = classColor,
                     modifier = editTextModifier.weight(2f),
                     isEnabled = true,
-                    onValueChanged = { aadharNumber = it }
-                )
+                    onValueChanged = { aadharNumber = it })
             }
             FormRow(padding = 24) {
-                FormEditText(
-                    textValue = address,
+                FormEditText(textValue = address,
                     text = "Enter Address",
                     keyboardType = KeyboardType.Text,
                     color = classColor,
                     modifier = editTextModifier.weight(2f),
                     isEnabled = true,
-                    onValueChanged = { address = it }
-                )
-                FormEditText(
-                    textValue = schoolAttended,
+                    onValueChanged = { address = it })
+                FormEditText(textValue = schoolAttended,
                     text = "Enter Previous School",
                     keyboardType = KeyboardType.Text,
                     color = classColor,
                     modifier = editTextModifier.weight(2f),
                     isEnabled = true,
-                    onValueChanged = { schoolAttended = it }
-                )
+                    onValueChanged = { schoolAttended = it })
             }
             FormRow(padding = 24) {
                 OutlinedTextField(value = "Date of Admission $dateOfAdmission",
