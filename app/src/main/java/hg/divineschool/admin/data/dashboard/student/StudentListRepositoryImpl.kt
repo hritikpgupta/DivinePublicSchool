@@ -50,7 +50,9 @@ class StudentListRepositoryImpl @Inject constructor(
                                 religion = doc.getString("religion") as String,
                                 rollNumber = doc.getLong("rollNumber") as Long,
                                 schoolAttended = doc.getString("schoolAttended") as String,
-                                transportStudent = doc.getBoolean("transportStudent") as Boolean
+                                transportStudent = doc.getBoolean("transportStudent") as Boolean,
+                                rte = doc.getBoolean("rte") as Boolean,
+                                active = doc.getBoolean("active") as Boolean
                             )
                         )
                     }

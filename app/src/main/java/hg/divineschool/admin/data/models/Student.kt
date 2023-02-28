@@ -33,6 +33,8 @@ data class Student(
     var transportStudent: Boolean = false,
     var newStudent: Boolean = false,
     var orphan: Boolean = false,
+    var rte: Boolean = false,
+    var active: Boolean = true,
 ): java.io.Serializable{
     fun doesMatchSearchQuery(query:String):Boolean{
         val matchingCombination = listOf("$firstName$lastName", "$firstName $lastName",

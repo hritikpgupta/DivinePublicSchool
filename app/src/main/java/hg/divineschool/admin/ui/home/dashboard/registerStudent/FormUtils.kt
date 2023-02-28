@@ -243,9 +243,11 @@ fun FormCheckboxes(
     transportStudent: Boolean,
     newStudent: Boolean,
     isOrphan: Boolean,
+    isRte: Boolean,
     onTransportChange: (status: Boolean) -> Unit,
     onNewStudentChange: (status: Boolean) -> Unit,
-    onIsOrphanChange: (status: Boolean) -> Unit
+    onIsOrphanChange: (status: Boolean) -> Unit,
+    onRteChange: (status: Boolean) -> Unit
 ) {
     FormRow(padding = 24) {
         Row(
@@ -306,6 +308,26 @@ fun FormCheckboxes(
                 modifier = Modifier.requiredSize(60.dp),
                 colors = CheckboxDefaults.colors(checkedColor = color),
                 onCheckedChange = { onIsOrphanChange(it) },
+            )
+        }
+        Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.presentation),
+                contentDescription = "",
+                modifier = Modifier.requiredSize(40.dp)
+            )
+            Text(
+                text = "RTE", style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp)
+            )
+            Checkbox(
+                checked = isRte,
+                modifier = Modifier.requiredSize(60.dp),
+                colors = CheckboxDefaults.colors(checkedColor = color),
+                onCheckedChange = { onRteChange(it) },
             )
         }
     }

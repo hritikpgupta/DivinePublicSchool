@@ -52,7 +52,6 @@ fun StudentsList(
     val searchWidth = remember { mutableStateOf(0.0f) }
 
     LaunchedEffect(Unit) {
-        Log.i(Log_Tag, "Loading $className students")
         viewModel.getAllStudents(classID.toLong())
     }
 

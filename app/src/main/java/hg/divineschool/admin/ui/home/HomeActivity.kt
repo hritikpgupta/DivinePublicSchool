@@ -54,7 +54,7 @@ class HomeActivity : ComponentActivity() {
             file.delete()
         }
     }
-    
+
     private fun requestCameraPermission() {
         when {
             ContextCompat.checkSelfPermission(

@@ -3,10 +3,13 @@ package hg.divineschool.admin.ui.home.dashboard.registerStudent
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
+import android.os.FileUtils
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.relocation.BringIntoViewRequester
@@ -21,8 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -54,10 +55,13 @@ import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.Log_Tag
 import hg.divineschool.admin.ui.utils.customGetSerializable
 import hg.divineschool.admin.ui.utils.toast
+import id.zelory.compressor.Compressor
 import kotlinx.coroutines.launch
+import java.io.File
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @OptIn(
     ExperimentalGlideComposeApi::class,
     ExperimentalFoundationApi::class,
@@ -91,40 +95,41 @@ fun RegisterStudent(
         }
     }
     var pickedAdmissionDate by remember {
-        if (currentStudent?.dateOfAdmission.toString().isEmpty()) {
+        if (currentStudent.dateOfAdmission.toString().isEmpty()) {
             mutableStateOf(LocalDate.now())
         } else {
-            mutableStateOf(currentStudent?.dateOfAdmission.toString().toLocalDate())
+            mutableStateOf(currentStudent.dateOfAdmission.toString().toLocalDate())
         }
     }
     val classColor = cardColors[classID.toInt()]
-    var rollNumber by remember { mutableStateOf(TextFieldValue(currentStudent?.rollNumber.toString())) }
-    var enrollmentNumber by remember { mutableStateOf(TextFieldValue(currentStudent?.enrollmentNumber.toString())) }
-    var firstName by remember { mutableStateOf(TextFieldValue(currentStudent?.firstName.toString())) }
-    var lastName by remember { mutableStateOf(TextFieldValue(currentStudent?.lastName.toString())) }
+    var rollNumber by remember { mutableStateOf(TextFieldValue(currentStudent.rollNumber.toString())) }
+    var enrollmentNumber by remember { mutableStateOf(TextFieldValue(currentStudent.enrollmentNumber.toString())) }
+    var firstName by remember { mutableStateOf(TextFieldValue(currentStudent.firstName.toString())) }
+    var lastName by remember { mutableStateOf(TextFieldValue(currentStudent.lastName.toString())) }
     val dateOfBirth by remember {
         derivedStateOf {
             DateTimeFormatter.ofPattern("MMM dd yyyy").format(pickedBirthDate)
         }
     }
-    var gender by remember { mutableStateOf(genderOptions.getValue(currentStudent?.gender.toString())) }
-    var fathersName by remember { mutableStateOf(TextFieldValue(currentStudent?.fathersName.toString())) }
-    var mothersName by remember { mutableStateOf(TextFieldValue(currentStudent?.mothersName.toString())) }
-    var guardianOccupation by remember { mutableStateOf(TextFieldValue(currentStudent?.guardianOccupation.toString())) }
-    var religion by remember { mutableStateOf(religionOptions.getValue(currentStudent?.religion.toString())) }
-    var address by remember { mutableStateOf(TextFieldValue(currentStudent?.address.toString())) }
-    var contactNumber by remember { mutableStateOf(TextFieldValue(currentStudent?.contactNumber.toString())) }
-    var aadharNumber by remember { mutableStateOf(TextFieldValue(currentStudent?.aadharNumber.toString())) }
+    var gender by remember { mutableStateOf(genderOptions.getValue(currentStudent.gender.toString())) }
+    var fathersName by remember { mutableStateOf(TextFieldValue(currentStudent.fathersName.toString())) }
+    var mothersName by remember { mutableStateOf(TextFieldValue(currentStudent.mothersName.toString())) }
+    var guardianOccupation by remember { mutableStateOf(TextFieldValue(currentStudent.guardianOccupation.toString())) }
+    var religion by remember { mutableStateOf(religionOptions.getValue(currentStudent.religion.toString())) }
+    var address by remember { mutableStateOf(TextFieldValue(currentStudent.address.toString())) }
+    var contactNumber by remember { mutableStateOf(TextFieldValue(currentStudent.contactNumber.toString())) }
+    var aadharNumber by remember { mutableStateOf(TextFieldValue(currentStudent.aadharNumber.toString())) }
     val dateOfAdmission by remember {
         derivedStateOf {
             DateTimeFormatter.ofPattern("MMM dd yyyy").format(pickedAdmissionDate)
         }
     }
-    var entryClass by remember { mutableStateOf(classEntryOptions.getValue(currentStudent?.entryClass.toString())) }
-    var schoolAttended by remember { mutableStateOf(TextFieldValue(currentStudent?.schoolAttended.toString())) }
-    var transportStudent by remember { mutableStateOf(currentStudent?.transportStudent) }
-    var newStudent by remember { mutableStateOf(currentStudent?.newStudent) }
-    var isOrphan by remember { mutableStateOf(currentStudent?.orphan) }
+    var entryClass by remember { mutableStateOf(classEntryOptions.getValue(currentStudent.entryClass.toString())) }
+    var schoolAttended by remember { mutableStateOf(TextFieldValue(currentStudent.schoolAttended.toString())) }
+    var transportStudent by remember { mutableStateOf(currentStudent.transportStudent) }
+    var newStudent by remember { mutableStateOf(currentStudent.newStudent) }
+    var isOrphan by remember { mutableStateOf(currentStudent.orphan) }
+    var isRte by remember { mutableStateOf(currentStudent.rte) }
     val birthDateDialogState = rememberMaterialDialogState()
     val admissionDateDialogState = rememberMaterialDialogState()
     var genderExpanded by remember { mutableStateOf(false) }
@@ -154,6 +159,15 @@ fun RegisterStudent(
                 val intentDate = it.data
                 uriString.value = intentDate?.getStringExtra("imageUri").toString()
                 showImage.value = true
+                coroutineScope.launch {
+                    val compressedFileImage =
+                        Compressor.compress(context, File(Uri.parse(uriString.value).path!!))
+                    FileUtils.copy(
+                        compressedFileImage.inputStream(),
+                        File(Uri.parse(uriString.value).path!!).outputStream()
+                    )
+                    compressedFileImage.delete()
+                }
             }
         }
 
@@ -252,14 +266,15 @@ fun RegisterStudent(
                     border = BorderStroke(4.dp, classColor),
                     modifier = Modifier
                         .weight(1f)
-                        .requiredSize(200.dp)
+                        .requiredSize(180.dp)
                         .padding(10.dp)
                 ) {
                     if (showImage.value) {
                         if (uriString.value.isNotEmpty()) {
-                            if (uriString.value.startsWith("https")){
+                            if (uriString.value.startsWith("https")) {
                                 AsyncImage(
-                                    model = ImageRequest.Builder(LocalContext.current).data(uriString.value)
+                                    model = ImageRequest.Builder(LocalContext.current)
+                                        .data(uriString.value)
                                         .crossfade(true).build(),
                                     contentScale = ContentScale.Crop,
                                     contentDescription = "Profile Image",
@@ -274,8 +289,7 @@ fun RegisterStudent(
                                             )
                                         }
                                 )
-                            }
-                            else{
+                            } else {
                                 GlideImage(model = Uri.parse(uriString.value).path,
                                     contentDescription = "Profile Image",
                                     contentScale = ContentScale.Crop,
@@ -291,8 +305,7 @@ fun RegisterStudent(
                                         })
                             }
                         }
-                    }
-                    else {
+                    } else {
                         Image(painter = painterResource(id = R.drawable.add_image),
                             contentDescription = "",
                             contentScale = ContentScale.FillBounds,
@@ -506,12 +519,16 @@ fun RegisterStudent(
 
             }
             FormCheckboxes(color = classColor,
-                transportStudent = transportStudent!!,
-                newStudent = newStudent!!,
-                isOrphan = isOrphan!!,
+                transportStudent = transportStudent,
+                newStudent = newStudent,
+                isOrphan = isOrphan,
+                isRte = isRte,
                 onTransportChange = { transportStudent = it },
                 onNewStudentChange = { newStudent = it },
-                onIsOrphanChange = { isOrphan = it })
+                onIsOrphanChange = { isOrphan = it },
+                onRteChange = { isRte = it }
+            )
+
             Spacer(modifier = Modifier.height(70.dp))
         }
         registerState.value.let { value ->
