@@ -124,11 +124,6 @@ fun StudentsList(
         })
     }, floatingActionButton = {
         ExtendedFloatingActionButton(onClick = {
-            val newStudent = Student()
-            navController.currentBackStackEntry?.arguments?.apply {
-                putSerializable("studentObj", newStudent)
-                putBoolean("isUpdate", false)
-            }
             navController.navigate(AppScreen.StudentScreen.RegisterStudent.route + "/${classID}/$className")
         },
             modifier = Modifier.padding(bottom = 70.dp, end = 10.dp),
@@ -221,11 +216,8 @@ fun StudentsList(
                     ) {
                         items(it) { studentInfo ->
                             StudentCard(student = studentInfo, color = cardColors[classID.toInt()] ) {
-                                navController.currentBackStackEntry?.arguments?.apply {
-                                    putSerializable("studentObj", studentInfo)
-                                    putBoolean("isUpdate", true)
-                                }
-                                navController.navigate(AppScreen.StudentScreen.RegisterStudent.route + "/${classID}/$className")
+
+                                //navController.navigate(AppScreen.StudentScreen.RegisterStudent.route + "/${classID}/$className")
                             }
                         }
                     }

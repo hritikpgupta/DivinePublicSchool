@@ -1,12 +1,9 @@
 package hg.divineschool.admin.data.models
 
-import android.os.Parcel
-import android.os.Parcelable
-
 data class Student(
     var image: String = "",
     var rollNumber: Long = 0,
-    var enrollmentNumber: Long = 0,
+    var scholarNumber: Long = 0,
 
 
     var firstName: String = "",

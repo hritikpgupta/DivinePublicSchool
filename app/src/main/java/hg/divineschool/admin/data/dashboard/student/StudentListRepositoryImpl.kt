@@ -1,7 +1,5 @@
 package hg.divineschool.admin.data.dashboard.student
 
-import android.util.Log
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Student
@@ -36,7 +34,7 @@ class StudentListRepositoryImpl @Inject constructor(
                                 contactNumber = doc.getLong("contactNumber") as Long,
                                 dateOfAdmission = doc.getString("dateOfAdmission") as String,
                                 dateOfBirth = doc.getString("dateOfBirth") as String,
-                                enrollmentNumber = doc.getLong("enrollmentNumber") as Long,
+                                scholarNumber = doc.getLong("scholarNumber") as Long,
                                 entryClass = doc.getString("entryClass") as String,
                                 fathersName = doc.getString("fathersName") as String,
                                 firstName = doc.getString("firstName") as String,

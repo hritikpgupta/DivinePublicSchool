@@ -316,7 +316,7 @@ fun FormCheckboxes(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Image(
-                painter = painterResource(id = R.drawable.presentation),
+                painter = painterResource(id = R.drawable.right_to_education),
                 contentDescription = "",
                 modifier = Modifier.requiredSize(40.dp)
             )

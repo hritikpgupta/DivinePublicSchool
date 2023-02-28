@@ -37,8 +37,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -53,7 +51,6 @@ import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.cardColors
 import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.Log_Tag
-import hg.divineschool.admin.ui.utils.customGetSerializable
 import hg.divineschool.admin.ui.utils.toast
 import id.zelory.compressor.Compressor
 import kotlinx.coroutines.launch
@@ -73,11 +70,7 @@ fun RegisterStudent(
     navController: NavController,
     viewModel: RegisterStudentViewModel
 ) {
-    var currentStudent =
-        navController.previousBackStackEntry?.arguments?.customGetSerializable<Student>("studentObj")
-    if (currentStudent == null) currentStudent = Student()
-    var isUpdate = navController.previousBackStackEntry?.arguments?.getBoolean("isUpdate", false)
-    if (isUpdate == null) isUpdate = false
+
     val coroutineScope = rememberCoroutineScope()
     val bringIntoViewRequester = BringIntoViewRequester()
     val editTextModifier = Modifier
@@ -88,48 +81,40 @@ fun RegisterStudent(
             }
         }
     var pickedBirthDate by remember {
-        if (currentStudent?.dateOfBirth.toString().isEmpty()) {
-            mutableStateOf(LocalDate.now())
-        } else {
-            mutableStateOf(currentStudent?.dateOfBirth.toString().toLocalDate())
-        }
+        mutableStateOf(LocalDate.now())
     }
     var pickedAdmissionDate by remember {
-        if (currentStudent.dateOfAdmission.toString().isEmpty()) {
-            mutableStateOf(LocalDate.now())
-        } else {
-            mutableStateOf(currentStudent.dateOfAdmission.toString().toLocalDate())
-        }
+        mutableStateOf(LocalDate.now())
     }
     val classColor = cardColors[classID.toInt()]
-    var rollNumber by remember { mutableStateOf(TextFieldValue(currentStudent.rollNumber.toString())) }
-    var enrollmentNumber by remember { mutableStateOf(TextFieldValue(currentStudent.enrollmentNumber.toString())) }
-    var firstName by remember { mutableStateOf(TextFieldValue(currentStudent.firstName.toString())) }
-    var lastName by remember { mutableStateOf(TextFieldValue(currentStudent.lastName.toString())) }
+    var rollNumber by remember { mutableStateOf(TextFieldValue("")) }
+    var scholarNumber by remember { mutableStateOf(TextFieldValue("")) }
+    var firstName by remember { mutableStateOf(TextFieldValue("")) }
+    var lastName by remember { mutableStateOf(TextFieldValue("")) }
     val dateOfBirth by remember {
         derivedStateOf {
             DateTimeFormatter.ofPattern("MMM dd yyyy").format(pickedBirthDate)
         }
     }
-    var gender by remember { mutableStateOf(genderOptions.getValue(currentStudent.gender.toString())) }
-    var fathersName by remember { mutableStateOf(TextFieldValue(currentStudent.fathersName.toString())) }
-    var mothersName by remember { mutableStateOf(TextFieldValue(currentStudent.mothersName.toString())) }
-    var guardianOccupation by remember { mutableStateOf(TextFieldValue(currentStudent.guardianOccupation.toString())) }
-    var religion by remember { mutableStateOf(religionOptions.getValue(currentStudent.religion.toString())) }
-    var address by remember { mutableStateOf(TextFieldValue(currentStudent.address.toString())) }
-    var contactNumber by remember { mutableStateOf(TextFieldValue(currentStudent.contactNumber.toString())) }
-    var aadharNumber by remember { mutableStateOf(TextFieldValue(currentStudent.aadharNumber.toString())) }
+    var gender by remember { mutableStateOf(genderOptions[0]) }
+    var fathersName by remember { mutableStateOf(TextFieldValue("")) }
+    var mothersName by remember { mutableStateOf(TextFieldValue("")) }
+    var guardianOccupation by remember { mutableStateOf(TextFieldValue("")) }
+    var religion by remember { mutableStateOf(religionOptions[0]) }
+    var address by remember { mutableStateOf(TextFieldValue("")) }
+    var contactNumber by remember { mutableStateOf(TextFieldValue("")) }
+    var aadharNumber by remember { mutableStateOf(TextFieldValue("")) }
     val dateOfAdmission by remember {
         derivedStateOf {
             DateTimeFormatter.ofPattern("MMM dd yyyy").format(pickedAdmissionDate)
         }
     }
-    var entryClass by remember { mutableStateOf(classEntryOptions.getValue(currentStudent.entryClass.toString())) }
-    var schoolAttended by remember { mutableStateOf(TextFieldValue(currentStudent.schoolAttended.toString())) }
-    var transportStudent by remember { mutableStateOf(currentStudent.transportStudent) }
-    var newStudent by remember { mutableStateOf(currentStudent.newStudent) }
-    var isOrphan by remember { mutableStateOf(currentStudent.orphan) }
-    var isRte by remember { mutableStateOf(currentStudent.rte) }
+    var entryClass by remember { mutableStateOf(classEntryOptions[0]) }
+    var schoolAttended by remember { mutableStateOf(TextFieldValue("")) }
+    var transportStudent by remember { mutableStateOf(false) }
+    var newStudent by remember { mutableStateOf(false) }
+    var isOrphan by remember { mutableStateOf(false) }
+    var isRte by remember { mutableStateOf(false) }
     val birthDateDialogState = rememberMaterialDialogState()
     val admissionDateDialogState = rememberMaterialDialogState()
     var genderExpanded by remember { mutableStateOf(false) }
@@ -139,25 +124,15 @@ fun RegisterStudent(
     val context = LocalContext.current
     val registerState = viewModel.registerStudentFlow.collectAsState()
     val uriString = remember {
-        if (currentStudent.image.isEmpty() || currentStudent.image.isBlank()
-        ) {
-            mutableStateOf("")
-        } else {
-            mutableStateOf(currentStudent.image)
-        }
+        mutableStateOf("")
     }
     val showImage = remember {
-        if (uriString.value.isEmpty()) {
-            mutableStateOf(false)
-        } else {
-            mutableStateOf(true)
-        }
+        mutableStateOf(false)
     }
     val clickImage =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
-                val intentDate = it.data
-                uriString.value = intentDate?.getStringExtra("imageUri").toString()
+                uriString.value = it.data?.getStringExtra("imageUri").toString()
                 showImage.value = true
                 coroutineScope.launch {
                     val compressedFileImage =
@@ -177,11 +152,11 @@ fun RegisterStudent(
         }, className = "Registration Form For $className")
     }, floatingActionButton = {
         ExtendedFloatingActionButton(onClick = {
-            if (rollNumber.text.isNotEmpty() && enrollmentNumber.text.isNotEmpty()) {
+            if (rollNumber.text.isNotEmpty() && scholarNumber.text.isNotEmpty()) {
                 try {
-                    val stu = Student(
+                    val student = Student(
                         rollNumber = rollNumber.text.toLong(),
-                        enrollmentNumber = enrollmentNumber.text.toLong(),
+                        scholarNumber = scholarNumber.text.toLong(),
                         firstName = firstName.text,
                         lastName = lastName.text,
                         dateOfBirth = dateOfBirth,
@@ -196,15 +171,16 @@ fun RegisterStudent(
                         dateOfAdmission = dateOfAdmission,
                         entryClass = entryClass,
                         schoolAttended = schoolAttended.text,
-                        transportStudent = transportStudent!!,
-                        newStudent = newStudent!!,
-                        orphan = isOrphan!!,
+                        transportStudent = transportStudent,
+                        newStudent = newStudent,
+                        orphan = isOrphan,
+                        rte = isRte,
                         image = ""
                     )
-                    val formValidation = validateStudentObjectBeforeUpload(stu)
+                    val formValidation = validateStudentObjectBeforeUpload(student)
                     if (formValidation == null) {
                         viewModel.registerStudent(
-                            stu, classID, className, uriString.value, isUpdate!!
+                            student, classID, className, uriString.value
                         )
                     } else {
                         context.toast(formValidation)
@@ -228,24 +204,13 @@ fun RegisterStudent(
                 )
             },
             text = {
-                if (isUpdate == true) {
-                    Text(
-                        text = "Update", style = TextStyle(
-                            fontFamily = boldFont,
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.SemiBold
-                        ), color = Color.White
-                    )
-                } else {
-                    Text(
-                        text = "Save", style = TextStyle(
-                            fontFamily = boldFont,
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.SemiBold
-                        ), color = Color.White
-                    )
-                }
-
+                Text(
+                    text = "Save", style = TextStyle(
+                        fontFamily = boldFont,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.SemiBold
+                    ), color = Color.White
+                )
             })
     }, floatingActionButtonPosition = FabPosition.End
     ) { paddingValues ->
@@ -271,41 +236,23 @@ fun RegisterStudent(
                 ) {
                     if (showImage.value) {
                         if (uriString.value.isNotEmpty()) {
-                            if (uriString.value.startsWith("https")) {
-                                AsyncImage(
-                                    model = ImageRequest.Builder(LocalContext.current)
-                                        .data(uriString.value)
-                                        .crossfade(true).build(),
-                                    contentScale = ContentScale.Crop,
-                                    contentDescription = "Profile Image",
-                                    modifier = Modifier
-                                        .requiredSize(180.dp)
-                                        .background(color = Color.White)
-                                        .clickable {
-                                            clickImage.launch(
-                                                Intent(
-                                                    context, CameraActivity::class.java
-                                                )
+                            GlideImage(model = Uri.parse(uriString.value).path,
+                                contentDescription = "Profile Image",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .requiredSize(180.dp)
+                                    .background(color = Color.White)
+                                    .clickable {
+                                        clickImage.launch(
+                                            Intent(
+                                                context, CameraActivity::class.java
                                             )
-                                        }
-                                )
-                            } else {
-                                GlideImage(model = Uri.parse(uriString.value).path,
-                                    contentDescription = "Profile Image",
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier
-                                        .requiredSize(180.dp)
-                                        .background(color = Color.White)
-                                        .clickable {
-                                            clickImage.launch(
-                                                Intent(
-                                                    context, CameraActivity::class.java
-                                                )
-                                            )
-                                        })
-                            }
+                                        )
+                                    }
+                            )
                         }
-                    } else {
+                    }
+                    else {
                         Image(painter = painterResource(id = R.drawable.add_image),
                             contentDescription = "",
                             contentScale = ContentScale.FillBounds,
@@ -325,13 +272,13 @@ fun RegisterStudent(
                     modifier = editTextModifier.weight(2f),
                     isEnabled = true,
                     onValueChanged = { rollNumber = it })
-                FormEditText(textValue = enrollmentNumber,
-                    text = "Enrollment Number",
+                FormEditText(textValue = scholarNumber,
+                    text = "Scholar Number",
                     keyboardType = KeyboardType.Number,
                     color = classColor,
                     modifier = editTextModifier.weight(2f),
-                    isEnabled = !isUpdate!!,
-                    onValueChanged = { enrollmentNumber = it })
+                    isEnabled = true,
+                    onValueChanged = { scholarNumber = it })
             }
             FormRow(padding = 14) {
                 FormEditText(textValue = firstName,

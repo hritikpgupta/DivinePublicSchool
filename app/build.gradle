@@ -107,7 +107,7 @@ dependencies {
     //Lifecycle + ViewModel
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
-    // Image Compresser
+    // Image Compressor
     implementation 'id.zelory:compressor:3.0.1'
 
 
