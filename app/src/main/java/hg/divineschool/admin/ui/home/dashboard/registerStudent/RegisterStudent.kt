@@ -257,7 +257,7 @@ fun RegisterStudent(
                 ) {
                     if (showImage.value) {
                         if (uriString.value.isNotEmpty()) {
-                            if (isUpdate == true){
+                            if (uriString.value.startsWith("https")){
                                 AsyncImage(
                                     model = ImageRequest.Builder(LocalContext.current).data(uriString.value)
                                         .crossfade(true).build(),
@@ -291,7 +291,8 @@ fun RegisterStudent(
                                         })
                             }
                         }
-                    } else {
+                    }
+                    else {
                         Image(painter = painterResource(id = R.drawable.add_image),
                             contentDescription = "",
                             contentScale = ContentScale.FillBounds,

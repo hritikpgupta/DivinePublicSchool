@@ -200,7 +200,6 @@ class CameraActivity : ComponentActivity() {
                                 .padding(10.dp)
                                 .border(1.dp, Color.White, CircleShape)
                         )
-
                     })
             }
         }

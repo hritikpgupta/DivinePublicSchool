@@ -18,12 +18,15 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import hg.divineschool.admin.R
 import hg.divineschool.admin.ui.theme.DivinePublicSchoolTheme
+import java.io.File
 
 @AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        clearFiles()
         requestCameraPermission()
         setContent {
             DivinePublicSchoolTheme {
@@ -43,7 +46,15 @@ class HomeActivity : ComponentActivity() {
             }
         }
     }
-
+    private fun clearFiles(){
+        val mediaDir = externalMediaDirs.firstOrNull()?.let {
+            File(it, resources.getString(R.string.app_name)).apply { mkdirs() }
+        }
+        mediaDir?.listFiles()?.forEach { file ->
+            file.delete()
+        }
+    }
+    
     private fun requestCameraPermission() {
         when {
             ContextCompat.checkSelfPermission(

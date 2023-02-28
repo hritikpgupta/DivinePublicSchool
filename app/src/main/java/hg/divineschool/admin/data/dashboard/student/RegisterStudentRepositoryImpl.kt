@@ -34,6 +34,7 @@ class RegisterStudentRepositoryImpl @Inject constructor(
                     val fileName =
                         student.enrollmentNumber.toString() + "-" + student.firstName + "-" + student.rollNumber.toString()
                     val ref = storageReference.child("$className/$fileName.jpg")
+                    
                     val downloadUrl = ref.putFile(Uri.parse(fileUriString)).uploadFile(ref)
                     student.apply {
                         image = downloadUrl.toString()
