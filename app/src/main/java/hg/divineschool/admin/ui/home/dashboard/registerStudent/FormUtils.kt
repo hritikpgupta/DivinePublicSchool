@@ -17,6 +17,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hg.divineschool.admin.R
@@ -47,11 +48,14 @@ fun String.toLocalDate(): LocalDate {
         LocalDate.now()
     } else {
         val dateList = this.trim().split(" ")
-        LocalDate.of(dateList[2].trim().toInt(),
-            decideMonth(dateList[0].trim()), dateList[1].trim().toInt())
+        LocalDate.of(
+            dateList[2].trim().toInt(),
+            decideMonth(dateList[0].trim()), dateList[1].trim().toInt()
+        )
     }
 }
-fun decideMonth(string: String): Month{
+
+fun decideMonth(string: String): Month {
     return when (string) {
         "Jan" -> {
             Month.JANUARY
@@ -260,8 +264,13 @@ fun FormCheckboxes(
                 contentDescription = "",
                 modifier = Modifier.requiredSize(40.dp)
             )
+            Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = "Transport", style = TextStyle(fontFamily = regularFont, fontSize = 30.sp)
+                text = "Vehicle",
+                overflow = TextOverflow.Ellipsis,
+                style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp),
+                maxLines = 1,
+                softWrap = true,
             )
             Checkbox(
                 checked = transportStudent,
@@ -280,8 +289,13 @@ fun FormCheckboxes(
                 contentDescription = "",
                 modifier = Modifier.requiredSize(40.dp)
             )
+            Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = "New Student", style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp)
+                text = "New",
+                overflow = TextOverflow.Ellipsis,
+                style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp),
+                maxLines = 1,
+                softWrap = true,
             )
             Checkbox(
                 checked = newStudent,
@@ -300,8 +314,13 @@ fun FormCheckboxes(
                 contentDescription = "",
                 modifier = Modifier.requiredSize(40.dp)
             )
+            Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = "Orphan", style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp)
+                text = "Orphan",
+                overflow = TextOverflow.Ellipsis,
+                style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp),
+                maxLines = 1,
+                softWrap = true,
             )
             Checkbox(
                 checked = isOrphan,
@@ -320,8 +339,13 @@ fun FormCheckboxes(
                 contentDescription = "",
                 modifier = Modifier.requiredSize(40.dp)
             )
+            Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = "RTE", style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp)
+                text = "RTE",
+                overflow = TextOverflow.Ellipsis,
+                style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp),
+                maxLines = 1,
+                softWrap = true,
             )
             Checkbox(
                 checked = isRte,

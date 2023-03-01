@@ -23,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -191,7 +190,7 @@ fun RegisterStudent(
                 }
             }
         },
-            modifier = Modifier.padding(bottom = 70.dp, end = 10.dp),
+            modifier = Modifier.padding(bottom = 60.dp, end = 10.dp),
             elevation = FloatingActionButtonDefaults.elevation(4.dp),
             backgroundColor = classColor,
             shape = RoundedCornerShape(8.dp),
@@ -224,8 +223,13 @@ fun RegisterStudent(
                 .padding(bottom = 65.dp, start = 5.dp, end = 5.dp)
                 .background(color = MaterialTheme.colors.background.copy(0.8f))
         ) {
-            FormRow(padding = 0) {
-                Box(contentAlignment = Alignment.BottomEnd,modifier = Modifier.weight(1f)) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Box(
+                    contentAlignment = Alignment.BottomEnd
+                ) {
                     Card(
                         shape = CircleShape,
                         elevation = 4.dp,
@@ -237,7 +241,8 @@ fun RegisterStudent(
                     ) {
                         if (showImage.value) {
                             if (uriString.value.isNotEmpty()) {
-                                GlideImage(model = Uri.parse(uriString.value).path,
+                                GlideImage(
+                                    model = Uri.parse(uriString.value).path,
                                     contentDescription = "Profile Image",
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier
@@ -246,12 +251,14 @@ fun RegisterStudent(
                                 )
                             }
                         } else {
-                            Image(painter = painterResource(id = R.drawable.image_missing),
+                            Image(
+                                painter = painterResource(id = R.drawable.image_missing),
                                 contentDescription = "",
                                 contentScale = ContentScale.FillWidth,
                                 modifier = Modifier
                                     .requiredSize(145.dp)
-                                    .background(color = NoImageBackground))
+                                    .background(color = NoImageBackground)
+                            )
                         }
                     }
                     Icon(
@@ -259,7 +266,7 @@ fun RegisterStudent(
                         null,
                         tint = classColor,
                         modifier = Modifier
-                            .padding(bottom = 0.dp, end = 0.dp)
+                            .padding(bottom = 4.dp, end = 2.dp)
                             .requiredSize(32.dp)
                             .clickable {
                                 clickImage.launch(
@@ -271,22 +278,24 @@ fun RegisterStudent(
                             }
                     )
                 }
+            }
+            FormRow(padding = 14) {
                 FormEditText(textValue = rollNumber,
                     text = "Roll Number",
                     keyboardType = KeyboardType.Number,
                     color = classColor,
-                    modifier = editTextModifier.weight(3f),
+                    modifier = editTextModifier.weight(1f),
                     isEnabled = true,
                     onValueChanged = { rollNumber = it })
                 FormEditText(textValue = scholarNumber,
                     text = "Scholar Number",
                     keyboardType = KeyboardType.Number,
                     color = classColor,
-                    modifier = editTextModifier.weight(3f),
+                    modifier = editTextModifier.weight(1f),
                     isEnabled = true,
                     onValueChanged = { scholarNumber = it })
             }
-            FormRow(padding = 14) {
+            FormRow(padding = 24) {
                 FormEditText(textValue = firstName,
                     text = "Enter First Name",
                     keyboardType = KeyboardType.Text,
