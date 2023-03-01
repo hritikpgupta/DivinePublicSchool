@@ -9,6 +9,7 @@ sealed class AppScreen(@StringRes val title: Int?, @DrawableRes val icon: Int?, 
     object StudentScreen : AppScreen(null, null, "nav_student_screen"){
         object StudentList : AppScreen(null, null,"student_list")
         object RegisterStudent : AppScreen(null, null,"register_student")
+        object UpdateStudent : AppScreen(null, null,"update_student")
         object CameraScreen : AppScreen(null, null,"camera_screen")
     }
 

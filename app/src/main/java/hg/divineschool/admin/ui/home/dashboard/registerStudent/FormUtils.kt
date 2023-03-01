@@ -43,10 +43,10 @@ val classEntryOptions = listOf(
 
 
 fun String.toLocalDate(): LocalDate {
-    return if (this == null || this.isEmpty() || this.isBlank()) {
+    return if (this.isEmpty() || this.isBlank()) {
         LocalDate.now()
     } else {
-        var dateList = this.trim().split(" ")
+        val dateList = this.trim().split(" ")
         LocalDate.of(dateList[2].trim().toInt(),
             decideMonth(dateList[0].trim()), dateList[1].trim().toInt())
     }

@@ -3,13 +3,11 @@ package hg.divineschool.admin.ui.home.dashboard.registerStudent
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.FileUtils
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.relocation.BringIntoViewRequester
@@ -17,6 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.Cake
 import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.DateRange
@@ -24,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -47,6 +47,7 @@ import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Student
 import hg.divineschool.admin.data.utils.validateStudentObjectBeforeUpload
 import hg.divineschool.admin.ui.home.DPSBar
+import hg.divineschool.admin.ui.theme.NoImageBackground
 import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.cardColors
 import hg.divineschool.admin.ui.theme.regularFont
@@ -58,7 +59,6 @@ import java.io.File
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-@RequiresApi(Build.VERSION_CODES.Q)
 @OptIn(
     ExperimentalGlideComposeApi::class,
     ExperimentalFoundationApi::class,
@@ -225,58 +225,64 @@ fun RegisterStudent(
                 .background(color = MaterialTheme.colors.background.copy(0.8f))
         ) {
             FormRow(padding = 0) {
-                Card(
-                    shape = CircleShape,
-                    elevation = 4.dp,
-                    border = BorderStroke(4.dp, classColor),
-                    modifier = Modifier
-                        .weight(1f)
-                        .requiredSize(180.dp)
-                        .padding(10.dp)
-                ) {
-                    if (showImage.value) {
-                        if (uriString.value.isNotEmpty()) {
-                            GlideImage(model = Uri.parse(uriString.value).path,
-                                contentDescription = "Profile Image",
-                                contentScale = ContentScale.Crop,
+                Box(contentAlignment = Alignment.BottomEnd,modifier = Modifier.weight(1f)) {
+                    Card(
+                        shape = CircleShape,
+                        elevation = 4.dp,
+                        border = BorderStroke(4.dp, classColor),
+                        backgroundColor = NoImageBackground,
+                        modifier = Modifier
+                            .requiredSize(200.dp)
+                            .padding(12.dp)
+                    ) {
+                        if (showImage.value) {
+                            if (uriString.value.isNotEmpty()) {
+                                GlideImage(model = Uri.parse(uriString.value).path,
+                                    contentDescription = "Profile Image",
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier
+                                        .requiredSize(200.dp)
+                                        .background(color = Color.White)
+                                )
+                            }
+                        } else {
+                            Image(painter = painterResource(id = R.drawable.image_missing),
+                                contentDescription = "",
+                                contentScale = ContentScale.FillWidth,
                                 modifier = Modifier
-                                    .requiredSize(180.dp)
-                                    .background(color = Color.White)
-                                    .clickable {
-                                        clickImage.launch(
-                                            Intent(
-                                                context, CameraActivity::class.java
-                                            )
-                                        )
-                                    }
-                            )
+                                    .requiredSize(145.dp)
+                                    .background(color = NoImageBackground))
                         }
                     }
-                    else {
-                        Image(painter = painterResource(id = R.drawable.add_image),
-                            contentDescription = "",
-                            contentScale = ContentScale.FillBounds,
-                            modifier = Modifier
-                                .requiredSize(120.dp)
-                                .background(color = Color.White)
-                                .clickable {
-                                    clickImage.launch(Intent(context, CameraActivity::class.java))
-                                })
-                    }
+                    Icon(
+                        Icons.Filled.AddAPhoto,
+                        null,
+                        tint = classColor,
+                        modifier = Modifier
+                            .padding(bottom = 0.dp, end = 0.dp)
+                            .requiredSize(32.dp)
+                            .clickable {
+                                clickImage.launch(
+                                    Intent(
+                                        context,
+                                        CameraActivity::class.java
+                                    )
+                                )
+                            }
+                    )
                 }
-
                 FormEditText(textValue = rollNumber,
                     text = "Roll Number",
                     keyboardType = KeyboardType.Number,
                     color = classColor,
-                    modifier = editTextModifier.weight(2f),
+                    modifier = editTextModifier.weight(3f),
                     isEnabled = true,
                     onValueChanged = { rollNumber = it })
                 FormEditText(textValue = scholarNumber,
                     text = "Scholar Number",
                     keyboardType = KeyboardType.Number,
                     color = classColor,
-                    modifier = editTextModifier.weight(2f),
+                    modifier = editTextModifier.weight(3f),
                     isEnabled = true,
                     onValueChanged = { scholarNumber = it })
             }

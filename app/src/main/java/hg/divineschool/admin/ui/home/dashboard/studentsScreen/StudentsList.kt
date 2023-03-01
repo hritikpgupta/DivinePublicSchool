@@ -216,8 +216,10 @@ fun StudentsList(
                     ) {
                         items(it) { studentInfo ->
                             StudentCard(student = studentInfo, color = cardColors[classID.toInt()] ) {
-
-                                //navController.navigate(AppScreen.StudentScreen.RegisterStudent.route + "/${classID}/$className")
+                                /*navController.currentBackStackEntry?.arguments?.apply {
+                                    putSerializable("studentObj", studentInfo)
+                                }
+                                navController.navigate(AppScreen.StudentScreen.UpdateStudent.route + "/${classID}/$className")*/
                             }
                         }
                     }
