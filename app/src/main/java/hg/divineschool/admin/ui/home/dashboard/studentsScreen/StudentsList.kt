@@ -1,6 +1,5 @@
 package hg.divineschool.admin.ui.home.dashboard.studentsScreen
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -29,12 +28,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import hg.divineschool.admin.AppScreen
 import hg.divineschool.admin.data.Resource
-import hg.divineschool.admin.data.models.Student
 import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.cardColors
 import hg.divineschool.admin.ui.theme.lightFont
 import hg.divineschool.admin.ui.theme.mediumFont
-import hg.divineschool.admin.ui.utils.Log_Tag
 import hg.divineschool.admin.ui.utils.toast
 
 @Composable
@@ -72,56 +69,56 @@ fun StudentsList(
             }
         },
             actions = {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = {
-                    if (searchWidth.value == 0.4f) {
-                        searchWidth.value = 0.0f
-                    } else {
-                        searchWidth.value = 0.4f
-                    }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(onClick = {
+                        if (searchWidth.value == 0.4f) {
+                            searchWidth.value = 0.0f
+                        } else {
+                            searchWidth.value = 0.4f
+                        }
 
-                }) {
-                    Icon(
-                        Icons.Filled.Search,
-                        null,
-                        modifier = Modifier.requiredSize(30.dp),
-                        tint = cardColors[classID.toInt()],
-                    )
-                }
-                TextField(value = searchText.value,
-                    shape = RoundedCornerShape(2.dp),
-                    textStyle = TextStyle(
-                        fontFamily = mediumFont,
-                        fontSize = 22.sp
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Done,
-                        keyboardType = KeyboardType.Text,
-                        autoCorrect = false,
-                        capitalization = KeyboardCapitalization.None,
-                    ),
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = MaterialTheme.colors.background.copy(
-                            0.8f
-                        ),
-                        placeholderColor = MaterialTheme.colors.background,
-                        cursorColor = cardColors[classID.toInt()],
-                        focusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent,
-                        ),
-                    onValueChange = viewModel::onSearchTextChange,
-                    modifier = Modifier
-                        .fillMaxWidth(searchWidth.value),
-                    placeholder = {
-                        Text(
-                            text = "Search Student", style = TextStyle(
-                                fontFamily = lightFont,
-                                fontSize = 22.sp
-                            )
+                    }) {
+                        Icon(
+                            Icons.Filled.Search,
+                            null,
+                            modifier = Modifier.requiredSize(30.dp),
+                            tint = cardColors[classID.toInt()],
                         )
-                    })
-            }
-        })
+                    }
+                    TextField(value = searchText.value,
+                        shape = RoundedCornerShape(2.dp),
+                        textStyle = TextStyle(
+                            fontFamily = mediumFont,
+                            fontSize = 22.sp
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done,
+                            keyboardType = KeyboardType.Text,
+                            autoCorrect = false,
+                            capitalization = KeyboardCapitalization.None,
+                        ),
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = MaterialTheme.colors.background.copy(
+                                0.8f
+                            ),
+                            placeholderColor = MaterialTheme.colors.background,
+                            cursorColor = cardColors[classID.toInt()],
+                            focusedIndicatorColor = Color.Transparent,
+                            disabledIndicatorColor = Color.Transparent,
+                        ),
+                        onValueChange = viewModel::onSearchTextChange,
+                        modifier = Modifier
+                            .fillMaxWidth(searchWidth.value),
+                        placeholder = {
+                            Text(
+                                text = "Search Student", style = TextStyle(
+                                    fontFamily = lightFont,
+                                    fontSize = 22.sp
+                                )
+                            )
+                        })
+                }
+            })
     }, floatingActionButton = {
         ExtendedFloatingActionButton(onClick = {
             navController.navigate(AppScreen.StudentScreen.RegisterStudent.route + "/${classID}/$className")
@@ -215,11 +212,14 @@ fun StudentsList(
                         columns = GridCells.Adaptive(280.dp)
                     ) {
                         items(it) { studentInfo ->
-                            StudentCard(student = studentInfo, color = cardColors[classID.toInt()] ) {
-                                /*navController.currentBackStackEntry?.arguments?.apply {
+                            StudentCard(
+                                student = studentInfo,
+                                color = cardColors[classID.toInt()]
+                            ) {
+                                navController.currentBackStackEntry?.arguments?.apply {
                                     putSerializable("studentObj", studentInfo)
                                 }
-                                navController.navigate(AppScreen.StudentScreen.UpdateStudent.route + "/${classID}/$className")*/
+                                navController.navigate(AppScreen.StudentScreen.UpdateStudent.route + "/${classID}/$className")
                             }
                         }
                     }

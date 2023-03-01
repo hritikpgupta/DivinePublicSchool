@@ -36,6 +36,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -51,6 +53,7 @@ import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.cardColors
 import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.Log_Tag
+import hg.divineschool.admin.ui.utils.customGetSerializable
 import hg.divineschool.admin.ui.utils.toast
 import id.zelory.compressor.Compressor
 import kotlinx.coroutines.launch
@@ -58,17 +61,16 @@ import java.io.File
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-@OptIn(
-    ExperimentalGlideComposeApi::class,
-    ExperimentalFoundationApi::class,
-)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalGlideComposeApi::class)
 @Composable
-fun RegisterStudent(
+fun UpdateStudent(
     classID: String,
     className: String,
     navController: NavController,
     viewModel: RegisterStudentViewModel
 ) {
+    val currentStudent =
+        navController.previousBackStackEntry?.arguments?.customGetSerializable<Student>("studentObj")
 
     val coroutineScope = rememberCoroutineScope()
     val bringIntoViewRequester = BringIntoViewRequester()
@@ -80,40 +82,40 @@ fun RegisterStudent(
             }
         }
     var pickedBirthDate by remember {
-        mutableStateOf(LocalDate.now())
+        mutableStateOf(currentStudent?.dateOfBirth?.toLocalDate())
     }
     var pickedAdmissionDate by remember {
-        mutableStateOf(LocalDate.now())
+        mutableStateOf(currentStudent?.dateOfAdmission?.toLocalDate())
     }
     val classColor = cardColors[classID.toInt()]
-    var rollNumber by remember { mutableStateOf(TextFieldValue("")) }
-    var scholarNumber by remember { mutableStateOf(TextFieldValue("")) }
-    var firstName by remember { mutableStateOf(TextFieldValue("")) }
-    var lastName by remember { mutableStateOf(TextFieldValue("")) }
+    var rollNumber by remember { mutableStateOf(TextFieldValue(currentStudent?.rollNumber.toString())) }
+    var scholarNumber by remember { mutableStateOf(TextFieldValue(currentStudent?.scholarNumber.toString())) }
+    var firstName by remember { mutableStateOf(TextFieldValue(currentStudent?.firstName.toString())) }
+    var lastName by remember { mutableStateOf(TextFieldValue(currentStudent?.lastName.toString())) }
     val dateOfBirth by remember {
         derivedStateOf {
             DateTimeFormatter.ofPattern("MMM dd yyyy").format(pickedBirthDate)
         }
     }
-    var gender by remember { mutableStateOf(genderOptions[0]) }
-    var fathersName by remember { mutableStateOf(TextFieldValue("")) }
-    var mothersName by remember { mutableStateOf(TextFieldValue("")) }
-    var guardianOccupation by remember { mutableStateOf(TextFieldValue("")) }
-    var religion by remember { mutableStateOf(religionOptions[0]) }
-    var address by remember { mutableStateOf(TextFieldValue("")) }
-    var contactNumber by remember { mutableStateOf(TextFieldValue("")) }
-    var aadharNumber by remember { mutableStateOf(TextFieldValue("")) }
+    var gender by remember { mutableStateOf(genderOptions.getValue(currentStudent?.gender.toString())) }
+    var fathersName by remember { mutableStateOf(TextFieldValue(currentStudent?.fathersName.toString())) }
+    var mothersName by remember { mutableStateOf(TextFieldValue(currentStudent?.mothersName.toString())) }
+    var guardianOccupation by remember { mutableStateOf(TextFieldValue(currentStudent?.guardianOccupation.toString())) }
+    var religion by remember { mutableStateOf(religionOptions.getValue(currentStudent?.religion.toString())) }
+    var address by remember { mutableStateOf(TextFieldValue(currentStudent?.address.toString())) }
+    var contactNumber by remember { mutableStateOf(TextFieldValue(currentStudent?.contactNumber.toString())) }
+    var aadharNumber by remember { mutableStateOf(TextFieldValue(currentStudent?.aadharNumber.toString())) }
     val dateOfAdmission by remember {
         derivedStateOf {
             DateTimeFormatter.ofPattern("MMM dd yyyy").format(pickedAdmissionDate)
         }
     }
-    var entryClass by remember { mutableStateOf(classEntryOptions[0]) }
-    var schoolAttended by remember { mutableStateOf(TextFieldValue("")) }
-    var transportStudent by remember { mutableStateOf(false) }
-    var newStudent by remember { mutableStateOf(false) }
-    var isOrphan by remember { mutableStateOf(false) }
-    var isRte by remember { mutableStateOf(false) }
+    var entryClass by remember { mutableStateOf(classEntryOptions.getValue(currentStudent?.entryClass.toString())) }
+    var schoolAttended by remember { mutableStateOf(TextFieldValue(currentStudent?.schoolAttended.toString())) }
+    var transportStudent by remember { mutableStateOf(currentStudent?.transportStudent) }
+    var newStudent by remember { mutableStateOf(currentStudent?.newStudent) }
+    var isOrphan by remember { mutableStateOf(currentStudent?.orphan) }
+    var isRte by remember { mutableStateOf(currentStudent?.rte) }
     val birthDateDialogState = rememberMaterialDialogState()
     val admissionDateDialogState = rememberMaterialDialogState()
     var genderExpanded by remember { mutableStateOf(false) }
@@ -121,15 +123,22 @@ fun RegisterStudent(
     var entryClassExpanded by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     val context = LocalContext.current
-    val registerState = viewModel.registerStudentFlow.collectAsState()
+    val updateState = viewModel.updateStudentFlow.collectAsState()
     val uriString = remember {
-        mutableStateOf("")
+        if (currentStudent!!.image.isEmpty() ) {
+            mutableStateOf("")
+        } else {
+            mutableStateOf(currentStudent.image)
+        }
     }
     val showImage = remember {
-        mutableStateOf(false)
+        if (uriString.value.isEmpty()) {
+            mutableStateOf(false)
+        } else {
+            mutableStateOf(true)
+        }
     }
-    val clickImage =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+    val clickImage =rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
                 uriString.value = it.data?.getStringExtra("imageUri").toString()
                 showImage.value = true
@@ -144,7 +153,6 @@ fun RegisterStudent(
                 }
             }
         }
-
     Scaffold(scaffoldState = rememberScaffoldState(), topBar = {
         DPSBar(onBackPressed = {
             navController.popBackStack()
@@ -170,23 +178,25 @@ fun RegisterStudent(
                         dateOfAdmission = dateOfAdmission,
                         entryClass = entryClass,
                         schoolAttended = schoolAttended.text,
-                        transportStudent = transportStudent,
-                        newStudent = newStudent,
-                        orphan = isOrphan,
-                        rte = isRte,
-                        image = ""
+                        transportStudent = transportStudent!!,
+                        newStudent = newStudent!!,
+                        orphan = isOrphan!!,
+                        rte = isRte!!,
+                        image = currentStudent!!.image
                     )
                     val formValidation = validateStudentObjectBeforeUpload(student)
                     if (formValidation == null) {
-                        viewModel.registerStudent(
+                        viewModel.updateStudent(
                             student, classID, className, uriString.value
                         )
                     } else {
                         context.toast(formValidation)
                     }
 
-                } catch (_: NumberFormatException) {
+                } catch (e: NumberFormatException) {
                     context.toast("Roll or Enrollment can't be null")
+                }catch (e : Exception){
+                    e.printStackTrace()
                 }
             }
         },
@@ -204,7 +214,7 @@ fun RegisterStudent(
             },
             text = {
                 Text(
-                    text = "Save", style = TextStyle(
+                    text = "Update", style = TextStyle(
                         fontFamily = boldFont,
                         fontSize = 22.sp,
                         fontWeight = FontWeight.SemiBold
@@ -241,16 +251,31 @@ fun RegisterStudent(
                     ) {
                         if (showImage.value) {
                             if (uriString.value.isNotEmpty()) {
-                                GlideImage(
-                                    model = Uri.parse(uriString.value).path,
-                                    contentDescription = "Profile Image",
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier
-                                        .requiredSize(200.dp)
-                                        .background(color = Color.White)
-                                )
+                                if (uriString.value.startsWith("https")){
+                                    AsyncImage(
+                                        model = ImageRequest.Builder(LocalContext.current)
+                                            .data(uriString.value)
+                                            .crossfade(true).build(),
+                                        contentScale = ContentScale.Crop,
+                                        contentDescription = "Profile Image",
+                                        modifier = Modifier
+                                            .requiredSize(200.dp)
+                                            .background(color = Color.White)
+                                    )
+                                }
+                                else{
+                                    GlideImage(
+                                        model = Uri.parse(uriString.value).path,
+                                        contentDescription = "Profile Image",
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier
+                                            .requiredSize(200.dp)
+                                            .background(color = Color.White)
+                                    )
+                                }
                             }
-                        } else {
+                        }
+                        else {
                             Image(
                                 painter = painterResource(id = R.drawable.image_missing),
                                 contentDescription = "",
@@ -292,7 +317,7 @@ fun RegisterStudent(
                     keyboardType = KeyboardType.Number,
                     color = classColor,
                     modifier = editTextModifier.weight(1f),
-                    isEnabled = true,
+                    isEnabled = false,
                     onValueChanged = { scholarNumber = it })
             }
             FormRow(padding = 24) {
@@ -481,10 +506,10 @@ fun RegisterStudent(
 
             }
             FormCheckboxes(color = classColor,
-                transportStudent = transportStudent,
-                newStudent = newStudent,
-                isOrphan = isOrphan,
-                isRte = isRte,
+                transportStudent = transportStudent!!,
+                newStudent = newStudent!!,
+                isOrphan = isOrphan!!,
+                isRte = isRte!!,
                 onTransportChange = { transportStudent = it },
                 onNewStudentChange = { newStudent = it },
                 onIsOrphanChange = { isOrphan = it },
@@ -492,14 +517,14 @@ fun RegisterStudent(
             )
             Spacer(modifier = Modifier.height(70.dp))
         }
-        registerState.value.let { value ->
+        updateState.value.let { value ->
             when (value) {
                 is Resource.Failure -> {
                     value.exception.message?.let { it1 -> context.toast(it1) }
                 }
                 is Resource.Success -> {
                     LaunchedEffect(Unit) {
-                        Log.i(Log_Tag, "Student Saved")
+                        Log.i(Log_Tag, "Student Updated")
                         navController.popBackStack()
                     }
                 }
@@ -516,7 +541,6 @@ fun RegisterStudent(
                 else -> {}
             }
         }
-
 
         MaterialDialog(dialogState = birthDateDialogState, buttons = {
             positiveButton(text = "Ok") {}
@@ -543,9 +567,6 @@ fun RegisterStudent(
             }
         }
     }
+
+
 }
-
-
-
-
-
