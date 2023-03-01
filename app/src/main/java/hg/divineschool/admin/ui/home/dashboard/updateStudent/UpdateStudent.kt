@@ -1,4 +1,4 @@
-package hg.divineschool.admin.ui.home.dashboard.registerStudent
+package hg.divineschool.admin.ui.home.dashboard.updateStudent
 
 import android.app.Activity
 import android.content.Intent
@@ -48,6 +48,7 @@ import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Student
 import hg.divineschool.admin.data.utils.validateStudentObjectBeforeUpload
 import hg.divineschool.admin.ui.home.DPSBar
+import hg.divineschool.admin.ui.home.dashboard.registerStudent.*
 import hg.divineschool.admin.ui.theme.NoImageBackground
 import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.cardColors
@@ -125,7 +126,7 @@ fun UpdateStudent(
     val context = LocalContext.current
     val updateState = viewModel.updateStudentFlow.collectAsState()
     val uriString = remember {
-        if (currentStudent!!.image.isEmpty() ) {
+        if (currentStudent!!.image.isEmpty()) {
             mutableStateOf("")
         } else {
             mutableStateOf(currentStudent.image)
@@ -138,7 +139,8 @@ fun UpdateStudent(
             mutableStateOf(true)
         }
     }
-    val clickImage =rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+    val clickImage =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
                 uriString.value = it.data?.getStringExtra("imageUri").toString()
                 showImage.value = true
@@ -156,7 +158,7 @@ fun UpdateStudent(
     Scaffold(scaffoldState = rememberScaffoldState(), topBar = {
         DPSBar(onBackPressed = {
             navController.popBackStack()
-        }, className = "Registration Form For $className")
+        }, className = "${currentStudent?.firstName} ${currentStudent?.lastName}")
     }, floatingActionButton = {
         ExtendedFloatingActionButton(onClick = {
             if (rollNumber.text.isNotEmpty() && scholarNumber.text.isNotEmpty()) {
@@ -195,7 +197,7 @@ fun UpdateStudent(
 
                 } catch (e: NumberFormatException) {
                     context.toast("Roll or Enrollment can't be null")
-                }catch (e : Exception){
+                } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
@@ -251,7 +253,7 @@ fun UpdateStudent(
                     ) {
                         if (showImage.value) {
                             if (uriString.value.isNotEmpty()) {
-                                if (uriString.value.startsWith("https")){
+                                if (uriString.value.startsWith("https")) {
                                     AsyncImage(
                                         model = ImageRequest.Builder(LocalContext.current)
                                             .data(uriString.value)
@@ -262,8 +264,7 @@ fun UpdateStudent(
                                             .requiredSize(200.dp)
                                             .background(color = Color.White)
                                     )
-                                }
-                                else{
+                                } else {
                                     GlideImage(
                                         model = Uri.parse(uriString.value).path,
                                         contentDescription = "Profile Image",
@@ -274,8 +275,7 @@ fun UpdateStudent(
                                     )
                                 }
                             }
-                        }
-                        else {
+                        } else {
                             Image(
                                 painter = painterResource(id = R.drawable.image_missing),
                                 contentDescription = "",

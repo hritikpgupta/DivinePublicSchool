@@ -13,7 +13,7 @@ import hg.divineschool.admin.BottomNavItem
 import hg.divineschool.admin.ui.home.attendance.AttendanceScreen
 import hg.divineschool.admin.ui.home.dashboard.DashboardScreen
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.RegisterStudent
-import hg.divineschool.admin.ui.home.dashboard.registerStudent.UpdateStudent
+import hg.divineschool.admin.ui.home.dashboard.updateStudent.UpdateStudent
 import hg.divineschool.admin.ui.home.dashboard.studentsScreen.StudentsList
 import hg.divineschool.admin.ui.home.invoice.InvoiceScreen
 import hg.divineschool.admin.ui.home.notification.NotificationScreen
