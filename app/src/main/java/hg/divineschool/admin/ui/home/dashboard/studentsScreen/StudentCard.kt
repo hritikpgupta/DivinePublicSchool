@@ -47,7 +47,7 @@ fun StudentCard(student: Student, color: Color, onCardClick: () -> Unit) {
                     contentScale = ContentScale.FillWidth,
                     contentDescription = "Logo",
                     modifier = Modifier
-                        .requiredSize(95.dp)
+                        .requiredSize(90.dp)
                         .shadow(10.dp, CircleShape, true, color, color)
                         .clip(
                             CircleShape
@@ -60,7 +60,7 @@ fun StudentCard(student: Student, color: Color, onCardClick: () -> Unit) {
                         text = "${student.firstName} ${student.lastName}",
                         style = TextStyle(
                             fontFamily = regularFont,
-                            fontSize = 25.sp,
+                            fontSize = 24.sp,
                             fontWeight = FontWeight.SemiBold
                         ),
                         maxLines = 1,
@@ -69,7 +69,7 @@ fun StudentCard(student: Student, color: Color, onCardClick: () -> Unit) {
                     )
                     Text(
                         text = "Roll No: ${student.rollNumber}",
-                        style = TextStyle(fontFamily = lightFont, fontSize = 25.sp, fontWeight = FontWeight.Normal)
+                        style = TextStyle(fontFamily = lightFont, fontSize = 23.sp, fontWeight = FontWeight.Normal)
                     )
                 }
             }

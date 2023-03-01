@@ -248,7 +248,7 @@ fun UpdateStudent(
                         border = BorderStroke(4.dp, classColor),
                         backgroundColor = NoImageBackground,
                         modifier = Modifier
-                            .requiredSize(200.dp)
+                            .requiredSize(220.dp)
                             .padding(12.dp)
                     ) {
                         if (showImage.value) {
@@ -261,7 +261,7 @@ fun UpdateStudent(
                                         contentScale = ContentScale.Crop,
                                         contentDescription = "Profile Image",
                                         modifier = Modifier
-                                            .requiredSize(200.dp)
+                                            .requiredSize(220.dp)
                                             .background(color = Color.White)
                                     )
                                 } else {
@@ -270,7 +270,7 @@ fun UpdateStudent(
                                         contentDescription = "Profile Image",
                                         contentScale = ContentScale.Crop,
                                         modifier = Modifier
-                                            .requiredSize(200.dp)
+                                            .requiredSize(220.dp)
                                             .background(color = Color.White)
                                     )
                                 }
@@ -304,7 +304,7 @@ fun UpdateStudent(
                     )
                 }
             }
-            FormRow(padding = 14) {
+            FormRow(padding = 24) {
                 FormEditText(textValue = rollNumber,
                     text = "Roll Number",
                     keyboardType = KeyboardType.Number,

@@ -236,7 +236,7 @@ fun RegisterStudent(
                         border = BorderStroke(4.dp, classColor),
                         backgroundColor = NoImageBackground,
                         modifier = Modifier
-                            .requiredSize(200.dp)
+                            .requiredSize(220.dp)
                             .padding(12.dp)
                     ) {
                         if (showImage.value) {
@@ -246,7 +246,7 @@ fun RegisterStudent(
                                     contentDescription = "Profile Image",
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier
-                                        .requiredSize(200.dp)
+                                        .requiredSize(220.dp)
                                         .background(color = Color.White)
                                 )
                             }
@@ -256,7 +256,7 @@ fun RegisterStudent(
                                 contentDescription = "",
                                 contentScale = ContentScale.FillWidth,
                                 modifier = Modifier
-                                    .requiredSize(145.dp)
+                                    .requiredSize(160.dp)
                                     .background(color = NoImageBackground)
                             )
                         }
@@ -279,7 +279,7 @@ fun RegisterStudent(
                     )
                 }
             }
-            FormRow(padding = 14) {
+            FormRow(padding = 24) {
                 FormEditText(textValue = rollNumber,
                     text = "Roll Number",
                     keyboardType = KeyboardType.Number,
