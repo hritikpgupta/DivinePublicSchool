@@ -36,7 +36,10 @@ data class Student(
     fun doesMatchSearchQuery(query:String):Boolean{
         val matchingCombination = listOf("$firstName$lastName", "$firstName $lastName",
             "${firstName.first()} ${lastName.first()}",
-            "$rollNumber","$religion","$guardianOccupation")
+            gender, dateOfBirth,dateOfAdmission, "$scholarNumber",
+            "$rollNumber", religion,
+            guardianOccupation, "$contactNumber", "$aadharNumber", mothersName , fathersName
+        )
         return matchingCombination.any { it.contains(query,ignoreCase = true) }
     }
 

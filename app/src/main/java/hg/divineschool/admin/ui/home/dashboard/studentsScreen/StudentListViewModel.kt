@@ -32,6 +32,8 @@ class StudentListViewModel @Inject constructor(
 
     private var _students = MutableStateFlow(studentList)
 
+
+
     @OptIn(FlowPreview::class)
     val students = searchText.debounce(50L).combine(_students){ text, students ->
         if (text.isBlank()){
@@ -47,6 +49,9 @@ class StudentListViewModel @Inject constructor(
         _searchText.value = text
     }
 
+    fun onClearSearchText(){
+        _searchText.value =""
+    }
 
 
      fun getAllStudents(id: Long) = viewModelScope.launch {

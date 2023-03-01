@@ -121,6 +121,8 @@ fun StudentsList(
             })
     }, floatingActionButton = {
         ExtendedFloatingActionButton(onClick = {
+            searchWidth.value = 0.0f
+            viewModel.onClearSearchText()
             navController.navigate(AppScreen.StudentScreen.RegisterStudent.route + "/${classID}/$className")
         },
             modifier = Modifier.padding(bottom = 70.dp, end = 10.dp),
@@ -220,6 +222,8 @@ fun StudentsList(
                                     putSerializable("studentObj", studentInfo)
                                 }
                                 navController.navigate(AppScreen.StudentScreen.UpdateStudent.route + "/${classID}/$className")
+                                searchWidth.value = 0.0f
+                                viewModel.onClearSearchText()
                             }
                         }
                     }
