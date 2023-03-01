@@ -21,8 +21,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hg.divineschool.admin.R
+import hg.divineschool.admin.ui.theme.lightFont
 import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.theme.regularFont
+import hg.divineschool.admin.ui.utils.getTextAlignment
 import java.time.LocalDate
 import java.time.Month
 
@@ -131,6 +133,7 @@ fun decideTextFieldColors(b: Boolean, color: Color): TextFieldColors {
     }
 }
 
+
 @Composable
 fun FormEditText(
     textValue: TextFieldValue,
@@ -146,10 +149,11 @@ fun FormEditText(
         label = {
             Text(
                 text = text, style = TextStyle(
-                    fontFamily = mediumFont, fontSize = 20.sp, fontWeight = FontWeight.SemiBold
+                    fontFamily = mediumFont, fontSize = 24.sp, fontWeight = FontWeight.SemiBold
                 )
             )
         },
+        textStyle = TextStyle(fontFamily = regularFont, fontSize = 22.sp, fontWeight = FontWeight.Thin, textAlign = isEnabled.getTextAlignment()),
         maxLines = 1,
         enabled = isEnabled,
         onValueChange = { onValueChanged(it) },

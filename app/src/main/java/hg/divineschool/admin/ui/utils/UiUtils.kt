@@ -12,6 +12,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.core.content.ContextCompat
 import java.io.Serializable
 import kotlin.coroutines.resume
@@ -46,6 +47,14 @@ fun Context.getActivity(): Activity? = when (this) {
     is Activity -> this
     is ContextWrapper -> baseContext.getActivity()
     else -> null
+}
+
+fun Boolean.getTextAlignment() : TextAlign{
+    return if (this){
+        TextAlign.Start
+    }else{
+        TextAlign.Center
+    }
 }
 
 suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutine { continuation ->

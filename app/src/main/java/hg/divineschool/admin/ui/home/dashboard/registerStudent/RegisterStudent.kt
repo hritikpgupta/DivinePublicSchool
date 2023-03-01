@@ -316,7 +316,7 @@ fun RegisterStudent(
                     textStyle = TextStyle(
                         textAlign = TextAlign.Center,
                         fontFamily = regularFont,
-                        fontSize = 18.sp,
+                        fontSize = 22.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colors.onBackground
                     ),
@@ -435,7 +435,7 @@ fun RegisterStudent(
                     textStyle = TextStyle(
                         textAlign = TextAlign.Center,
                         fontFamily = regularFont,
-                        fontSize = 18.sp,
+                        fontSize = 22.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colors.onBackground
                     ),
