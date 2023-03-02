@@ -213,7 +213,7 @@ fun StudentsList(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(color = MaterialTheme.colors.background.copy(0.6f)),
-                        columns = GridCells.Adaptive(280.dp)
+                        columns = GridCells.Adaptive(200.dp)
                     ) {
                         items(it) { studentInfo ->
                             StudentCard(

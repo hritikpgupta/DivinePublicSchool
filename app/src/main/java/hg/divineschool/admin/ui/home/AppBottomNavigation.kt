@@ -21,7 +21,6 @@ import hg.divineschool.admin.ui.theme.lightFont
 fun AppBottomNavigation(navController: NavController) {
     val navItems = listOf(
         BottomNavItem.Home,
-        BottomNavItem.Invoice,
         BottomNavItem.Attendance,
         BottomNavItem.Notification
     )

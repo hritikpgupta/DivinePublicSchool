@@ -43,12 +43,12 @@ fun DivinePublicSchoolTheme(
 ) {
     val systemUiController = rememberSystemUiController()
     val colors = if (darkTheme) {
-        DarkColorPalette
+        LightColorPalette
     } else {
         LightColorPalette
     }
     if (darkTheme) {
-        systemUiController.setStatusBarColor(color = Color.Black, darkIcons = false)
+        systemUiController.setStatusBarColor(color = Color.White, darkIcons = true)
     } else {
         systemUiController.setStatusBarColor(color = Color.White, darkIcons = true)
     }

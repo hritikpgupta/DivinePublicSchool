@@ -46,12 +46,18 @@ fun StudentInvoice(
         DPSBar(onBackPressed = { navController.popBackStack() }, className = "Generate Bill")
     }) {
         val items = listOf(
-            MonthFee(isPaid = true, month = "January"),
-            MonthFee(isPaid = false, month = "Feb"),
+            MonthFee(isPaid = false, month = "January"),
+            MonthFee(isPaid = false, month = "February"),
             MonthFee(isPaid = false, month = "March"),
-            MonthFee(isPaid = false, month = "April"),
+            MonthFee(isPaid = true, month = "April"),
+            MonthFee(isPaid = true, month = "May"),
+            MonthFee(isPaid = true, month = "June"),
+            MonthFee(isPaid = false, month = "July"),
+            MonthFee(isPaid = false, month = "August"),
             MonthFee(isPaid = false, month = "September"),
-            MonthFee(isPaid = false, month = "June"),
+            MonthFee(isPaid = false, month = "October"),
+            MonthFee(isPaid = false, month = "November"),
+            MonthFee(isPaid = false, month = "December"),
         )
         Column(
             horizontalAlignment = Alignment.Start,
@@ -62,31 +68,27 @@ fun StudentInvoice(
                 .padding(bottom = 65.dp, start = 5.dp, end = 5.dp)
                 .background(color = MaterialTheme.colors.background.copy(0.8f))
         ) {
-            MultiSelectList(items, classColor)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 2.dp)
+                    .wrapContentWidth(Alignment.Start)
+            ) {
+                MultiSelectList(items, classColor)
+            }
+
         }
     }
 
 }
 
-//@Preview(showSystemUi = true, showBackground = true, device = Devices.TABLET)
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MultiSelectList(items: List<MonthFee>, color: Color) {
-    //items: List<MonthFee> ,color: Color
-/*    val items =
-        listOf(
-            MonthFee(isPaid = true, month = "January"),
-            MonthFee(isPaid = false, month = "Feb"),
-            MonthFee(isPaid = false, month = "March"),
-            MonthFee(isPaid = false, month = "April"),
-            MonthFee(isPaid = false, month = "May"),
-            MonthFee(isPaid = false, month = "June"),
-        )
-    val color = cardColors[0]*/
 
     val selectedItems = remember { mutableStateListOf<MonthFee>() }
     LazyVerticalGrid(
-        verticalArrangement = Arrangement.spacedBy(18.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         userScrollEnabled = true,
         contentPadding = PaddingValues(
@@ -133,7 +135,7 @@ fun MultiSelectList(items: List<MonthFee>, color: Color) {
                                 .padding(6.dp)
                         )
                     }
-                    if (item.isPaid){
+                    if (item.isPaid) {
                         Image(
                             painter = painterResource(id = R.drawable.green_tick),
                             modifier = Modifier
