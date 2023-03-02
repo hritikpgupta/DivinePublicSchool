@@ -50,7 +50,7 @@ fun StudentInvoice(
             MonthFee(isPaid = false, month = "Feb"),
             MonthFee(isPaid = false, month = "March"),
             MonthFee(isPaid = false, month = "April"),
-            MonthFee(isPaid = false, month = "May"),
+            MonthFee(isPaid = false, month = "September"),
             MonthFee(isPaid = false, month = "June"),
         )
         Column(
@@ -95,14 +95,14 @@ fun MultiSelectList(items: List<MonthFee>, color: Color) {
         modifier = Modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colors.background.copy(0.6f)),
-        columns = GridCells.Adaptive(180.dp)
+        columns = GridCells.Adaptive(170.dp)
     ) {
         items(items) { item ->
             val isSelected = selectedItems.contains(item)
             val cardBgColor = remember { mutableStateOf(item.isPaid.getActivatedColor(color)) }
             Card(elevation = 6.dp,
                 backgroundColor = MaterialTheme.colors.background.copy(1f),
-                modifier = Modifier.requiredSize(width = 180.dp, height = 80.dp),
+                modifier = Modifier.requiredSize(width = 170.dp, height = 80.dp),
                 onClick = {
                     if (!item.isPaid) {
                         if (isSelected) {
