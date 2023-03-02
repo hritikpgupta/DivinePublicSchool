@@ -122,7 +122,9 @@ fun StudentsList(
     }, floatingActionButton = {
         ExtendedFloatingActionButton(onClick = {
             searchWidth.value = 0.0f
-            viewModel.onClearSearchText()
+            if (searchText.value.isNotEmpty()){
+                viewModel.onClearSearchText()
+            }
             navController.navigate(AppScreen.StudentScreen.RegisterStudent.route + "/${classID}/$className")
         },
             modifier = Modifier.padding(bottom = 70.dp, end = 10.dp),
@@ -216,15 +218,19 @@ fun StudentsList(
                         items(it) { studentInfo ->
                             StudentCard(
                                 student = studentInfo,
-                                color = cardColors[classID.toInt()]
-                            ) {
-                                navController.currentBackStackEntry?.arguments?.apply {
-                                    putSerializable("studentObj", studentInfo)
-                                }
-                                navController.navigate(AppScreen.StudentScreen.UpdateStudent.route + "/${classID}/$className")
-                                searchWidth.value = 0.0f
-                                viewModel.onClearSearchText()
-                            }
+                                color = cardColors[classID.toInt()],
+                                onViewClick = {
+                                    navController.currentBackStackEntry?.arguments?.apply {
+                                        putSerializable("studentObj", studentInfo)
+                                    }
+                                    navController.navigate(AppScreen.StudentScreen.UpdateStudent.route + "/${classID}/$className")
+                                    searchWidth.value = 0.0f
+                                    if (searchText.value.isNotEmpty()){
+                                        viewModel.onClearSearchText()
+                                    }
+                                },
+                                onInvoiceClick = {}
+                            )
                         }
                     }
                 }
