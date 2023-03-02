@@ -229,7 +229,9 @@ fun StudentsList(
                                         viewModel.onClearSearchText()
                                     }
                                 },
-                                onInvoiceClick = {}
+                                onInvoiceClick = {
+                                    navController.navigate(AppScreen.StudentScreen.StudentInvoice.route+ "/${classID}/$className/${studentInfo.scholarNumber}")
+                                }
                             )
                         }
                     }

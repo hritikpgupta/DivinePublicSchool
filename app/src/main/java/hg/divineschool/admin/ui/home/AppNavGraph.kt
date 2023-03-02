@@ -12,9 +12,10 @@ import hg.divineschool.admin.AppScreen
 import hg.divineschool.admin.BottomNavItem
 import hg.divineschool.admin.ui.home.attendance.AttendanceScreen
 import hg.divineschool.admin.ui.home.dashboard.DashboardScreen
+import hg.divineschool.admin.ui.home.dashboard.invoiceStudent.StudentInvoice
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.RegisterStudent
-import hg.divineschool.admin.ui.home.dashboard.updateStudent.UpdateStudent
 import hg.divineschool.admin.ui.home.dashboard.studentsScreen.StudentsList
+import hg.divineschool.admin.ui.home.dashboard.updateStudent.UpdateStudent
 import hg.divineschool.admin.ui.home.invoice.InvoiceScreen
 import hg.divineschool.admin.ui.home.notification.NotificationScreen
 
@@ -57,18 +58,42 @@ fun NavGraphBuilder.studentListNav(navController: NavHostController) {
         }
 
         composable(AppScreen.StudentScreen.RegisterStudent.route + "/{id}/{name}") {
-            it.arguments.let {bundle ->
+            it.arguments.let { bundle ->
                 bundle?.getString("id")?.let { it1 ->
-                    RegisterStudent(classID = it1, className = bundle.getString("name")!!, navController, hiltViewModel())
+                    RegisterStudent(
+                        classID = it1,
+                        className = bundle.getString("name")!!,
+                        navController,
+                        hiltViewModel()
+                    )
                 }
             }
         }
         composable(AppScreen.StudentScreen.UpdateStudent.route + "/{id}/{name}") {
-            it.arguments.let {bundle ->
+            it.arguments.let { bundle ->
                 bundle?.getString("id")?.let { it1 ->
-                    UpdateStudent(classID = it1, className = bundle.getString("name")!!, navController, hiltViewModel())
+                    UpdateStudent(
+                        classID = it1,
+                        className = bundle.getString("name")!!,
+                        navController,
+                        hiltViewModel()
+                    )
                 }
             }
+        }
+        composable(AppScreen.StudentScreen.StudentInvoice.route + "/{id}/{name}/{scholarNumber}") {
+            it.arguments.let { bundle ->
+                bundle.let { it ->
+                    StudentInvoice(
+                        classID = it?.getString("id").toString(),
+                        className = it?.getString("name").toString(),
+                        scholarNumber = it?.getString("scholarNumber").toString(),
+                        navController = navController,
+                        hiltViewModel()
+                    )
+                }
+            }
+
         }
 
     }

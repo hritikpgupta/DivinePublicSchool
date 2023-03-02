@@ -1,4 +1,4 @@
-package hg.divineschool.admin
+package hg.divineschool.admin.di
 
 import android.app.Application
 import android.content.Context
@@ -14,10 +14,7 @@ import hg.divineschool.admin.data.auth.AuthRepository
 import hg.divineschool.admin.data.auth.AuthRepositoryImpl
 import hg.divineschool.admin.data.dashboard.DashboardRepository
 import hg.divineschool.admin.data.dashboard.DashboardRepositoryImpl
-import hg.divineschool.admin.data.dashboard.student.RegisterStudentRepository
-import hg.divineschool.admin.data.dashboard.student.RegisterStudentRepositoryImpl
-import hg.divineschool.admin.data.dashboard.student.StudentListRepository
-import hg.divineschool.admin.data.dashboard.student.StudentListRepositoryImpl
+import hg.divineschool.admin.data.dashboard.student.*
 import javax.inject.Qualifier
 
 @Module
@@ -52,6 +49,8 @@ object AppModule {
     fun provideStudentListRepository(impl: StudentListRepositoryImpl): StudentListRepository = impl
     @Provides
     fun provideRegisterStudentRepository(impl: RegisterStudentRepositoryImpl): RegisterStudentRepository = impl
+    @Provides
+    fun provideStudentInvoiceRepository(impl: StudentInvoiceRepositoryImpl): StudentInvoiceRepository = impl
 
 }
 
