@@ -97,12 +97,7 @@ fun StudentCard(
                         }
                         DropdownMenu(
                             expanded = expanded,
-                            onDismissRequest = { expanded = false },
-                            modifier = Modifier.border(
-                                width = 1.5.dp,
-                                color = color,
-                                shape = RectangleShape
-                            )
+                            onDismissRequest = { expanded = false }
                         ) {
                             DropdownMenuItem(onClick = {
                                 expanded = false
@@ -111,13 +106,12 @@ fun StudentCard(
                                 Icon(
                                     Icons.Default.RemoveRedEye,
                                     contentDescription = "",
-                                    tint = color,
                                     modifier = Modifier.requiredSize(25.dp)
                                 )
                                 Spacer(modifier = Modifier.width(5.dp))
                                 Text(text = "View", style = TextStyle(fontSize = 18.sp))
                             }
-                            Divider(thickness = 1.dp, color = color)
+                            Divider(thickness = 3.dp)
                             DropdownMenuItem(
                                 onClick = {
                                     expanded = false
@@ -127,7 +121,6 @@ fun StudentCard(
                                 Icon(
                                     ImageVector.vectorResource(id = R.drawable.ic_invoice),
                                     contentDescription = "",
-                                    tint = color,
                                     modifier = Modifier.requiredSize(25.dp)
                                 )
                                 Spacer(modifier = Modifier.width(5.dp))

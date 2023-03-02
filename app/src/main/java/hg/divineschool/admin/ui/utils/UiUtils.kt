@@ -11,6 +11,7 @@ import androidx.annotation.StringRes
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.core.content.ContextCompat
@@ -54,6 +55,14 @@ fun Boolean.getTextAlignment() : TextAlign{
         TextAlign.Start
     }else{
         TextAlign.Center
+    }
+}
+
+fun Boolean.getActivatedColor(color : Color) : Color{
+    return if (this){
+        return color
+    }else {
+        return Color.LightGray
     }
 }
 
