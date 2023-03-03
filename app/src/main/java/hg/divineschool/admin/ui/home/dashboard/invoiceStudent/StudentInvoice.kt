@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -23,6 +24,7 @@ import hg.divineschool.admin.ui.home.DPSBar
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.FormRow
 import hg.divineschool.admin.ui.theme.cardColors
 import hg.divineschool.admin.ui.theme.mediumFont
+import hg.divineschool.admin.ui.utils.INR
 import hg.divineschool.admin.ui.utils.Log_Tag
 
 @Composable
@@ -96,14 +98,33 @@ fun StudentInvoice(
                 }
                 FormRow(padding = 12) {
                     Card(elevation = 8.dp, modifier = Modifier.padding(horizontal = 10.dp)) {
-                        Column(modifier = Modifier
-                            .requiredHeight(180.dp)
-                            .padding(6.dp)) {
-                            Text(
-                                text = "Select Month",
-                                style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp),
-                                modifier = Modifier.padding(horizontal = 5.dp)
-                            )
+                        Column(
+                            modifier = Modifier
+                                .requiredHeight(180.dp)
+                                .padding(6.dp)
+                        ) {
+                            Row(modifier = Modifier.padding(horizontal = 5.dp)) {
+                                Text(
+                                    text = "Select Month",
+                                    style = TextStyle(
+                                        fontFamily = mediumFont,
+                                        fontSize = 30.sp,
+                                        textAlign = TextAlign.Start
+                                    ),
+                                    modifier = Modifier
+                                        .weight(1f)
+                                )
+                                Text(
+                                    text = "$INR 300",
+                                    style = TextStyle(
+                                        fontFamily = mediumFont,
+                                        fontSize = 30.sp,
+                                        textAlign = TextAlign.End
+                                    ),
+                                    modifier = Modifier
+                                        .weight(1f)
+                                )
+                            }
                             MonthSelectList(items, classColor) {}
                         }
                     }
