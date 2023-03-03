@@ -220,7 +220,7 @@ fun AccessoryDropdown(
         ) {
             Text(
                 if (selectedItems.value.isEmpty()) {
-                    "Select Accessory"
+                    "Select Accessory & Supplies"
                 } else {
                     selectedItems.value.joinToString(", ")
                 },

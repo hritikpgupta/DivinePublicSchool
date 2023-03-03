@@ -6,19 +6,23 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
 import hg.divineschool.admin.data.models.MonthFee
 import hg.divineschool.admin.ui.home.DPSBar
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.FormRow
 import hg.divineschool.admin.ui.theme.cardColors
+import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.utils.Log_Tag
 
 @Composable
@@ -71,7 +75,7 @@ fun StudentInvoice(
 
             ) {
                 FormRow(padding = 12) {
-                    Card(elevation = 2.dp, modifier = Modifier.padding(horizontal = 10.dp)) {
+                    Card(elevation = 8.dp, modifier = Modifier.padding(horizontal = 10.dp)) {
                         Row {
                             InvoiceCheckBoxes(
                                 text = "Admission Fee", classColor, modifier = Modifier
@@ -89,10 +93,20 @@ fun StudentInvoice(
                             }
                         }
                     }
-
                 }
                 FormRow(padding = 12) {
-                    MonthSelectList(items, classColor) {}
+                    Card(elevation = 8.dp, modifier = Modifier.padding(horizontal = 10.dp)) {
+                        Column(modifier = Modifier
+                            .requiredHeight(180.dp)
+                            .padding(6.dp)) {
+                            Text(
+                                text = "Select Month",
+                                style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp),
+                                modifier = Modifier.padding(horizontal = 5.dp)
+                            )
+                            MonthSelectList(items, classColor) {}
+                        }
+                    }
                 }
             }
             Divider(
