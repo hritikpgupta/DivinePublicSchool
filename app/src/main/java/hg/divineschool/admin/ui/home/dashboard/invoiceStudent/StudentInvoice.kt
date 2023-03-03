@@ -1,14 +1,17 @@
 package hg.divineschool.admin.ui.home.dashboard.invoiceStudent
 
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Card
+import androidx.compose.material.Divider
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
@@ -49,46 +52,61 @@ fun StudentInvoice(
             MonthFee(isPaid = false, month = "November"),
             MonthFee(isPaid = false, month = "December"),
         )
-        Column(
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.Top,
+        val accessoryList = listOf("Junior Tie", "Senior Tie", "Diary", "Belt", "ID & Fee Card")
+        val selectedAccessory = remember {
+            mutableStateOf(emptyList<String>())
+        }
+        Row(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
                 .padding(bottom = 65.dp, start = 5.dp, end = 5.dp)
-                .background(color = MaterialTheme.colors.background.copy(0.8f))
         ) {
-
-            Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.requiredWidth(600.dp)) {
-                StudentInformation(modifier = Modifier.weight(1f))
-            }
-            FormRow(padding = 24) {
-                InvoiceCheckBoxes(
-                    text = "Admission Fee", classColor, modifier = Modifier.weight(1f)
-                )
-                InvoiceCheckBoxes(
-                    text = "ID & Fee Card Fee", classColor, modifier = Modifier.weight(1f)
-                )
-                InvoiceCheckBoxes(text = "Diary Fee", classColor, modifier = Modifier.weight(1f))
-            }
-            FormRow(padding = 24) {
-                InvoiceCheckBoxes(text = "Belt Fee", classColor, modifier = Modifier.weight(1f))
-                InvoiceCheckBoxes(
-                    text = "Junior Tie Fee", classColor, modifier = Modifier.weight(1f)
-                )
-                InvoiceCheckBoxes(
-                    text = "Senior Tie Fee", classColor, modifier = Modifier.weight(1f)
-                )
-            }
-            Row(
+            Column(
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Top,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 2.dp)
-                    .wrapContentWidth(Alignment.Start)
-            ) {
-                MonthSelectList(items, classColor) {}
-            }
+                    .fillMaxSize()
+                    .weight(0.75f)
 
+            ) {
+                FormRow(padding = 12) {
+                    Card(elevation = 2.dp, modifier = Modifier.padding(horizontal = 10.dp)) {
+                        Row {
+                            InvoiceCheckBoxes(
+                                text = "Admission Fee", classColor, modifier = Modifier
+                                    .weight(1f)
+                                    .padding(6.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Row(modifier = Modifier.weight(2f)) {
+                                AccessoryDropdown(
+                                    items = accessoryList,
+                                    selectedItems = selectedAccessory,
+                                    color = classColor,
+                                    modifier = Modifier.padding(6.dp)
+                                )
+                            }
+                        }
+                    }
+
+                }
+                FormRow(padding = 12) {
+                    MonthSelectList(items, classColor) {}
+                }
+            }
+            Divider(
+                color = Color.LightGray, modifier = Modifier
+                    .fillMaxHeight()
+                    .width(6.dp)
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(.25f)
+            ) {
+
+            }
         }
     }
 }

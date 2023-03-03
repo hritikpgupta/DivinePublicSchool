@@ -3,16 +3,16 @@ package hg.divineschool.admin.ui.home.dashboard.invoiceStudent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -41,23 +42,23 @@ fun MonthSelectList(
 
     val selectedItems = remember { mutableStateListOf<MonthFee>() }
     LazyVerticalGrid(
-        verticalArrangement = Arrangement.spacedBy(14.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
         userScrollEnabled = true,
         contentPadding = PaddingValues(
-            top = 15.dp, start = 10.dp, end = 10.dp, bottom = 80.dp
+            top = 15.dp, start = 1.dp, end = 1.dp, bottom = 10.dp
         ),
         modifier = Modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colors.background.copy(0.6f)),
-        columns = GridCells.Adaptive(170.dp)
+        columns = GridCells.Adaptive(150.dp)
     ) {
         items(items) { item ->
             val isSelected = selectedItems.contains(item)
             val cardBgColor = remember { mutableStateOf(item.isPaid.getActivatedColor(color)) }
             Card(elevation = 6.dp,
                 backgroundColor = MaterialTheme.colors.background.copy(1f),
-                modifier = Modifier.requiredSize(width = 170.dp, height = 80.dp),
+                modifier = Modifier.requiredSize(width = 140.dp, height = 50.dp),
                 onClick = {
                     if (!item.isPaid) {
                         if (isSelected) {
@@ -76,24 +77,26 @@ fun MonthSelectList(
                         verticalArrangement = Arrangement.Center,
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(8.dp)
+                            .padding(4.dp)
                             .background(color = cardBgColor.value)
                     ) {
                         Text(
                             text = item.month, style = TextStyle(
                                 textAlign = TextAlign.Center,
                                 fontFamily = regularFont,
-                                fontSize = 24.sp
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 20.sp
                             ), color = Color.White, modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(6.dp)
                         )
+
                     }
                     if (item.isPaid) {
                         Image(
                             painter = painterResource(id = R.drawable.green_tick),
                             modifier = Modifier
-                                .requiredSize(35.dp)
+                                .requiredSize(25.dp)
                                 .padding(start = 0.dp, end = 0.dp, top = 0.dp, bottom = 0.dp)
                                 .clip(CircleShape),
                             contentDescription = ""
@@ -199,4 +202,68 @@ fun StudentInformation(modifier: Modifier) {
     }
 
 
+}
+
+@Composable
+fun AccessoryDropdown(
+    items: List<String>,
+    selectedItems: MutableState<List<String>>,
+    color: Color,
+    modifier: Modifier
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Column {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier.clickable { expanded = true }
+        ) {
+            Text(
+                if (selectedItems.value.isEmpty()) {
+                    "Select Accessory"
+                } else {
+                    selectedItems.value.joinToString(", ")
+                },
+                color = if (selectedItems.value.isEmpty()) {
+                    MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium)
+                } else {
+                    MaterialTheme.colors.onSurface
+                },
+                modifier = Modifier.weight(1f),
+                overflow = TextOverflow.Ellipsis,
+                style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp),
+                maxLines = 1,
+                softWrap = true,
+            )
+            Icon(
+                imageVector = Icons.Filled.ArrowDropDown,
+                contentDescription = null,
+            )
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            items.forEach { item ->
+                DropdownMenuItem(
+                    onClick = {
+                        if (selectedItems.value.contains(item)) {
+                            selectedItems.value = selectedItems.value - item
+                        } else {
+                            selectedItems.value = selectedItems.value + item
+                        }
+                        println(selectedItems.value)
+                    }
+                ) {
+                    Checkbox(
+                        checked = selectedItems.value.contains(item),
+                        onCheckedChange = null,
+                        colors = CheckboxDefaults.colors(checkedColor = color ),
+                        modifier = Modifier.padding(end = 16.dp)
+                    )
+                    Text(text = item, style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp))
+                }
+            }
+        }
+    }
 }
