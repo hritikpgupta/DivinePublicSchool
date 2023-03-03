@@ -8,10 +8,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -24,10 +21,13 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hg.divineschool.admin.R
 import hg.divineschool.admin.data.models.MonthFee
+import hg.divineschool.admin.ui.theme.cardColors
+import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.getActivatedColor
 
@@ -107,56 +107,96 @@ fun MonthSelectList(
 }
 
 @Composable
-fun TableHeading(heading : String, modifier: Modifier) {
+fun TableHeading(heading: String, modifier: Modifier) {
     Text(
         text = " $heading",
-        modifier = modifier.border(0.5.dp, Color.LightGray, RectangleShape),
+        modifier = modifier.border(1.dp, Color.LightGray.copy(0.5f), RectangleShape),
         textAlign = TextAlign.Start,
-        style = TextStyle(fontFamily = regularFont, fontSize = 24.sp)
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 1,
+        style = TextStyle(fontFamily = regularFont, fontSize = 30.sp)
     )
 }
+
 @Composable
-fun TableValue(value : String, modifier: Modifier) {
+fun TableValue(value: String, modifier: Modifier) {
     Text(
         text = " $value",
-        modifier = modifier.border(0.5.dp, Color.LightGray, RectangleShape),
+        modifier = modifier.border(1.dp, Color.LightGray.copy(0.5f), RectangleShape),
         textAlign = TextAlign.Start,
-        style = TextStyle(fontFamily = regularFont, fontSize = 24.sp)
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 1,
+        style = TextStyle(fontFamily = regularFont, fontSize = 30.sp)
 
     )
+}
+
+@Composable
+fun InvoiceCheckBoxes(text: String, color: Color, modifier: Modifier) {
+    Row(
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier.padding(horizontal = 20.dp)
+    ) {
+        androidx.compose.material3.Text(
+            text = text,
+            overflow = TextOverflow.Ellipsis,
+            style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp),
+            maxLines = 1,
+            softWrap = true,
+        )
+        Spacer(modifier = Modifier.fillMaxWidth())
+        Checkbox(
+            checked = true,
+            modifier = Modifier.requiredSize(30.dp),
+            colors = CheckboxDefaults.colors(checkedColor = color),
+            onCheckedChange = { },
+        )
+    }
+
 }
 
 @Composable
 fun StudentInformation(modifier: Modifier) {
-    Card(
-        backgroundColor = MaterialTheme.colors.background,
-        elevation = 6.dp,
-        modifier = modifier
 
+    Card(
+        elevation = 8.dp, modifier = modifier
+            .padding(4.dp)
+            .border(
+                3.dp, cardColors[0],
+                RectangleShape
+            )
     ) {
-        Column(modifier = Modifier.padding(2.dp)) {
+        Column(modifier = modifier.padding(4.dp)) {
+            Text(
+                text = "Student Information",
+                style = TextStyle(fontFamily = mediumFont, fontSize = 28.sp),
+                textAlign = TextAlign.Center
+            )
+            Divider(thickness = 1.dp, color = Color.DarkGray.copy(0.4f))
             Row {
                 TableHeading(heading = "Name", modifier = Modifier.weight(1f))
-                TableValue(value = "Hritik Gupta", modifier = Modifier.weight(2f))
+                TableValue(value = "Hritik Gupta", modifier = Modifier.weight(1f))
             }
             Row {
                 TableHeading(heading = "Father's Name", modifier = Modifier.weight(1f))
-                TableValue(value = "Rakesh Kumar Gupta", modifier = Modifier.weight(2f))
+                TableValue(value = "Rakesh Kumar Gupta", modifier = Modifier.weight(1f))
             }
             Row {
                 TableHeading(heading = "Class", modifier = Modifier.weight(1f))
-                TableValue(value = "Play Group", modifier = Modifier.weight(2f))
+                TableValue(value = "Play Group", modifier = Modifier.weight(1f))
             }
             Row {
                 TableHeading(heading = "Transport Student", modifier = Modifier.weight(1f))
-                TableValue(value = "Yes", modifier = Modifier.weight(2f))
+                TableValue(value = "Yes", modifier = Modifier.weight(1f))
             }
             Row {
                 TableHeading(heading = "New Student", modifier = Modifier.weight(1f))
-                TableValue(value = "No", modifier = Modifier.weight(2f))
+                TableValue(value = "No", modifier = Modifier.weight(1f))
             }
 
         }
     }
+
 
 }
