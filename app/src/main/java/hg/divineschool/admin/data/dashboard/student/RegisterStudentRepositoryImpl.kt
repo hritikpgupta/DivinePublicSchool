@@ -10,6 +10,7 @@ import hg.divineschool.admin.data.utils.awaitDocument
 import hg.divineschool.admin.data.utils.uploadFile
 import hg.divineschool.admin.ui.utils.Log_Tag
 import hg.divineschool.admin.ui.utils.convertIdToPath
+import hg.divineschool.admin.ui.utils.defaultTuitionFeeList
 import javax.inject.Inject
 
 class RegisterStudentRepositoryImpl @Inject constructor(
@@ -19,7 +20,6 @@ class RegisterStudentRepositoryImpl @Inject constructor(
     override suspend fun uploadProfileImage(
         student: Student, classId: String, className: String, fileUriString: String
     ): Resource<Student> {
-
         return try {
             val scholarExist =
                 db.collection("classes").document(classId.convertIdToPath()).collection("students")
@@ -37,6 +37,13 @@ class RegisterStudentRepositoryImpl @Inject constructor(
                 }
                 db.collection("classes").document(classId.convertIdToPath()).collection("students")
                     .document(student.scholarNumber.toString()).set(student).awaitDocument()
+
+                defaultTuitionFeeList.forEach {
+                    db.collection("classes").document(classId.convertIdToPath()).collection("students")
+                        .document(student.scholarNumber.toString()).collection("tuitionFee")
+                        .document(it.month).set(it).awaitDocument()
+                }
+
                 Resource.Success(student)
             } else {
                 Resource.FailureMessage("Scholar number in use.")

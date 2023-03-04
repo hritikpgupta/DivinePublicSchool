@@ -56,7 +56,7 @@ class StudentListViewModel @Inject constructor(
 
      fun getAllStudents(id: Long) = viewModelScope.launch {
         _studentListFlow.value = Resource.Loading
-        val result = repository.getStudentList(id);
+        val result = repository.getStudentList(id)
          _students.value = repository.students!!
         _studentListFlow.value = result
     }
