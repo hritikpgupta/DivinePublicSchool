@@ -230,7 +230,14 @@ fun StudentsList(
                                     }
                                 },
                                 onInvoiceClick = {
+                                    navController.currentBackStackEntry?.arguments?.apply {
+                                        putSerializable("studentObj", studentInfo)
+                                    }
                                     navController.navigate(AppScreen.StudentScreen.StudentInvoice.route+ "/${classID}/$className/${studentInfo.scholarNumber}")
+                                    searchWidth.value = 0.0f
+                                    if (searchText.value.isNotEmpty()){
+                                        viewModel.onClearSearchText()
+                                    }
                                 }
                             )
                         }

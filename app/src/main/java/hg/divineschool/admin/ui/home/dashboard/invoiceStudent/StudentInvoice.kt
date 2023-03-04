@@ -1,6 +1,5 @@
 package hg.divineschool.admin.ui.home.dashboard.invoiceStudent
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Card
@@ -20,13 +19,17 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
 import hg.divineschool.admin.data.Resource
+import hg.divineschool.admin.data.models.FeeStructure
+import hg.divineschool.admin.data.models.Student
+import hg.divineschool.admin.data.utils.getBooks
+import hg.divineschool.admin.data.utils.getPlaces
 import hg.divineschool.admin.ui.home.DPSBar
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.FormRow
 import hg.divineschool.admin.ui.theme.cardColors
 import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.utils.INR
-import hg.divineschool.admin.ui.utils.Log_Tag
 import hg.divineschool.admin.ui.utils.accessoryList
+import hg.divineschool.admin.ui.utils.customGetSerializable
 import hg.divineschool.admin.ui.utils.toast
 
 @Composable
@@ -37,6 +40,8 @@ fun StudentInvoice(
     navController: NavController,
     viewModel: StudentInvoiceViewModel
 ) {
+    val currentStudent =
+        navController.previousBackStackEntry?.arguments?.customGetSerializable<Student>("studentObj")
     val scrollState = rememberScrollState()
     val studentInfoState = viewModel.studentInformation.collectAsState()
     val context = LocalContext.current
@@ -83,9 +88,11 @@ fun StudentInvoice(
                                     modifier = Modifier.padding(horizontal = 10.dp)
                                 ) {
                                     Row {
-                                        if (it.result.student.newStudent){
+                                        if (currentStudent?.newStudent == true) {
                                             InvoiceCheckBoxes(
-                                                text = "Admission Fee", classColor, modifier = Modifier
+                                                text = "Admission Fee",
+                                                classColor,
+                                                modifier = Modifier
                                                     .weight(1f)
                                                     .padding(6.dp)
                                             )
@@ -114,7 +121,7 @@ fun StudentInvoice(
                                     ) {
                                         Row(modifier = Modifier.padding(horizontal = 5.dp)) {
                                             Text(
-                                                text = "Select Month",
+                                                text = "Select Months",
                                                 style = TextStyle(
                                                     fontFamily = mediumFont,
                                                     fontSize = 30.sp,
@@ -138,10 +145,92 @@ fun StudentInvoice(
                                     }
                                 }
                             }
+                            FormRow(padding = 12) {
+                                Card(
+                                    elevation = 8.dp,
+                                    modifier = Modifier.padding(horizontal = 10.dp)
+                                ) {
+                                    Column(
+                                        modifier = Modifier
+                                            .heightIn(min = 180.dp, max = 270.dp)
+                                            .padding(8.dp)
+                                    ) {
+                                        Row(modifier = Modifier.padding(horizontal = 5.dp)) {
+                                            Text(
+                                                text = "Select Books",
+                                                style = TextStyle(
+                                                    fontFamily = mediumFont,
+                                                    fontSize = 30.sp,
+                                                    textAlign = TextAlign.Start
+                                                ),
+                                                modifier = Modifier
+                                                    .weight(1f)
+                                            )
+                                            Text(
+                                                text = "$INR 700",
+                                                style = TextStyle(
+                                                    fontFamily = mediumFont,
+                                                    fontSize = 30.sp,
+                                                    textAlign = TextAlign.End
+                                                ),
+                                                modifier = Modifier
+                                                    .weight(1f)
+                                            )
+                                        }
+                                        BookSelectList(
+                                            FeeStructure.FEE_STRUCT.getBooks(classID),
+                                            classColor
+                                        ) {}
+                                    }
+                                }
+                            }
+                            if(currentStudent?.transportStudent == true){
+                                FormRow(padding = 12) {
+                                    Card(
+                                        elevation = 8.dp,
+                                        modifier = Modifier.padding(horizontal = 10.dp)
+                                    ) {
+                                        Column(
+                                            modifier = Modifier
+                                                .heightIn(min = 180.dp, max = 270.dp)
+                                                .padding(8.dp)
+                                        ) {
+                                            Row(modifier = Modifier.padding(horizontal = 5.dp)) {
+                                                Text(
+                                                    text = "Select Destination",
+                                                    style = TextStyle(
+                                                        fontFamily = mediumFont,
+                                                        fontSize = 30.sp,
+                                                        textAlign = TextAlign.Start
+                                                    ),
+                                                    modifier = Modifier
+                                                        .weight(1f)
+                                                )
+                                                Text(
+                                                    text = "$INR 450",
+                                                    style = TextStyle(
+                                                        fontFamily = mediumFont,
+                                                        fontSize = 30.sp,
+                                                        textAlign = TextAlign.End
+                                                    ),
+                                                    modifier = Modifier
+                                                        .weight(1f)
+                                                )
+                                            }
+                                            DestinationSelectList(
+                                                FeeStructure.FEE_STRUCT.getPlaces(),
+                                                classColor
+                                            ) {}
+                                        }
+                                    }
+                                }
+                            }
                         }
-                        Divider(color = Color.LightGray, modifier = Modifier
+                        Divider(
+                            color = Color.LightGray, modifier = Modifier
                                 .fillMaxHeight()
-                                .width(6.dp))
+                                .width(6.dp)
+                        )
                         InvoiceSummarySection(modifier = Modifier.weight(0.25f))
                     }
                 }

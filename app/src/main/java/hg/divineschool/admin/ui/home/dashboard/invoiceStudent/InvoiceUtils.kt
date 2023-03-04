@@ -26,10 +26,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hg.divineschool.admin.R
+import hg.divineschool.admin.data.models.Book
 import hg.divineschool.admin.data.models.MonthFee
+import hg.divineschool.admin.data.models.Place
 import hg.divineschool.admin.ui.theme.cardColors
 import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.theme.regularFont
+import hg.divineschool.admin.ui.utils.INR
 import hg.divineschool.admin.ui.utils.getActivatedColor
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -258,12 +261,176 @@ fun AccessoryDropdown(
                     Checkbox(
                         checked = selectedItems.value.contains(item),
                         onCheckedChange = null,
-                        colors = CheckboxDefaults.colors(checkedColor = color ),
+                        colors = CheckboxDefaults.colors(checkedColor = color),
                         modifier = Modifier.padding(end = 16.dp)
                     )
                     Text(text = item, style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp))
                 }
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun BookSelectList(
+    items: List<Book>,
+    color: Color,
+    onBookSelect: (list: List<Book>) -> Unit
+) {
+
+    val selectedItems = remember { mutableStateListOf<Book>() }
+    LazyVerticalGrid(
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
+        userScrollEnabled = true,
+        contentPadding = PaddingValues(
+            top = 15.dp, start = 1.dp, end = 1.dp, bottom = 10.dp
+        ),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colors.background.copy(0.6f)),
+        columns = GridCells.Adaptive(220.dp)
+    ) {
+        items(items) { item ->
+            val isSelected = selectedItems.contains(item)
+            val cardBgColor = remember { mutableStateOf(Color.LightGray) }
+            Card(elevation = 6.dp,
+                backgroundColor = MaterialTheme.colors.background.copy(1f),
+                modifier = Modifier.requiredSize(width = 220.dp, height = 90.dp),
+                onClick = {
+                    if (isSelected) {
+                        selectedItems.remove(item)
+                        cardBgColor.value = Color.LightGray
+                    } else {
+                        selectedItems.add(item)
+                        cardBgColor.value = color.copy(0.65f)
+                    }
+                    onBookSelect(selectedItems.toList())
+
+                }) {
+                Box(contentAlignment = Alignment.TopEnd) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(4.dp)
+                            .background(color = cardBgColor.value)
+                    ) {
+                        Text(
+                            text = item.bookName,
+                            overflow = TextOverflow.Ellipsis,
+
+                            style = TextStyle(
+                                textAlign = TextAlign.Center,
+                                fontFamily = regularFont,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 24.sp
+                            ),
+                            color = Color.White,
+                            maxLines = 1,
+                            softWrap = true,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(6.dp)
+                        )
+                        Text(
+                            text = "$INR ${item.bookPrice}", style = TextStyle(
+                                textAlign = TextAlign.Center,
+                                fontFamily = regularFont,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 22.sp
+                            ), color = Color.White, modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(6.dp)
+                        )
+
+                    }
+                }
+            }
+
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun DestinationSelectList(
+    items: List<Place>,
+    color: Color,
+    onDestinationSelect: (place: Place) -> Unit
+) {
+
+    var selectedItem: Place? by remember { mutableStateOf(null) }
+    LazyVerticalGrid(
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
+        userScrollEnabled = true,
+        contentPadding = PaddingValues(
+            top = 15.dp, start = 1.dp, end = 1.dp, bottom = 10.dp
+        ),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colors.background.copy(0.6f)),
+        columns = GridCells.Adaptive(220.dp)
+    ) {
+        items(items) { item ->
+
+            Card(elevation = 6.dp,
+                backgroundColor = MaterialTheme.colors.background.copy(1f),
+                modifier = Modifier.requiredSize(width = 220.dp, height = 90.dp),
+                onClick = {
+                    selectedItem = item
+                    onDestinationSelect(selectedItem!!)
+                }) {
+                Box(contentAlignment = Alignment.TopEnd) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(4.dp)
+                            .background(
+                                color = if (selectedItem == item) {
+                                    color.copy(0.5f)
+                                } else {
+                                    Color.LightGray
+                                }
+                            )
+                    ) {
+                        Text(
+                            text = item.placeName,
+                            overflow = TextOverflow.Ellipsis,
+
+                            style = TextStyle(
+                                textAlign = TextAlign.Center,
+                                fontFamily = regularFont,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 24.sp
+                            ),
+                            color = Color.White,
+                            maxLines = 1,
+                            softWrap = true,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(6.dp)
+                        )
+                        Text(
+                            text = "$INR ${item.placePrice}", style = TextStyle(
+                                textAlign = TextAlign.Center,
+                                fontFamily = regularFont,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 22.sp
+                            ), color = Color.White, modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(6.dp)
+                        )
+
+                    }
+                }
+            }
+
         }
     }
 }

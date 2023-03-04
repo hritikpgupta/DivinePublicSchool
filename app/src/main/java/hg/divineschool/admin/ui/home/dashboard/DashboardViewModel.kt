@@ -23,11 +23,15 @@ class DashboardViewModel @Inject constructor(
 
     init {
         getAllClasses()
+        getFeeStructure()
     }
 
     private fun getAllClasses() = viewModelScope.launch {
         _classListFlow.value = Resource.Loading
         val result = repository.getAllClasses()
         _classListFlow.value = result
+    }
+    private fun getFeeStructure() = viewModelScope.launch {
+        repository.getFeeStructure()
     }
 }
