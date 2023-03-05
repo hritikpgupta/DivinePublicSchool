@@ -77,7 +77,7 @@ fun FeeStructure.getBooks(classID: String): List<Book> {
     val bookList = ArrayList<Book>()
     when (classID.toInt()) {
         0 -> {
-            returnBookList(this.pgBooks,bookList)
+            returnBookList(this.classEightBooks,bookList)
         }
         1 -> {
             returnBookList(this.lnBooks,bookList)
@@ -129,4 +129,46 @@ fun FeeStructure.getPlaces() : List<Place>{
         places.add(Place(key.toString(),value.toString().toInt()))
     }
     return places
+}
+
+fun FeeStructure.getTuitionFee(classID: String) : Int{
+    val fee = 0
+    when (classID.toInt()) {
+        0 -> {
+            return this.pgTuition
+        }
+        1 -> {
+            return this.lnTuition
+        }
+        2 -> {
+            return this.unTuition
+        }
+        3 -> {
+            return this.classOneTuition
+        }
+        4 -> {
+            return this.classTwoTuition
+        }
+        5 -> {
+            return this.classThreeTuition
+        }
+        6 -> {
+            return this.classFourTuition
+        }
+        7 -> {
+            return this.classFiveTuition
+        }
+        8 -> {
+            return this.classSixTuition
+        }
+        9 -> {
+            return this.classSevenTuition
+        }
+        10 -> {
+            return this.classEightTuition
+        }
+        else ->{
+            return fee
+        }
+    }
 }

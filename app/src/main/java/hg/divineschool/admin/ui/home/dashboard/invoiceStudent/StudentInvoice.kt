@@ -2,6 +2,7 @@ package hg.divineschool.admin.ui.home.dashboard.invoiceStudent
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
@@ -23,6 +24,7 @@ import hg.divineschool.admin.data.models.FeeStructure
 import hg.divineschool.admin.data.models.Student
 import hg.divineschool.admin.data.utils.getBooks
 import hg.divineschool.admin.data.utils.getPlaces
+import hg.divineschool.admin.data.utils.getTuitionFee
 import hg.divineschool.admin.ui.home.DPSBar
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.FormRow
 import hg.divineschool.admin.ui.theme.cardColors
@@ -44,6 +46,18 @@ fun StudentInvoice(
         navController.previousBackStackEntry?.arguments?.customGetSerializable<Student>("studentObj")
     val scrollState = rememberScrollState()
     val studentInfoState = viewModel.studentInformation.collectAsState()
+    val chargeAdmissionFee = remember {
+        mutableStateOf(false)
+    }
+    val tuitionFee = remember {
+        mutableStateOf(0)
+    }
+    val transportFee = remember {
+        mutableStateOf(0)
+    }
+    val bookFee = remember {
+        mutableStateOf(0)
+    }
     val context = LocalContext.current
     val classColor = cardColors[classID.toInt()]
     LaunchedEffect(Unit) {
@@ -79,6 +93,7 @@ fun StudentInvoice(
                             horizontalAlignment = Alignment.Start,
                             verticalArrangement = Arrangement.Top,
                             modifier = Modifier
+                                .verticalScroll(scrollState)
                                 .fillMaxSize()
                                 .weight(0.75f)
                         ) {
@@ -87,11 +102,13 @@ fun StudentInvoice(
                                     elevation = 8.dp,
                                     modifier = Modifier.padding(horizontal = 10.dp)
                                 ) {
-                                    Row {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
                                         if (currentStudent?.newStudent == true) {
                                             InvoiceCheckBoxes(
                                                 text = "Admission Fee",
-                                                classColor,
+                                                classColor, chargeAdmissionFee.value, { bool ->
+                                                    chargeAdmissionFee.value = bool
+                                                },
                                                 modifier = Modifier
                                                     .weight(1f)
                                                     .padding(6.dp)
@@ -131,7 +148,7 @@ fun StudentInvoice(
                                                     .weight(1f)
                                             )
                                             Text(
-                                                text = "$INR 300",
+                                                text = "$INR ${tuitionFee.value}",
                                                 style = TextStyle(
                                                     fontFamily = mediumFont,
                                                     fontSize = 30.sp,
@@ -141,7 +158,19 @@ fun StudentInvoice(
                                                     .weight(1f)
                                             )
                                         }
-                                        MonthSelectList(it.result.monthFeeList, classColor) {}
+                                        MonthSelectList(
+                                            it.result.monthFeeList,
+                                            classColor
+                                        ) { monthList ->
+                                            if (monthList.isNotEmpty()) {
+                                                tuitionFee.value =
+                                                    monthList.size * FeeStructure.FEE_STRUCT.getTuitionFee(
+                                                        classID
+                                                    )
+                                            } else {
+                                                tuitionFee.value = 0
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -167,7 +196,7 @@ fun StudentInvoice(
                                                     .weight(1f)
                                             )
                                             Text(
-                                                text = "$INR 700",
+                                                text = "$INR ${bookFee.value}",
                                                 style = TextStyle(
                                                     fontFamily = mediumFont,
                                                     fontSize = 30.sp,
@@ -180,11 +209,22 @@ fun StudentInvoice(
                                         BookSelectList(
                                             FeeStructure.FEE_STRUCT.getBooks(classID),
                                             classColor
-                                        ) {}
+                                        ) { bookList ->
+                                            if (bookList.isNotEmpty()) {
+                                                var sum = 0
+                                                bookList.forEach { book ->
+                                                    sum += book.bookPrice
+                                                }
+                                                bookFee.value = sum
+                                            } else {
+                                                bookFee.value = 0
+                                            }
+
+                                        }
                                     }
                                 }
                             }
-                            if(currentStudent?.transportStudent == true){
+                            if (currentStudent?.transportStudent == true) {
                                 FormRow(padding = 12) {
                                     Card(
                                         elevation = 8.dp,
@@ -207,7 +247,7 @@ fun StudentInvoice(
                                                         .weight(1f)
                                                 )
                                                 Text(
-                                                    text = "$INR 450",
+                                                    text = "$INR ${transportFee.value}",
                                                     style = TextStyle(
                                                         fontFamily = mediumFont,
                                                         fontSize = 30.sp,
@@ -220,7 +260,13 @@ fun StudentInvoice(
                                             DestinationSelectList(
                                                 FeeStructure.FEE_STRUCT.getPlaces(),
                                                 classColor
-                                            ) {}
+                                            ) { place ->
+                                                if (place != null) {
+                                                    transportFee.value = place.placePrice
+                                                } else {
+                                                    transportFee.value = 0
+                                                }
+                                            }
                                         }
                                     }
                                 }

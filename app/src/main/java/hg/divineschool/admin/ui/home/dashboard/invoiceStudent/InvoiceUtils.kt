@@ -138,7 +138,7 @@ fun TableValue(value: String, modifier: Modifier) {
 }
 
 @Composable
-fun InvoiceCheckBoxes(text: String, color: Color, modifier: Modifier) {
+fun InvoiceCheckBoxes(text: String, color: Color, value :Boolean, onChecked :(b : Boolean) ->Unit ,modifier: Modifier) {
     Row(
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
@@ -153,10 +153,10 @@ fun InvoiceCheckBoxes(text: String, color: Color, modifier: Modifier) {
         )
         Spacer(modifier = Modifier.fillMaxWidth())
         Checkbox(
-            checked = true,
+            checked = value,
             modifier = Modifier.requiredSize(30.dp),
             colors = CheckboxDefaults.colors(checkedColor = color),
-            onCheckedChange = { },
+            onCheckedChange = { onChecked(it) },
         )
     }
 
@@ -359,7 +359,7 @@ fun BookSelectList(
 fun DestinationSelectList(
     items: List<Place>,
     color: Color,
-    onDestinationSelect: (place: Place) -> Unit
+    onDestinationSelect: (place: Place?) -> Unit
 ) {
 
     var selectedItem: Place? by remember { mutableStateOf(null) }
@@ -381,8 +381,14 @@ fun DestinationSelectList(
                 backgroundColor = MaterialTheme.colors.background.copy(1f),
                 modifier = Modifier.requiredSize(width = 220.dp, height = 90.dp),
                 onClick = {
-                    selectedItem = item
-                    onDestinationSelect(selectedItem!!)
+                    if (selectedItem == item ){
+                        selectedItem = null
+                        onDestinationSelect(null)
+                    }else{
+                        selectedItem = item
+                        onDestinationSelect(selectedItem!!)
+                    }
+
                 }) {
                 Box(contentAlignment = Alignment.TopEnd) {
                     Column(
@@ -393,7 +399,9 @@ fun DestinationSelectList(
                             .padding(4.dp)
                             .background(
                                 color = if (selectedItem == item) {
-                                    color.copy(0.5f)
+                                    color.copy(0.65f)
+                                } else if (selectedItem == null) {
+                                    Color.LightGray
                                 } else {
                                     Color.LightGray
                                 }
