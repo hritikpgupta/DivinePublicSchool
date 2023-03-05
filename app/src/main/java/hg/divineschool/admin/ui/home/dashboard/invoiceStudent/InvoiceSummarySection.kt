@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -36,8 +38,11 @@ fun Preview() {
 fun InvoiceSummarySection(
     classID: String, student: Student,
     color: Color, modifier: Modifier, tuitionFee: Int,
-    admissionFee: Int, transportFee: Int, bookFee: Int, supplementFee: Int
+    admissionFee: Int, transportFee: Int, bookFee: Int, supplementFee: Int,
+    examinationFee: Int, annualFee: Int, computerFee : Int
 ) {
+    val sum = tuitionFee+admissionFee+transportFee+bookFee+supplementFee+examinationFee+annualFee+computerFee
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -91,7 +96,7 @@ fun InvoiceSummarySection(
         Row {
             TableHeading(heading = "Examination Fee", modifier = Modifier.weight(0.6f))
             TableValue(
-                value = "$INR 0",
+                value = "$INR $examinationFee ",
                 modifier = Modifier.weight(0.4f),
                 align = TextAlign.End
             )
@@ -99,7 +104,7 @@ fun InvoiceSummarySection(
         Row {
             TableHeading(heading = "Computer Fee", modifier = Modifier.weight(0.6f))
             TableValue(
-                value = "$INR 150",
+                value = "$INR $computerFee ",
                 modifier = Modifier.weight(0.4f),
                 align = TextAlign.End
             )
@@ -107,7 +112,7 @@ fun InvoiceSummarySection(
         Row {
             TableHeading(heading = "Annual Fee", modifier = Modifier.weight(0.6f))
             TableValue(
-                value = "$INR 450",
+                value = "$INR $annualFee ",
                 modifier = Modifier.weight(0.4f),
                 align = TextAlign.End
             )
@@ -149,7 +154,7 @@ fun InvoiceSummarySection(
                 style = TextStyle(fontFamily = boldFont, fontSize = 20.sp)
             )
             Text(
-                text = " $INR 48530 ",
+                text = " $INR $sum ",
                 modifier = modifier
                     .weight(0.4f)
                     .border(1.dp, Color.LightGray.copy(0.4f), RectangleShape),

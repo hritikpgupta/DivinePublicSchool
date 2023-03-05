@@ -15,6 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.core.content.ContextCompat
+import hg.divineschool.admin.data.models.FeeStructure
+import hg.divineschool.admin.data.models.MonthFee
 import java.io.Serializable
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -50,18 +52,18 @@ fun Context.getActivity(): Activity? = when (this) {
     else -> null
 }
 
-fun Boolean.getTextAlignment() : TextAlign{
-    return if (this){
+fun Boolean.getTextAlignment(): TextAlign {
+    return if (this) {
         TextAlign.Start
-    }else{
+    } else {
         TextAlign.Center
     }
 }
 
-fun Boolean.getActivatedColor(color : Color) : Color{
-    return if (this){
+fun Boolean.getActivatedColor(color: Color): Color {
+    return if (this) {
         return color
-    }else {
+    } else {
         return Color.LightGray
     }
 }
@@ -76,7 +78,9 @@ suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutin
 
 @Suppress("DEPRECATION")
 inline fun <reified T : Serializable> Bundle.customGetSerializable(key: String): T? {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) getSerializable(key, T::class.java)
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) getSerializable(
+        key, T::class.java
+    )
     else getSerializable(key) as? T
 }
 
@@ -175,4 +179,67 @@ fun String.convertIdToName(): String {
     } else {
         ""
     }
+}
+
+fun List<MonthFee>.getExamFeeCount(): Int {
+    var isJan = false
+    var isSept = false
+    this.forEach { monthFee ->
+        if (monthFee.month == "January") {
+            isJan = true
+        }
+        if (monthFee.month == "September") {
+            isSept = true
+        }
+    }
+    return if (isJan && isSept) {
+        2
+    } else if (isJan || isSept) {
+        1
+    } else {
+        0
+    }
+}
+
+fun List<MonthFee>.getAnnualFeeCount(): Int {
+    var isJuly = false
+    this.forEach { monthFee ->
+        if (monthFee.month == "July") {
+            isJuly = true
+        }
+    }
+    return if (isJuly) {
+        1
+    } else {
+        0
+    }
+}
+
+fun List<MonthFee>.contains(monthName: String): Boolean {
+    this.forEach {
+        if (it.month == monthName) {
+            return true
+        }
+    }
+    return false
+}
+
+fun List<MonthFee>.getComputerFee(classID: String): Int {
+
+    return if (this.contains("March") || this.contains("June") || this.contains("September") || this.contains(
+            "December"
+        )
+    ) {
+        if (classID.toInt() in 5..7) {
+            FeeStructure.FEE_STRUCT.computerFeeJunior * 1
+        } else if (classID.toInt() in 8..10) {
+            FeeStructure.FEE_STRUCT.computerFeeSenior * 1
+        } else {
+            0
+        }
+
+    } else {
+        0
+    }
+
 }

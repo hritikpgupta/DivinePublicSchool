@@ -74,7 +74,7 @@ fun FeeStructure.getBooks(classID: String): List<Book> {
     val bookList = ArrayList<Book>()
     when (classID.toInt()) {
         0 -> {
-            returnBookList(this.classEightBooks,bookList)
+            returnBookList(this.pgBooks,bookList)
         }
         1 -> {
             returnBookList(this.lnBooks,bookList)

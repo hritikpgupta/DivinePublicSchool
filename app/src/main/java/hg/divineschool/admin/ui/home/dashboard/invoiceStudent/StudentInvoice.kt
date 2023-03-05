@@ -31,9 +31,7 @@ import hg.divineschool.admin.ui.home.DPSBar
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.FormRow
 import hg.divineschool.admin.ui.theme.cardColors
 import hg.divineschool.admin.ui.theme.mediumFont
-import hg.divineschool.admin.ui.utils.INR
-import hg.divineschool.admin.ui.utils.customGetSerializable
-import hg.divineschool.admin.ui.utils.toast
+import hg.divineschool.admin.ui.utils.*
 
 @Composable
 fun StudentInvoice(
@@ -79,8 +77,6 @@ fun StudentInvoice(
     val annualFee = remember {
         mutableStateOf(0)
     }
-
-
 
 
     val context = LocalContext.current
@@ -204,6 +200,12 @@ fun StudentInvoice(
                                                     monthList.size * FeeStructure.FEE_STRUCT.getTuitionFee(
                                                         classID
                                                     )
+                                                examinationFee.value =
+                                                    FeeStructure.FEE_STRUCT.examFee * monthList.getExamFeeCount()
+                                                annualFee.value =
+                                                    FeeStructure.FEE_STRUCT.annualCharge * monthList.getAnnualFeeCount()
+                                                computerFee.value =
+                                                    monthList.getComputerFee(classID)
 
                                             } else {
                                                 tuitionFee.value = 0
@@ -315,7 +317,10 @@ fun StudentInvoice(
                             admissionFee = admissionFee.value,
                             transportFee = transportFee.value,
                             bookFee = bookFee.value,
-                            supplementFee = supplementFee.value
+                            supplementFee = supplementFee.value,
+                            examinationFee = examinationFee.value,
+                            annualFee = annualFee.value,
+                            computerFee = computerFee.value
                         )
                     }
                 }
