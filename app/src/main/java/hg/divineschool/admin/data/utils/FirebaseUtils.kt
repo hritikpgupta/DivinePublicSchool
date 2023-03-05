@@ -3,10 +3,7 @@ package hg.divineschool.admin.data.utils
 import android.net.Uri
 import com.google.android.gms.tasks.Task
 import com.google.firebase.storage.StorageReference
-import hg.divineschool.admin.data.models.Book
-import hg.divineschool.admin.data.models.FeeStructure
-import hg.divineschool.admin.data.models.Place
-import hg.divineschool.admin.data.models.Student
+import hg.divineschool.admin.data.models.*
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resumeWithException
 
@@ -171,4 +168,23 @@ fun FeeStructure.getTuitionFee(classID: String) : Int{
             return fee
         }
     }
+}
+
+fun Boolean.toYesOrNo() : String{
+    return if (this){
+        "Yes"
+    }else{
+        "No"
+    }
+}
+
+fun FeeStructure.getSupplement(): List<Supplement>{
+    val supplements = ArrayList<Supplement>()
+    supplements.add(Supplement(itemName = "Belt", price = this.beltPrice))
+    supplements.add(Supplement(itemName = "Diary", price = this.diaryFee))
+    supplements.add(Supplement(itemName = "ID & Fee Card", price = this.idAndFeeCardPrice))
+    supplements.add(Supplement(itemName = "Junior Tie", price = this.tieFeeJunior))
+    supplements.add(Supplement(itemName = "Senior Tie", price = this.tieFeeSenior))
+
+    return supplements
 }

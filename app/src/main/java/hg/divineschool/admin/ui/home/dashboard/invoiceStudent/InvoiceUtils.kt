@@ -26,13 +26,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hg.divineschool.admin.R
-import hg.divineschool.admin.data.models.Book
-import hg.divineschool.admin.data.models.MonthFee
-import hg.divineschool.admin.data.models.Place
-import hg.divineschool.admin.ui.theme.cardColors
+import hg.divineschool.admin.data.models.*
+import hg.divineschool.admin.data.utils.toYesOrNo
+import hg.divineschool.admin.ui.theme.lightFont
 import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.INR
+import hg.divineschool.admin.ui.utils.convertIdToName
 import hg.divineschool.admin.ui.utils.getActivatedColor
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -120,25 +120,31 @@ fun TableHeading(heading: String, modifier: Modifier) {
         textAlign = TextAlign.Start,
         overflow = TextOverflow.Ellipsis,
         maxLines = 1,
-        style = TextStyle(fontFamily = regularFont, fontSize = 30.sp)
+        style = TextStyle(fontFamily = lightFont, fontSize = 20.sp)
     )
 }
 
 @Composable
-fun TableValue(value: String, modifier: Modifier) {
+fun TableValue(value: String, modifier: Modifier, align: TextAlign) {
     Text(
         text = " $value",
         modifier = modifier.border(1.dp, Color.LightGray.copy(0.5f), RectangleShape),
-        textAlign = TextAlign.Start,
+        textAlign = align,
         overflow = TextOverflow.Ellipsis,
         maxLines = 1,
-        style = TextStyle(fontFamily = regularFont, fontSize = 30.sp)
+        style = TextStyle(fontFamily = lightFont, fontSize = 20.sp)
 
     )
 }
 
 @Composable
-fun InvoiceCheckBoxes(text: String, color: Color, value :Boolean, onChecked :(b : Boolean) ->Unit ,modifier: Modifier) {
+fun InvoiceCheckBoxes(
+    text: String,
+    color: Color,
+    value: Boolean,
+    onChecked: (b: Boolean) -> Unit,
+    modifier: Modifier
+) {
     Row(
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
@@ -163,54 +169,76 @@ fun InvoiceCheckBoxes(text: String, color: Color, value :Boolean, onChecked :(b 
 }
 
 @Composable
-fun StudentInformation(modifier: Modifier) {
+fun StudentInformation(student: Student, classID: String) {
 
-    Card(
-        elevation = 8.dp, modifier = modifier
-            .padding(4.dp)
-            .border(
-                3.dp, cardColors[0],
-                RectangleShape
-            )
-    ) {
-        Column(modifier = modifier.padding(4.dp)) {
-            Text(
-                text = "Student Information",
-                style = TextStyle(fontFamily = mediumFont, fontSize = 28.sp),
-                textAlign = TextAlign.Center
-            )
-            Divider(thickness = 1.dp, color = Color.DarkGray.copy(0.4f))
-            Row {
-                TableHeading(heading = "Name", modifier = Modifier.weight(1f))
-                TableValue(value = "Hritik Gupta", modifier = Modifier.weight(1f))
-            }
-            Row {
-                TableHeading(heading = "Father's Name", modifier = Modifier.weight(1f))
-                TableValue(value = "Rakesh Kumar Gupta", modifier = Modifier.weight(1f))
-            }
-            Row {
-                TableHeading(heading = "Class", modifier = Modifier.weight(1f))
-                TableValue(value = "Play Group", modifier = Modifier.weight(1f))
-            }
-            Row {
-                TableHeading(heading = "Transport Student", modifier = Modifier.weight(1f))
-                TableValue(value = "Yes", modifier = Modifier.weight(1f))
-            }
-            Row {
-                TableHeading(heading = "New Student", modifier = Modifier.weight(1f))
-                TableValue(value = "No", modifier = Modifier.weight(1f))
-            }
-
-        }
+    Row {
+        TableHeading(heading = "Name", modifier = Modifier.weight(0.3f))
+        TableValue(
+            value = "${student.firstName} ${student.lastName}",
+            modifier = Modifier.weight(0.7f),
+            align = TextAlign.Start
+        )
+    }
+    Row {
+        TableHeading(heading = "Father", modifier = Modifier.weight(0.3f))
+        TableValue(
+            value = student.fathersName,
+            modifier = Modifier.weight(0.7f),
+            align = TextAlign.Start
+        )
+    }
+    Row {
+        TableHeading(heading = "Class", modifier = Modifier.weight(0.3f))
+        TableValue(
+            value = classID.convertIdToName(),
+            modifier = Modifier.weight(0.7f),
+            align = TextAlign.Start
+        )
+    }
+    Row {
+        TableHeading(heading = "Roll No", modifier = Modifier.weight(0.3f))
+        TableValue(
+            value = "${student.rollNumber}",
+            modifier = Modifier.weight(0.7f),
+            align = TextAlign.Start
+        )
+    }
+    Row {
+        TableHeading(heading = "Transport", modifier = Modifier.weight(0.3f))
+        TableValue(
+            value = student.transportStudent.toYesOrNo(),
+            modifier = Modifier.weight(0.7f),
+            align = TextAlign.Start
+        )
+    }
+    Row {
+        TableHeading(heading = "New", modifier = Modifier.weight(0.3f))
+        TableValue(
+            value = student.newStudent.toYesOrNo(),
+            modifier = Modifier.weight(0.7f),
+            align = TextAlign.Start
+        )
     }
 
+}
 
+fun List<Supplement>.getString(): String {
+    if (this.isNotEmpty()) {
+        var stringBuilder = StringBuilder()
+        this.forEach { supplement ->
+            stringBuilder.append(supplement.itemName + ", ")
+        }
+        return stringBuilder.toString()
+    } else {
+        return "Select Accessory & Supplies"
+    }
 }
 
 @Composable
 fun AccessoryDropdown(
-    items: List<String>,
-    selectedItems: MutableState<List<String>>,
+    items: List<Supplement>,
+    selectedItems: MutableState<List<Supplement>>,
+    onItemsSelected: (list: List<Supplement>) -> Unit,
     color: Color,
     modifier: Modifier
 ) {
@@ -225,7 +253,7 @@ fun AccessoryDropdown(
                 if (selectedItems.value.isEmpty()) {
                     "Select Accessory & Supplies"
                 } else {
-                    selectedItems.value.joinToString(", ")
+                    selectedItems.value.getString()
                 },
                 color = if (selectedItems.value.isEmpty()) {
                     MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium)
@@ -234,7 +262,7 @@ fun AccessoryDropdown(
                 },
                 modifier = Modifier.weight(1f),
                 overflow = TextOverflow.Ellipsis,
-                style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp),
+                style = TextStyle(fontFamily = mediumFont, fontSize = 28.sp),
                 maxLines = 1,
                 softWrap = true,
             )
@@ -252,10 +280,11 @@ fun AccessoryDropdown(
                     onClick = {
                         if (selectedItems.value.contains(item)) {
                             selectedItems.value = selectedItems.value - item
+                            onItemsSelected(selectedItems.value)
                         } else {
                             selectedItems.value = selectedItems.value + item
+                            onItemsSelected(selectedItems.value)
                         }
-                        println(selectedItems.value)
                     }
                 ) {
                     Checkbox(
@@ -264,7 +293,10 @@ fun AccessoryDropdown(
                         colors = CheckboxDefaults.colors(checkedColor = color),
                         modifier = Modifier.padding(end = 16.dp)
                     )
-                    Text(text = item, style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp))
+                    Text(
+                        text = "${item.itemName} $INR ${item.price}",
+                        style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp)
+                    )
                 }
             }
         }
@@ -381,10 +413,10 @@ fun DestinationSelectList(
                 backgroundColor = MaterialTheme.colors.background.copy(1f),
                 modifier = Modifier.requiredSize(width = 220.dp, height = 90.dp),
                 onClick = {
-                    if (selectedItem == item ){
+                    if (selectedItem == item) {
                         selectedItem = null
                         onDestinationSelect(null)
-                    }else{
+                    } else {
                         selectedItem = item
                         onDestinationSelect(selectedItem!!)
                     }

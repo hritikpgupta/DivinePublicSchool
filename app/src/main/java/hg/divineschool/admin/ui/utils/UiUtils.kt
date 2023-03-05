@@ -148,3 +148,31 @@ fun String.convertIdToPath(): String {
         ""
     }
 }
+
+fun String.convertIdToName(): String {
+    return if (this.toInt() == 0) {
+        "Play Group"
+    } else if (this.toInt() == 1) {
+        "Lower Nursery"
+    } else if (this.toInt() == 2) {
+        "Upper Nursery"
+    } else if (this.toInt() == 3) {
+        "Class One"
+    } else if (this.toInt() == 4) {
+        "Class Two"
+    } else if (this.toInt() == 5) {
+        "Class Three"
+    } else if (this.toInt() == 6) {
+        "Class Four"
+    } else if (this.toInt() == 7) {
+        "Class Five"
+    } else if (this.toInt() == 8) {
+        "Class Six"
+    } else if (this.toInt() == 9) {
+        "Class Seven"
+    } else if (this.toInt() == 10) {
+        "Class Eight"
+    } else {
+        ""
+    }
+}

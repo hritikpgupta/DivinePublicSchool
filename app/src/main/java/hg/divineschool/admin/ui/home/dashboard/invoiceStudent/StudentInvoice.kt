@@ -22,15 +22,16 @@ import com.google.accompanist.insets.ui.Scaffold
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.FeeStructure
 import hg.divineschool.admin.data.models.Student
+import hg.divineschool.admin.data.models.Supplement
 import hg.divineschool.admin.data.utils.getBooks
 import hg.divineschool.admin.data.utils.getPlaces
+import hg.divineschool.admin.data.utils.getSupplement
 import hg.divineschool.admin.data.utils.getTuitionFee
 import hg.divineschool.admin.ui.home.DPSBar
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.FormRow
 import hg.divineschool.admin.ui.theme.cardColors
 import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.utils.INR
-import hg.divineschool.admin.ui.utils.accessoryList
 import hg.divineschool.admin.ui.utils.customGetSerializable
 import hg.divineschool.admin.ui.utils.toast
 
@@ -46,26 +47,48 @@ fun StudentInvoice(
         navController.previousBackStackEntry?.arguments?.customGetSerializable<Student>("studentObj")
     val scrollState = rememberScrollState()
     val studentInfoState = viewModel.studentInformation.collectAsState()
+    val selectedAccessory = remember {
+        mutableStateOf(emptyList<Supplement>())
+    }
+
     val chargeAdmissionFee = remember {
         mutableStateOf(false)
     }
     val tuitionFee = remember {
         mutableStateOf(0)
     }
+    val admissionFee = remember {
+        mutableStateOf(0)
+    }
     val transportFee = remember {
+        mutableStateOf(0)
+    }
+    val supplementFee = remember {
         mutableStateOf(0)
     }
     val bookFee = remember {
         mutableStateOf(0)
     }
+
+    val examinationFee = remember {
+        mutableStateOf(0)
+    }
+    val computerFee = remember {
+        mutableStateOf(0)
+    }
+    val annualFee = remember {
+        mutableStateOf(0)
+    }
+
+
+
+
     val context = LocalContext.current
     val classColor = cardColors[classID.toInt()]
     LaunchedEffect(Unit) {
         viewModel.getStudent(classID, scholarNumber)
     }
-    val selectedAccessory = remember {
-        mutableStateOf(emptyList<String>())
-    }
+
 
     Scaffold(scaffoldState = rememberScaffoldState(), topBar = {
         DPSBar(onBackPressed = { navController.popBackStack() }, className = "Generate Bill")
@@ -106,8 +129,16 @@ fun StudentInvoice(
                                         if (currentStudent?.newStudent == true) {
                                             InvoiceCheckBoxes(
                                                 text = "Admission Fee",
-                                                classColor, chargeAdmissionFee.value, { bool ->
+                                                classColor,
+                                                chargeAdmissionFee.value,
+                                                { bool ->
                                                     chargeAdmissionFee.value = bool
+                                                    if (chargeAdmissionFee.value) {
+                                                        admissionFee.value =
+                                                            FeeStructure.FEE_STRUCT.admissionCharge
+                                                    } else {
+                                                        admissionFee.value = 0
+                                                    }
                                                 },
                                                 modifier = Modifier
                                                     .weight(1f)
@@ -117,8 +148,19 @@ fun StudentInvoice(
                                         }
                                         Row(modifier = Modifier.weight(2f)) {
                                             AccessoryDropdown(
-                                                items = accessoryList,
+                                                items = FeeStructure.FEE_STRUCT.getSupplement(),
                                                 selectedItems = selectedAccessory,
+                                                onItemsSelected = { suppList ->
+                                                    if (suppList.isNotEmpty()) {
+                                                        var sum = 0
+                                                        suppList.forEach { sup ->
+                                                            sum += sup.price
+                                                        }
+                                                        supplementFee.value = sum
+                                                    } else {
+                                                        supplementFee.value = 0
+                                                    }
+                                                },
                                                 color = classColor,
                                                 modifier = Modifier.padding(6.dp)
                                             )
@@ -138,14 +180,11 @@ fun StudentInvoice(
                                     ) {
                                         Row(modifier = Modifier.padding(horizontal = 5.dp)) {
                                             Text(
-                                                text = "Select Months",
-                                                style = TextStyle(
+                                                text = "Select Months", style = TextStyle(
                                                     fontFamily = mediumFont,
                                                     fontSize = 30.sp,
                                                     textAlign = TextAlign.Start
-                                                ),
-                                                modifier = Modifier
-                                                    .weight(1f)
+                                                ), modifier = Modifier.weight(1f)
                                             )
                                             Text(
                                                 text = "$INR ${tuitionFee.value}",
@@ -154,21 +193,23 @@ fun StudentInvoice(
                                                     fontSize = 30.sp,
                                                     textAlign = TextAlign.End
                                                 ),
-                                                modifier = Modifier
-                                                    .weight(1f)
+                                                modifier = Modifier.weight(1f)
                                             )
                                         }
                                         MonthSelectList(
-                                            it.result.monthFeeList,
-                                            classColor
+                                            it.result.monthFeeList, classColor
                                         ) { monthList ->
                                             if (monthList.isNotEmpty()) {
                                                 tuitionFee.value =
                                                     monthList.size * FeeStructure.FEE_STRUCT.getTuitionFee(
                                                         classID
                                                     )
+
                                             } else {
                                                 tuitionFee.value = 0
+                                                examinationFee.value = 0
+                                                annualFee.value = 0
+                                                computerFee.value = 0
                                             }
                                         }
                                     }
@@ -186,29 +227,22 @@ fun StudentInvoice(
                                     ) {
                                         Row(modifier = Modifier.padding(horizontal = 5.dp)) {
                                             Text(
-                                                text = "Select Books",
-                                                style = TextStyle(
+                                                text = "Select Books", style = TextStyle(
                                                     fontFamily = mediumFont,
                                                     fontSize = 30.sp,
                                                     textAlign = TextAlign.Start
-                                                ),
-                                                modifier = Modifier
-                                                    .weight(1f)
+                                                ), modifier = Modifier.weight(1f)
                                             )
                                             Text(
-                                                text = "$INR ${bookFee.value}",
-                                                style = TextStyle(
+                                                text = "$INR ${bookFee.value}", style = TextStyle(
                                                     fontFamily = mediumFont,
                                                     fontSize = 30.sp,
                                                     textAlign = TextAlign.End
-                                                ),
-                                                modifier = Modifier
-                                                    .weight(1f)
+                                                ), modifier = Modifier.weight(1f)
                                             )
                                         }
                                         BookSelectList(
-                                            FeeStructure.FEE_STRUCT.getBooks(classID),
-                                            classColor
+                                            FeeStructure.FEE_STRUCT.getBooks(classID), classColor
                                         ) { bookList ->
                                             if (bookList.isNotEmpty()) {
                                                 var sum = 0
@@ -237,14 +271,11 @@ fun StudentInvoice(
                                         ) {
                                             Row(modifier = Modifier.padding(horizontal = 5.dp)) {
                                                 Text(
-                                                    text = "Select Destination",
-                                                    style = TextStyle(
+                                                    text = "Select Destination", style = TextStyle(
                                                         fontFamily = mediumFont,
                                                         fontSize = 30.sp,
                                                         textAlign = TextAlign.Start
-                                                    ),
-                                                    modifier = Modifier
-                                                        .weight(1f)
+                                                    ), modifier = Modifier.weight(1f)
                                                 )
                                                 Text(
                                                     text = "$INR ${transportFee.value}",
@@ -253,13 +284,11 @@ fun StudentInvoice(
                                                         fontSize = 30.sp,
                                                         textAlign = TextAlign.End
                                                     ),
-                                                    modifier = Modifier
-                                                        .weight(1f)
+                                                    modifier = Modifier.weight(1f)
                                                 )
                                             }
                                             DestinationSelectList(
-                                                FeeStructure.FEE_STRUCT.getPlaces(),
-                                                classColor
+                                                FeeStructure.FEE_STRUCT.getPlaces(), classColor
                                             ) { place ->
                                                 if (place != null) {
                                                     transportFee.value = place.placePrice
@@ -277,7 +306,17 @@ fun StudentInvoice(
                                 .fillMaxHeight()
                                 .width(6.dp)
                         )
-                        InvoiceSummarySection(modifier = Modifier.weight(0.25f))
+                        InvoiceSummarySection(
+                            classID = classID,
+                            student = currentStudent!!,
+                            modifier = Modifier.weight(0.25f),
+                            color = classColor,
+                            tuitionFee = tuitionFee.value,
+                            admissionFee = admissionFee.value,
+                            transportFee = transportFee.value,
+                            bookFee = bookFee.value,
+                            supplementFee = supplementFee.value
+                        )
                     }
                 }
                 else -> {}

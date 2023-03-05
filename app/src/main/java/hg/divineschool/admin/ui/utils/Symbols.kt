@@ -23,4 +23,3 @@ val defaultTuitionFeeList = listOf(
     MonthFee(isPaid = false, month = "December", monthIndex = 12),
 )
 
-val accessoryList = listOf("Junior Tie", "Senior Tie", "Diary", "Belt", "ID & Fee Card")
