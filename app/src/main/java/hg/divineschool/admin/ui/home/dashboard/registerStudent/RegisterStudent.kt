@@ -2,12 +2,18 @@ package hg.divineschool.admin.ui.home.dashboard.registerStudent
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.ThumbnailUtils
 import android.net.Uri
+import android.os.Build
 import android.os.FileUtils
 import android.util.Log
+import android.util.Size
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.relocation.BringIntoViewRequester
@@ -41,7 +47,6 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import hg.divineschool.admin.R
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Student
 import hg.divineschool.admin.data.utils.validateStudentObjectBeforeUpload
@@ -53,11 +58,19 @@ import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.Log_Tag
 import hg.divineschool.admin.ui.utils.toast
 import id.zelory.compressor.Compressor
+import id.zelory.compressor.constraint.quality
+import id.zelory.compressor.constraint.resolution
+import id.zelory.compressor.constraint.size
 import kotlinx.coroutines.launch
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.IOException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+
+@RequiresApi(Build.VERSION_CODES.Q)
 @OptIn(
     ExperimentalGlideComposeApi::class,
     ExperimentalFoundationApi::class,
@@ -132,10 +145,15 @@ fun RegisterStudent(
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
                 uriString.value = it.data?.getStringExtra("imageUri").toString()
+                println(uriString.value)
                 showImage.value = true
                 coroutineScope.launch {
                     val compressedFileImage =
-                        Compressor.compress(context, File(Uri.parse(uriString.value).path!!))
+                        Compressor.compress(context, File(Uri.parse(uriString.value).path!!)){
+                            resolution(400,400)
+                            quality(80)
+                            size(30_000)
+                        }
                     FileUtils.copy(
                         compressedFileImage.inputStream(),
                         File(Uri.parse(uriString.value).path!!).outputStream()
@@ -252,7 +270,7 @@ fun RegisterStudent(
                             }
                         } else {
                             Image(
-                                painter = painterResource(id = R.drawable.image_missing),
+                                painter = painterResource(id = hg.divineschool.admin.R.drawable.image_missing),
                                 contentDescription = "",
                                 contentScale = ContentScale.FillWidth,
                                 modifier = Modifier

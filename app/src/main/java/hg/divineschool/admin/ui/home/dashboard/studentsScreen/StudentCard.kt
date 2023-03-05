@@ -60,6 +60,7 @@ fun StudentCard(
                     )
                     .background(color = color)
             )
+
             Spacer(modifier = Modifier.height(5.dp))
             Text(
                 text = "${student.firstName} ${student.lastName}",

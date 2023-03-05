@@ -44,7 +44,7 @@ fun MonthSelectList(
     val selectedItems = remember { mutableStateListOf<MonthFee>() }
     LazyVerticalGrid(
         verticalArrangement = Arrangement.spacedBy(10.dp),
-        horizontalArrangement = Arrangement.spacedBy(2.dp),
+        horizontalArrangement = Arrangement.spacedBy(0.dp),
         userScrollEnabled = true,
         contentPadding = PaddingValues(
             top = 15.dp, start = 1.dp, end = 1.dp, bottom = 10.dp
@@ -134,6 +134,7 @@ fun TableHeading2(heading: String, modifier: Modifier, color: Color) {
         style = TextStyle(fontFamily = boldFont, fontSize = 22.sp)
     )
 }
+
 @Composable
 fun TableValue2(value: String, modifier: Modifier) {
     Text(
@@ -159,7 +160,6 @@ fun TableValue(value: String, modifier: Modifier, align: TextAlign) {
 
     )
 }
-
 
 
 @Composable
@@ -298,7 +298,9 @@ fun AccessoryDropdown(
         }
         DropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.requiredWidth(400.dp)
+
         ) {
             items.forEach { item ->
                 DropdownMenuItem(
@@ -312,16 +314,46 @@ fun AccessoryDropdown(
                         }
                     }
                 ) {
-                    Checkbox(
-                        checked = selectedItems.value.contains(item),
-                        onCheckedChange = null,
-                        colors = CheckboxDefaults.colors(checkedColor = color),
-                        modifier = Modifier.padding(end = 16.dp)
-                    )
-                    Text(
-                        text = "${item.itemName} $INR ${item.price}",
-                        style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp)
-                    )
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(0.8f)
+                        ) {
+                            Checkbox(
+                                checked = selectedItems.value.contains(item),
+                                onCheckedChange = null,
+                                colors = CheckboxDefaults.colors(checkedColor = color),
+                                modifier = Modifier.padding(end = 16.dp)
+                            )
+                            Text(
+                                text = item.itemName,
+                                style = TextStyle(
+                                    fontFamily = mediumFont,
+                                    fontSize = 30.sp,
+                                    textAlign = TextAlign.Start
+                                )
+                            )
+                        }
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.End,
+                            modifier = Modifier.fillMaxWidth().weight(0.3f)
+                        ) {
+                            Text(
+                                text = "$INR ${item.price}",
+                                style = TextStyle(
+                                    fontFamily = mediumFont,
+                                    fontSize = 30.sp,
+                                    textAlign = TextAlign.End
+                                )
+                            )
+                        }
+                    }
+
+
                 }
             }
         }

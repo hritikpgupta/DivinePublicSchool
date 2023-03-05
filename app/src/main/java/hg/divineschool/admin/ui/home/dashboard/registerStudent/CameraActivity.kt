@@ -59,7 +59,7 @@ class CameraActivity : ComponentActivity() {
         outputDirectory = getOutputDirectory()
         cameraExecutor = Executors.newSingleThreadExecutor()
         setContent {
-            requestFullScreen(LocalView.current)
+            //requestFullScreen(LocalView.current)
             Surface(
                 modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
             ) {

@@ -105,7 +105,7 @@ fun StudentInvoice(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(color = Color.LightGray.copy(0.2f))
-                            .padding(bottom = 65.dp, start = 10.dp, end = 15.dp, top = 65.dp)
+                            .padding(bottom = 65.dp, start = 5.dp, end = 5.dp, top = 55.dp)
                     ) {
                         Column(
                             horizontalAlignment = Alignment.Start,
@@ -136,12 +136,12 @@ fun StudentInvoice(
                                                     }
                                                 },
                                                 modifier = Modifier
-                                                    .weight(1f)
-                                                    .padding(6.dp)
+                                                    .weight(0.35f)
+                                                    .padding(8.dp)
                                             )
                                             Spacer(modifier = Modifier.width(4.dp))
                                         }
-                                        Row(modifier = Modifier.weight(2f)) {
+                                        Row(modifier = Modifier.weight(0.65f)) {
                                             AccessoryDropdown(
                                                 items = FeeStructure.FEE_STRUCT.getSupplement(),
                                                 selectedItems = selectedAccessory,
