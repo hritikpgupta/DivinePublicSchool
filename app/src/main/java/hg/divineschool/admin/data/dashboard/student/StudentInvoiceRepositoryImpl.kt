@@ -19,15 +19,15 @@ class StudentInvoiceRepositoryImpl @Inject constructor(
     ): Resource<StudentMonthFee> {
         return try {
             val monthFeeList = ArrayList<MonthFee>()
-/*            val result = db.collection("classes").document(classID.convertIdToPath())
-                .collection("students").document(studentScholarNumber).get().awaitDocument()*/
+            val result = db.collection("classes").document(classID.convertIdToPath())
+                .collection("students").document(studentScholarNumber).get().awaitDocument()
             val studentFeeList = db.collection("classes").document(classID.convertIdToPath())
                 .collection("students").document(studentScholarNumber).collection("tuitionFee")
                 .orderBy("monthIndex", Query.Direction.ASCENDING)
                 .get().awaitDocument()
 
 
-/*            val stu = Student()
+            val stu = Student()
             result.data.let {
                 stu.apply {
                     it.let { value ->
@@ -55,7 +55,7 @@ class StudentInvoiceRepositoryImpl @Inject constructor(
                         dateOfAdmission = value["dateOfAdmission"] as String
                     }
                 }
-            }*/
+            }
             studentFeeList.documents.let {
                 if (it.isNotEmpty()) {
                     it.forEach { doc ->
@@ -69,7 +69,7 @@ class StudentInvoiceRepositoryImpl @Inject constructor(
                     }
                 }
             }
-            val studentMonthFee = StudentMonthFee(monthFeeList = monthFeeList)
+            val studentMonthFee = StudentMonthFee(student = stu, monthFeeList = monthFeeList)
 
             Resource.Success(studentMonthFee)
 

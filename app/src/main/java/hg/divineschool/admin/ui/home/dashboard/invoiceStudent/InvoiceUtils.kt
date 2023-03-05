@@ -28,9 +28,7 @@ import androidx.compose.ui.unit.sp
 import hg.divineschool.admin.R
 import hg.divineschool.admin.data.models.*
 import hg.divineschool.admin.data.utils.toYesOrNo
-import hg.divineschool.admin.ui.theme.lightFont
-import hg.divineschool.admin.ui.theme.mediumFont
-import hg.divineschool.admin.ui.theme.regularFont
+import hg.divineschool.admin.ui.theme.*
 import hg.divineschool.admin.ui.utils.INR
 import hg.divineschool.admin.ui.utils.convertIdToName
 import hg.divineschool.admin.ui.utils.getActivatedColor
@@ -125,6 +123,31 @@ fun TableHeading(heading: String, modifier: Modifier) {
 }
 
 @Composable
+fun TableHeading2(heading: String, modifier: Modifier, color: Color) {
+    Text(
+        text = " $heading",
+        color = color,
+        modifier = modifier.border(1.dp, Color.LightGray.copy(0.5f), RectangleShape),
+        textAlign = TextAlign.Center,
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 1,
+        style = TextStyle(fontFamily = boldFont, fontSize = 22.sp)
+    )
+}
+@Composable
+fun TableValue2(value: String, modifier: Modifier) {
+    Text(
+        text = value,
+        modifier = modifier.border(1.dp, Color.LightGray.copy(0.5f), RectangleShape),
+        textAlign = TextAlign.End,
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 1,
+        style = TextStyle(fontFamily = mediumFont, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+
+    )
+}
+
+@Composable
 fun TableValue(value: String, modifier: Modifier, align: TextAlign) {
     Text(
         text = " $value",
@@ -136,6 +159,8 @@ fun TableValue(value: String, modifier: Modifier, align: TextAlign) {
 
     )
 }
+
+
 
 @Composable
 fun InvoiceCheckBoxes(

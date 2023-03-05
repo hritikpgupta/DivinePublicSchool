@@ -181,7 +181,7 @@ fun String.convertIdToName(): String {
     }
 }
 
-fun List<MonthFee>.getExamFeeCount(): Int {
+fun List<MonthFee>.getExamFee(): Int {
     var isJan = false
     var isSept = false
     this.forEach { monthFee ->
@@ -193,15 +193,15 @@ fun List<MonthFee>.getExamFeeCount(): Int {
         }
     }
     return if (isJan && isSept) {
-        2
+        2 * FeeStructure.FEE_STRUCT.examFee
     } else if (isJan || isSept) {
-        1
+        1 * FeeStructure.FEE_STRUCT.examFee
     } else {
         0
     }
 }
 
-fun List<MonthFee>.getAnnualFeeCount(): Int {
+fun List<MonthFee>.getAnnualFee(): Int {
     var isJuly = false
     this.forEach { monthFee ->
         if (monthFee.month == "July") {
@@ -209,7 +209,7 @@ fun List<MonthFee>.getAnnualFeeCount(): Int {
         }
     }
     return if (isJuly) {
-        1
+        1 * FeeStructure.FEE_STRUCT.annualCharge
     } else {
         0
     }
@@ -226,20 +226,28 @@ fun List<MonthFee>.contains(monthName: String): Boolean {
 
 fun List<MonthFee>.getComputerFee(classID: String): Int {
 
-    return if (this.contains("March") || this.contains("June") || this.contains("September") || this.contains(
-            "December"
-        )
-    ) {
-        if (classID.toInt() in 5..7) {
-            FeeStructure.FEE_STRUCT.computerFeeJunior * 1
-        } else if (classID.toInt() in 8..10) {
-            FeeStructure.FEE_STRUCT.computerFeeSenior * 1
-        } else {
-            0
+    var count = 0
+    this.forEach { monthFee ->
+        if (monthFee.month == "March") {
+            count ++
         }
-
-    } else {
+        if (monthFee.month == "June") {
+            count ++
+        }
+        if (monthFee.month == "September") {
+            count ++
+        }
+        if (monthFee.month == "December") {
+            count ++
+        }
+    }
+    return if (classID.toInt() in 5..7){
+        FeeStructure.FEE_STRUCT.computerFeeJunior * count
+    }else if (classID.toInt() in 8..10) {
+        FeeStructure.FEE_STRUCT.computerFeeSenior * count
+    }else {
         0
     }
+
 
 }

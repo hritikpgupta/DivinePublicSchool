@@ -1,23 +1,17 @@
 package hg.divineschool.admin.ui.home.dashboard.invoiceStudent
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hg.divineschool.admin.data.models.Student
-import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.lightFont
 import hg.divineschool.admin.ui.utils.INR
 
@@ -39,9 +33,10 @@ fun InvoiceSummarySection(
     classID: String, student: Student,
     color: Color, modifier: Modifier, tuitionFee: Int,
     admissionFee: Int, transportFee: Int, bookFee: Int, supplementFee: Int,
-    examinationFee: Int, annualFee: Int, computerFee : Int
+    examinationFee: Int, annualFee: Int, computerFee: Int
 ) {
-    val sum = tuitionFee+admissionFee+transportFee+bookFee+supplementFee+examinationFee+annualFee+computerFee
+    val sum =
+        tuitionFee + admissionFee + transportFee + bookFee + supplementFee + examinationFee + annualFee + computerFee
 
     Column(
         modifier = modifier
@@ -142,29 +137,11 @@ fun InvoiceSummarySection(
             )
         }
         Row {
-            Text(
-                text = " Total",
-                color = color,
-                modifier = modifier
-                    .weight(0.6f)
-                    .border(1.dp, Color.LightGray.copy(0.6f), RectangleShape),
-                textAlign = TextAlign.Center,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1,
-                style = TextStyle(fontFamily = boldFont, fontSize = 20.sp)
+            TableHeading2(heading = "Total", modifier = Modifier.weight(0.6f), color = color)
+            TableValue2(
+                value = "$INR $sum ",
+                modifier = Modifier.weight(0.4f)
             )
-            Text(
-                text = " $INR $sum ",
-                modifier = modifier
-                    .weight(0.4f)
-                    .border(1.dp, Color.LightGray.copy(0.4f), RectangleShape),
-                textAlign = TextAlign.End,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1,
-                style = TextStyle(fontFamily = boldFont, fontSize = 20.sp)
-
-            )
-
         }
         Divider(thickness = 2.dp, color = Color.LightGray)
 

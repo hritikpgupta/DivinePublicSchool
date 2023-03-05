@@ -1,12 +1,10 @@
 package hg.divineschool.admin.ui.home.dashboard.invoiceStudent
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,7 +19,6 @@ import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.FeeStructure
-import hg.divineschool.admin.data.models.Student
 import hg.divineschool.admin.data.models.Supplement
 import hg.divineschool.admin.data.utils.getBooks
 import hg.divineschool.admin.data.utils.getPlaces
@@ -41,8 +38,9 @@ fun StudentInvoice(
     navController: NavController,
     viewModel: StudentInvoiceViewModel
 ) {
-    val currentStudent =
-        navController.previousBackStackEntry?.arguments?.customGetSerializable<Student>("studentObj")
+/*    var currentStudent = navController.previousBackStackEntry?.arguments?.customGetSerializable<Student>("studentObj")
+    if (currentStudent == null)
+        currentStudent = Student()*/
     val scrollState = rememberScrollState()
     val studentInfoState = viewModel.studentInformation.collectAsState()
     val selectedAccessory = remember {
@@ -106,7 +104,8 @@ fun StudentInvoice(
                     Row(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(bottom = 65.dp, start = 5.dp, end = 5.dp, top = 65.dp)
+                            .background(color = Color.LightGray.copy(0.2f))
+                            .padding(bottom = 65.dp, start = 10.dp, end = 15.dp, top = 65.dp)
                     ) {
                         Column(
                             horizontalAlignment = Alignment.Start,
@@ -122,7 +121,7 @@ fun StudentInvoice(
                                     modifier = Modifier.padding(horizontal = 10.dp)
                                 ) {
                                     Row(verticalAlignment = Alignment.CenterVertically) {
-                                        if (currentStudent?.newStudent == true) {
+                                        if (it.result.student.newStudent) {
                                             InvoiceCheckBoxes(
                                                 text = "Admission Fee",
                                                 classColor,
@@ -200,10 +199,8 @@ fun StudentInvoice(
                                                     monthList.size * FeeStructure.FEE_STRUCT.getTuitionFee(
                                                         classID
                                                     )
-                                                examinationFee.value =
-                                                    FeeStructure.FEE_STRUCT.examFee * monthList.getExamFeeCount()
-                                                annualFee.value =
-                                                    FeeStructure.FEE_STRUCT.annualCharge * monthList.getAnnualFeeCount()
+                                                examinationFee.value = monthList.getExamFee()
+                                                annualFee.value = monthList.getAnnualFee()
                                                 computerFee.value =
                                                     monthList.getComputerFee(classID)
 
@@ -260,7 +257,7 @@ fun StudentInvoice(
                                     }
                                 }
                             }
-                            if (currentStudent?.transportStudent == true) {
+                            if (it.result.student.transportStudent) {
                                 FormRow(padding = 12) {
                                     Card(
                                         elevation = 8.dp,
@@ -302,6 +299,7 @@ fun StudentInvoice(
                                     }
                                 }
                             }
+                            Spacer(modifier = Modifier.height(12.dp))
                         }
                         Divider(
                             color = Color.LightGray, modifier = Modifier
@@ -310,7 +308,7 @@ fun StudentInvoice(
                         )
                         InvoiceSummarySection(
                             classID = classID,
-                            student = currentStudent!!,
+                            student = it.result.student,
                             modifier = Modifier.weight(0.25f),
                             color = classColor,
                             tuitionFee = tuitionFee.value,
