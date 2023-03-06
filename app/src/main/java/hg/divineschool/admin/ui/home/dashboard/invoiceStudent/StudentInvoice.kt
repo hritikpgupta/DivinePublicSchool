@@ -4,7 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
+import hg.divine.invoice.InvoiceGenerator
+import hg.divine.invoice.model.Bill
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.FeeStructure
 import hg.divineschool.admin.data.models.Supplement
@@ -29,6 +34,8 @@ import hg.divineschool.admin.ui.home.dashboard.registerStudent.FormRow
 import hg.divineschool.admin.ui.theme.cardColors
 import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.utils.*
+import java.io.File
+import java.io.FileOutputStream
 
 @Composable
 fun StudentInvoice(
@@ -82,7 +89,6 @@ fun StudentInvoice(
     LaunchedEffect(Unit) {
         viewModel.getStudent(classID, scholarNumber)
     }
-
 
     Scaffold(scaffoldState = rememberScaffoldState(), topBar = {
         DPSBar(onBackPressed = { navController.popBackStack() }, className = "Generate Bill")
@@ -319,11 +325,27 @@ fun StudentInvoice(
                             examinationFee = examinationFee.value,
                             annualFee = annualFee.value,
                             computerFee = computerFee.value
-                        )
+                        ) {
+
+                        }
                     }
                 }
                 else -> {}
             }
+        }
+    }
+}
+
+fun generateBill() {
+    val invoiceGenerator = InvoiceGenerator()
+    invoiceGenerator.generateInvoice(Bill())
+    val byteArrayOS = invoiceGenerator.generateInvoice(Bill())
+    byteArrayOS.let {
+        try {
+            val os = FileOutputStream(File("C:\\Users\\hgupta\\Downloads\\test.pdf"))
+            it?.writeTo(os)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }

@@ -20,6 +20,7 @@ class AuthActivity : ComponentActivity() {
                 DpsNavHost(rememberNavController())
             }
         }
+
     }
 
 }

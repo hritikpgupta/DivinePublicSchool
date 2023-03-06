@@ -15,25 +15,12 @@ import hg.divineschool.admin.data.models.Student
 import hg.divineschool.admin.ui.theme.lightFont
 import hg.divineschool.admin.ui.utils.INR
 
-/*@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun Preview() {
-    InvoiceSummarySection(
-        classID = "0",
-        student = Student(),
-        modifier = Modifier,
-        color = cardColors[0],
-        tuitionFee = 0,
-        admissionFee = 0
-    )
-}*/
-
 @Composable
 fun InvoiceSummarySection(
     classID: String, student: Student,
     color: Color, modifier: Modifier, tuitionFee: Int,
     admissionFee: Int, transportFee: Int, bookFee: Int, supplementFee: Int,
-    examinationFee: Int, annualFee: Int, computerFee: Int
+    examinationFee: Int, annualFee: Int, computerFee: Int, onGenerateClicked : () -> Unit
 ) {
     val sum =
         tuitionFee + admissionFee + transportFee + bookFee + supplementFee + examinationFee + annualFee + computerFee
@@ -144,7 +131,6 @@ fun InvoiceSummarySection(
             )
         }
         Divider(thickness = 2.dp, color = Color.LightGray)
-
 
     }
 

@@ -110,6 +110,7 @@ dependencies {
     // Image Compressor
     implementation 'id.zelory:compressor:3.0.1'
 
+    api files('../libs/divine_invoice.jar')
 
     //Retrofit
     implementation(libs.retrofit)
