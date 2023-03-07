@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
 import hg.divine.invoice.InvoiceGenerator
-import hg.divine.invoice.model.Bill
+import hg.divine.invoice.model.FeeRow
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.FeeStructure
 import hg.divineschool.admin.data.models.Supplement
@@ -48,6 +48,20 @@ fun StudentInvoice(
 /*    var currentStudent = navController.previousBackStackEntry?.arguments?.customGetSerializable<Student>("studentObj")
     if (currentStudent == null)
         currentStudent = Student()*/
+
+    val list = ArrayList<FeeRow>()
+    list.add(FeeRow(feeType = "Tuition Fee", amount = 300))
+    list.add(FeeRow(feeType = "Computer Fee", amount = 120))
+    list.add(FeeRow(feeType = "Annual Fee", amount = 100))
+    list.add(FeeRow(feeType = "Late Fee", amount = 100))
+    list.add(FeeRow(feeType = "Admission Fee", amount = 500))
+    list.add(FeeRow(feeType = "Supplement Fee", amount = 70))
+    list.add(FeeRow(feeType = "Transport Fee", amount = 450))
+    list.add(FeeRow(feeType = "Book Fee", amount = 1250))
+    list.add(FeeRow(feeType = "Exam Fee", amount = 200))
+
+
+
     val scrollState = rememberScrollState()
     val studentInfoState = viewModel.studentInformation.collectAsState()
     val selectedAccessory = remember {
