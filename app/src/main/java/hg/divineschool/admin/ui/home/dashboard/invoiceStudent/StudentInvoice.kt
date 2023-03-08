@@ -1,6 +1,5 @@
 package hg.divineschool.admin.ui.home.dashboard.invoiceStudent
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -22,7 +21,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
 import hg.divineschool.admin.data.Resource
+import hg.divineschool.admin.data.models.Book
 import hg.divineschool.admin.data.models.FeeStructure
+import hg.divineschool.admin.data.models.MonthFee
 import hg.divineschool.admin.data.models.Supplement
 import hg.divineschool.admin.data.utils.getBooks
 import hg.divineschool.admin.data.utils.getPlaces
@@ -33,7 +34,7 @@ import hg.divineschool.admin.ui.home.dashboard.registerStudent.FormRow
 import hg.divineschool.admin.ui.theme.cardColors
 import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.utils.*
-import kotlinx.coroutines.launch
+import java.util.*
 
 @Composable
 fun StudentInvoice(
@@ -46,13 +47,20 @@ fun StudentInvoice(
 /*    var currentStudent = navController.previousBackStackEntry?.arguments?.customGetSerializable<Student>("studentObj")
     if (currentStudent == null)
         currentStudent = Student()*/
-
+    val random = Random()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
     val studentInfoState = viewModel.studentInformation.collectAsState()
-    val selectedAccessory = remember {
+    val invoiceState = viewModel.saveInvoice.collectAsState()
+    val selectedSupplement = remember {
         mutableStateOf(emptyList<Supplement>())
+    }
+    val selectedBooks = remember {
+        mutableStateOf(emptyList<Book>())
+    }
+    val selectedMonthFee = remember {
+        mutableStateOf(emptyList<MonthFee>())
     }
 
     val chargeAdmissionFee = remember {
@@ -67,6 +75,10 @@ fun StudentInvoice(
     val transportFee = remember {
         mutableStateOf(0)
     }
+    var transportPlace = remember {
+        mutableStateOf("")
+    }
+
     val supplementFee = remember {
         mutableStateOf(0)
     }
@@ -83,7 +95,6 @@ fun StudentInvoice(
     val annualFee = remember {
         mutableStateOf(0)
     }
-
 
     val classColor = cardColors[classID.toInt()]
     LaunchedEffect(Unit) {
@@ -150,7 +161,7 @@ fun StudentInvoice(
                                         Row(modifier = Modifier.weight(0.65f)) {
                                             AccessoryDropdown(
                                                 items = FeeStructure.FEE_STRUCT.getSupplement(),
-                                                selectedItems = selectedAccessory,
+                                                selectedItems = selectedSupplement,
                                                 onItemsSelected = { suppList ->
                                                     if (suppList.isNotEmpty()) {
                                                         var sum = 0
@@ -200,7 +211,9 @@ fun StudentInvoice(
                                         MonthSelectList(
                                             it.result.monthFeeList, classColor
                                         ) { monthList ->
+
                                             if (monthList.isNotEmpty()) {
+                                                selectedMonthFee.value = monthList
                                                 tuitionFee.value =
                                                     monthList.size * FeeStructure.FEE_STRUCT.getTuitionFee(
                                                         classID
@@ -209,12 +222,12 @@ fun StudentInvoice(
                                                 annualFee.value = monthList.getAnnualFee()
                                                 computerFee.value =
                                                     monthList.getComputerFee(classID)
-
                                             } else {
                                                 tuitionFee.value = 0
                                                 examinationFee.value = 0
                                                 annualFee.value = 0
                                                 computerFee.value = 0
+                                                selectedMonthFee.value = emptyList()
                                             }
                                         }
                                     }
@@ -250,6 +263,7 @@ fun StudentInvoice(
                                             FeeStructure.FEE_STRUCT.getBooks(classID), classColor
                                         ) { bookList ->
                                             if (bookList.isNotEmpty()) {
+                                                selectedBooks.value = bookList
                                                 var sum = 0
                                                 bookList.forEach { book ->
                                                     sum += book.bookPrice
@@ -257,6 +271,7 @@ fun StudentInvoice(
                                                 bookFee.value = sum
                                             } else {
                                                 bookFee.value = 0
+                                                selectedBooks.value = emptyList()
                                             }
 
                                         }
@@ -297,8 +312,10 @@ fun StudentInvoice(
                                             ) { place ->
                                                 if (place != null) {
                                                     transportFee.value = place.placePrice
+                                                    transportPlace.value = place.placeName
                                                 } else {
                                                     transportFee.value = 0
+                                                    transportPlace.value = ""
                                                 }
                                             }
                                         }
@@ -325,23 +342,53 @@ fun StudentInvoice(
                             examinationFee = examinationFee.value,
                             annualFee = annualFee.value,
                             computerFee = computerFee.value
-                        ) {
-                            scope.launch {
-                                generateBill(
-                                    "file:///storage/emulated/0/Android/media/hg.divineschool.admin/Divine%20Public%20School/test.pdf",
-                                    context
-                                )
+                        ) { invoice ->
+                            invoice.placeName = transportPlace.value
+                            if (selectedSupplement.value.isNotEmpty()) {
+                                invoice.supplementsList =
+                                    selectedSupplement.value.getFormattedString()
                             }
+                            if (selectedBooks.value.isNotEmpty()) {
+                                invoice.bookList = selectedBooks.value.getFormattedString()
+                            }
+                            if (selectedMonthFee.value.isNotEmpty()) {
+                                invoice.tuitionFeeMonthList =
+                                    selectedMonthFee.value.getFormattedString()
+                            }
+                            var invoiceNumber: Long =
+                                (random.nextInt(99999999) + random.nextInt(99999999) + random.nextInt(
+                                    99999999
+                                )).toLong() - random.nextInt(999999)
+                            invoiceNumber /= (random.nextInt(9999) + 1)
+                            invoiceNumber *= (random.nextInt(999999) + 1)
+                            invoice.invoiceNumber = invoiceNumber.toString()
+                            viewModel.saveInvoice(classID, scholarNumber, invoice)
                         }
                     }
                 }
                 else -> {}
             }
         }
-    }
-}
+        invoiceState.value.let {
+            when (it) {
+                is Resource.Loading -> {
+                    Box(
+                        contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+                is Resource.Failure -> {
+                    it.exception.message?.let { it1 -> context.toast(it1) }
+                }
+                is Resource.FailureMessage -> {}
+                is Resource.Success -> {
 
-fun generateBill(uriString: String, context: Context) {
+                }
+                else -> {}
+            }
+        }
+    }
 }
 
 

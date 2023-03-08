@@ -15,10 +15,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.core.content.ContextCompat
-import hg.divineschool.admin.R
+import hg.divineschool.admin.data.models.Book
 import hg.divineschool.admin.data.models.FeeStructure
 import hg.divineschool.admin.data.models.MonthFee
-import java.io.File
+import hg.divineschool.admin.data.models.Supplement
 import java.io.Serializable
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -231,27 +231,57 @@ fun List<MonthFee>.getComputerFee(classID: String): Int {
     var count = 0
     this.forEach { monthFee ->
         if (monthFee.month == "March") {
-            count ++
+            count++
         }
         if (monthFee.month == "June") {
-            count ++
+            count++
         }
         if (monthFee.month == "September") {
-            count ++
+            count++
         }
         if (monthFee.month == "December") {
-            count ++
+            count++
         }
     }
-    return if (classID.toInt() in 5..7){
+    return if (classID.toInt() in 5..7) {
         FeeStructure.FEE_STRUCT.computerFeeJunior * count
-    }else if (classID.toInt() in 8..10) {
+    } else if (classID.toInt() in 8..10) {
         FeeStructure.FEE_STRUCT.computerFeeSenior * count
-    }else {
+    } else {
         0
     }
 
 
+}
+
+fun List<Supplement>.getFormattedString(): String {
+    val stringBuilder = StringBuilder()
+    stringBuilder.append("[")
+    this.forEach { supplement ->
+        stringBuilder.append(supplement.itemName)
+        stringBuilder.append(",")
+    }
+    return "${stringBuilder.toString().substring(0, stringBuilder.length - 1)}]"
+}
+
+fun List<Book>.getFormattedString(): String {
+    val stringBuilder = StringBuilder()
+    stringBuilder.append("[")
+    this.forEach { book ->
+        stringBuilder.append(book.bookName)
+        stringBuilder.append(",")
+    }
+    return "${stringBuilder.toString().substring(0, stringBuilder.length - 1)}]"
+}
+
+fun List<MonthFee>.getFormattedString(): String {
+    val stringBuilder = StringBuilder()
+    stringBuilder.append("[")
+    this.forEach { monthFee ->
+        stringBuilder.append(monthFee.month)
+        stringBuilder.append(",")
+    }
+    return "${stringBuilder.toString().substring(0, stringBuilder.length - 1)}]"
 }
 
 

@@ -3,9 +3,11 @@ package hg.divineschool.admin.data.dashboard.student
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import hg.divineschool.admin.data.Resource
+import hg.divineschool.admin.data.models.Invoice
 import hg.divineschool.admin.data.models.MonthFee
 import hg.divineschool.admin.data.models.Student
 import hg.divineschool.admin.data.models.StudentMonthFee
+import hg.divineschool.admin.data.utils.await
 import hg.divineschool.admin.data.utils.awaitDocument
 import hg.divineschool.admin.ui.utils.convertIdToPath
 import javax.inject.Inject
@@ -73,6 +75,21 @@ class StudentInvoiceRepositoryImpl @Inject constructor(
 
             Resource.Success(studentMonthFee)
 
+        } catch (e: Exception) {
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun saveInvoice(
+        classID: String,
+        studentScholarNumber: String,
+        invoice: Invoice
+    ): Resource<Invoice> {
+        return try {
+            db.collection("classes").document(classID.convertIdToPath())
+                .collection("students").document(studentScholarNumber).collection("invoices")
+                .document(invoice.invoiceNumber.toString()).set(invoice).awaitDocument()
+            Resource.Success(invoice)
         } catch (e: Exception) {
             Resource.Failure(e)
         }

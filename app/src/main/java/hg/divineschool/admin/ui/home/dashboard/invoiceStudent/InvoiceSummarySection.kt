@@ -12,16 +12,27 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import hg.divineschool.admin.data.models.Invoice
 import hg.divineschool.admin.data.models.Student
 import hg.divineschool.admin.ui.theme.lightFont
 import hg.divineschool.admin.ui.utils.INR
+import hg.divineschool.admin.ui.utils.convertIdToName
 
 @Composable
 fun InvoiceSummarySection(
-    classID: String, student: Student,
-    color: Color, modifier: Modifier, tuitionFee: Int,
-    admissionFee: Int, transportFee: Int, bookFee: Int, supplementFee: Int,
-    examinationFee: Int, annualFee: Int, computerFee: Int, onGenerateClicked : () -> Unit
+    classID: String,
+    student: Student,
+    color: Color,
+    modifier: Modifier,
+    tuitionFee: Int,
+    admissionFee: Int,
+    transportFee: Int,
+    bookFee: Int,
+    supplementFee: Int,
+    examinationFee: Int,
+    annualFee: Int,
+    computerFee: Int,
+    onGenerateClicked: (invoice: Invoice) -> Unit
 ) {
     val sum =
         tuitionFee + admissionFee + transportFee + bookFee + supplementFee + examinationFee + annualFee + computerFee
@@ -132,7 +143,26 @@ fun InvoiceSummarySection(
             )
         }
         Divider(thickness = 2.dp, color = Color.LightGray)
-        OutlinedButton(onClick = onGenerateClicked) {
+        OutlinedButton(onClick = {
+            onGenerateClicked(
+                Invoice(
+                    tuitionFee = tuitionFee,
+                    admissionFee = admissionFee,
+                    transportFee = transportFee,
+                    bookFee = bookFee,
+                    supplementaryFee = supplementFee,
+                    examFee = examinationFee,
+                    annualCharge = annualFee,
+                    computerFee = computerFee,
+                    total = sum,
+                    rollNumber = student.rollNumber.toInt(),
+                    studentName = "${student.firstName} ${student.lastName}",
+                    guardianName = "S/0 ${student.fathersName}",
+                    address = student.address,
+                    className = classID.convertIdToName()
+                )
+            )
+        }) {
             Text("Generate Invoice")
         }
 
