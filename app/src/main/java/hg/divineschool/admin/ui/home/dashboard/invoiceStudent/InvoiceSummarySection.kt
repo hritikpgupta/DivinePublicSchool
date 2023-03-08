@@ -3,6 +3,7 @@ package hg.divineschool.admin.ui.home.dashboard.invoiceStudent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -131,6 +132,9 @@ fun InvoiceSummarySection(
             )
         }
         Divider(thickness = 2.dp, color = Color.LightGray)
+        OutlinedButton(onClick = onGenerateClicked) {
+            Text("Generate Invoice")
+        }
 
     }
 

@@ -1,5 +1,6 @@
 package hg.divineschool.admin.ui.home.dashboard.invoiceStudent
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -20,9 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
-import hg.divine.invoice.InvoiceGenerator
-import hg.divine.invoice.model.FeeRow
-import hg.divine.invoice.model.Invoice
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.FeeStructure
 import hg.divineschool.admin.data.models.Supplement
@@ -35,8 +33,7 @@ import hg.divineschool.admin.ui.home.dashboard.registerStudent.FormRow
 import hg.divineschool.admin.ui.theme.cardColors
 import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.utils.*
-import java.io.File
-import java.io.FileOutputStream
+import kotlinx.coroutines.launch
 
 @Composable
 fun StudentInvoice(
@@ -50,7 +47,8 @@ fun StudentInvoice(
     if (currentStudent == null)
         currentStudent = Student()*/
 
-
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
     val studentInfoState = viewModel.studentInformation.collectAsState()
     val selectedAccessory = remember {
@@ -87,7 +85,6 @@ fun StudentInvoice(
     }
 
 
-    val context = LocalContext.current
     val classColor = cardColors[classID.toInt()]
     LaunchedEffect(Unit) {
         viewModel.getStudent(classID, scholarNumber)
@@ -329,7 +326,12 @@ fun StudentInvoice(
                             annualFee = annualFee.value,
                             computerFee = computerFee.value
                         ) {
-
+                            scope.launch {
+                                generateBill(
+                                    "file:///storage/emulated/0/Android/media/hg.divineschool.admin/Divine%20Public%20School/test.pdf",
+                                    context
+                                )
+                            }
                         }
                     }
                 }
@@ -339,27 +341,7 @@ fun StudentInvoice(
     }
 }
 
-fun generateBill() {
-    val feeList = ArrayList<FeeRow>()
-    feeList.add(FeeRow(feeType = "Tuition Fee", amount = 300))
-    feeList.add(FeeRow(feeType = "Computer Fee", amount = 120))
-    feeList.add(FeeRow(feeType = "Annual Fee", amount = 100))
-    feeList.add(FeeRow(feeType = "Late Fee", amount = 100))
-    feeList.add(FeeRow(feeType = "Admission Fee", amount = 500))
-    feeList.add(FeeRow(feeType = "Supplement Fee", amount = 70))
-    feeList.add(FeeRow(feeType = "Transport Fee", amount = 450))
-    feeList.add(FeeRow(feeType = "Book Fee", amount = 1250))
-    feeList.add(FeeRow(feeType = "Exam Fee", amount = 200))
-    val invoiceGenerator = InvoiceGenerator()
-    val byteArrayOS = invoiceGenerator.generateInvoice(Invoice(), list = feeList)
-    byteArrayOS.let {
-        try {
-            val os = FileOutputStream(File("C:\\Users\\hgupta\\Downloads\\test.pdf"))
-            it?.writeTo(os)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
+fun generateBill(uriString: String, context: Context) {
 }
 
 

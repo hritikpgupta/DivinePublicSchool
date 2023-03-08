@@ -145,7 +145,6 @@ fun RegisterStudent(
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
                 uriString.value = it.data?.getStringExtra("imageUri").toString()
-                println(uriString.value)
                 showImage.value = true
                 coroutineScope.launch {
                     val compressedFileImage =
