@@ -2,8 +2,9 @@ package hg.divineschool.admin.ui.home.dashboard.invoiceStudent
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -143,28 +144,40 @@ fun InvoiceSummarySection(
             )
         }
         Divider(thickness = 2.dp, color = Color.LightGray)
-        OutlinedButton(onClick = {
-            onGenerateClicked(
-                Invoice(
-                    tuitionFee = tuitionFee,
-                    admissionFee = admissionFee,
-                    transportFee = transportFee,
-                    bookFee = bookFee,
-                    supplementaryFee = supplementFee,
-                    examFee = examinationFee,
-                    annualCharge = annualFee,
-                    computerFee = computerFee,
-                    total = sum,
-                    rollNumber = student.rollNumber.toInt(),
-                    studentName = "${student.firstName} ${student.lastName}",
-                    guardianName = "S/0 ${student.fathersName}",
-                    address = student.address,
-                    className = classID.convertIdToName()
+        Spacer(modifier = Modifier.requiredHeight(8.dp))
+        Button(
+            colors = ButtonDefaults.buttonColors(backgroundColor = color), onClick = {
+                onGenerateClicked(
+                    Invoice(
+                        tuitionFee = tuitionFee,
+                        admissionFee = admissionFee,
+                        transportFee = transportFee,
+                        bookFee = bookFee,
+                        supplementaryFee = supplementFee,
+                        examFee = examinationFee,
+                        annualCharge = annualFee,
+                        computerFee = computerFee,
+                        total = sum,
+                        rollNumber = student.rollNumber.toInt(),
+                        studentName = "${student.firstName} ${student.lastName}",
+                        guardianName = "S/0 ${student.fathersName}",
+                        address = student.address,
+                        className = classID.convertIdToName()
+                    )
                 )
+            }, elevation = ButtonDefaults.elevation(
+                defaultElevation = 10.dp,
+                pressedElevation = 15.dp,
+                disabledElevation = 0.dp
+            ), modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = "Generate Invoice",
+                color = Color.White,
+                style = TextStyle(fontSize = 24.sp)
             )
-        }) {
-            Text("Generate Invoice")
         }
+
 
     }
 

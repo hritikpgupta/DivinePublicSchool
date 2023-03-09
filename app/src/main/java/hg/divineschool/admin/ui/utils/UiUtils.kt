@@ -254,7 +254,7 @@ fun List<MonthFee>.getComputerFee(classID: String): Int {
 
 }
 
-fun List<Supplement>.getFormattedString(): String {
+fun List<Supplement>.getFormattedSupplementString(): String {
     val stringBuilder = StringBuilder()
     stringBuilder.append("[")
     this.forEach { supplement ->
@@ -264,7 +264,7 @@ fun List<Supplement>.getFormattedString(): String {
     return "${stringBuilder.toString().substring(0, stringBuilder.length - 1)}]"
 }
 
-fun List<Book>.getFormattedString(): String {
+fun List<Book>.getFormattedBookString(): String {
     val stringBuilder = StringBuilder()
     stringBuilder.append("[")
     this.forEach { book ->
@@ -274,7 +274,7 @@ fun List<Book>.getFormattedString(): String {
     return "${stringBuilder.toString().substring(0, stringBuilder.length - 1)}]"
 }
 
-fun List<MonthFee>.getFormattedString(): String {
+fun List<MonthFee>.getFormattedMonthString(): String {
     val stringBuilder = StringBuilder()
     stringBuilder.append("[")
     this.forEach { monthFee ->

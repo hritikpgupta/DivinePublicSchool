@@ -346,14 +346,14 @@ fun StudentInvoice(
                             invoice.placeName = transportPlace.value
                             if (selectedSupplement.value.isNotEmpty()) {
                                 invoice.supplementsList =
-                                    selectedSupplement.value.getFormattedString()
+                                    selectedSupplement.value.getFormattedSupplementString()
                             }
                             if (selectedBooks.value.isNotEmpty()) {
-                                invoice.bookList = selectedBooks.value.getFormattedString()
+                                invoice.bookList = selectedBooks.value.getFormattedBookString()
                             }
                             if (selectedMonthFee.value.isNotEmpty()) {
                                 invoice.tuitionFeeMonthList =
-                                    selectedMonthFee.value.getFormattedString()
+                                    selectedMonthFee.value.getFormattedMonthString()
                             }
                             var invoiceNumber: Long =
                                 (random.nextInt(99999999) + random.nextInt(99999999) + random.nextInt(
