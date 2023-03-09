@@ -2,40 +2,46 @@ package hg.divineschool.admin.ui.home.dashboard.invoiceStudent
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
 import hg.divineschool.admin.data.Resource
-import hg.divineschool.admin.data.models.Book
-import hg.divineschool.admin.data.models.FeeStructure
-import hg.divineschool.admin.data.models.MonthFee
-import hg.divineschool.admin.data.models.Supplement
+import hg.divineschool.admin.data.models.*
 import hg.divineschool.admin.data.utils.getBooks
 import hg.divineschool.admin.data.utils.getPlaces
 import hg.divineschool.admin.data.utils.getSupplement
 import hg.divineschool.admin.data.utils.getTuitionFee
-import hg.divineschool.admin.ui.home.DPSBar
+import hg.divineschool.admin.ui.home.DPSBarWithAction
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.FormRow
+import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.cardColors
 import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.utils.*
+import kotlinx.coroutines.launch
 import java.util.*
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun StudentInvoice(
     classID: String,
@@ -44,15 +50,17 @@ fun StudentInvoice(
     navController: NavController,
     viewModel: StudentInvoiceViewModel
 ) {
-/*    var currentStudent = navController.previousBackStackEntry?.arguments?.customGetSerializable<Student>("studentObj")
-    if (currentStudent == null)
-        currentStudent = Student()*/
+
     val random = Random()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
+    val scaffoldState = rememberScaffoldState()
     val studentInfoState = viewModel.studentInformation.collectAsState()
     val invoiceState = viewModel.saveInvoice.collectAsState()
+    val studentInvoiceList = remember {
+        mutableStateOf(emptyList<Invoice>())
+    }
     val selectedSupplement = remember {
         mutableStateOf(emptyList<Supplement>())
     }
@@ -99,11 +107,52 @@ fun StudentInvoice(
     val classColor = cardColors[classID.toInt()]
     LaunchedEffect(Unit) {
         viewModel.getStudent(classID, scholarNumber)
+        studentInvoiceList.value = viewModel.getAllInvoices(classID, scholarNumber)
     }
 
-    Scaffold(scaffoldState = rememberScaffoldState(), topBar = {
-        DPSBar(onBackPressed = { navController.popBackStack() }, className = "Generate Bill")
-    }) {
+    Scaffold(
+        scaffoldState = scaffoldState,
+        drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
+        topBar = {
+            DPSBarWithAction(
+                onBackPressed = { navController.popBackStack() },
+                onActionPressed = {
+                    scope.launch {
+                        scaffoldState.drawerState.open()
+                    }
+                },
+                className = "Generate Bill"
+            )
+        },
+        drawerShape = customShape(),
+        drawerContent = {
+            Column(
+                modifier = Modifier
+                    .padding(bottom = 50.dp, start = 0.dp, top = 12.dp, end = 0.dp)
+                    .fillMaxSize()
+            ) {
+                Text(
+                    text = "Previous Invoices",
+                    style = TextStyle(
+                        fontSize = 32.sp,
+                        fontFamily = boldFont,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    textAlign = TextAlign.Center,
+                    color = Color.Black
+                )
+                Divider(thickness = 4.dp, color = Color.LightGray)
+                LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                    items(studentInvoiceList.value) { item ->
+                        ListItem {
+                            Text(text = item.invoiceNumber.toString())
+                        }
+                    }
+                }
+
+            }
+        },
+    ) {
         studentInfoState.value.let {
             when (it) {
                 is Resource.Loading -> {
@@ -334,14 +383,14 @@ fun StudentInvoice(
                             student = it.result.student,
                             modifier = Modifier.weight(0.25f),
                             color = classColor,
-                            tuitionFee = tuitionFee.value,
-                            admissionFee = admissionFee.value,
-                            transportFee = transportFee.value,
-                            bookFee = bookFee.value,
-                            supplementFee = supplementFee.value,
-                            examinationFee = examinationFee.value,
-                            annualFee = annualFee.value,
-                            computerFee = computerFee.value
+                            tuitionFee = tuitionFee.value.toLong(),
+                            admissionFee = admissionFee.value.toLong(),
+                            transportFee = transportFee.value.toLong(),
+                            bookFee = bookFee.value.toLong(),
+                            supplementFee = supplementFee.value.toLong(),
+                            examinationFee = examinationFee.value.toLong(),
+                            annualFee = annualFee.value.toLong(),
+                            computerFee = computerFee.value.toLong()
                         ) { invoice ->
                             invoice.placeName = transportPlace.value
                             if (selectedSupplement.value.isNotEmpty()) {
@@ -361,7 +410,7 @@ fun StudentInvoice(
                                 )).toLong() - random.nextInt(999999)
                             invoiceNumber /= (random.nextInt(9999) + 1)
                             invoiceNumber *= (random.nextInt(999999) + 1)
-                            invoice.invoiceNumber = invoiceNumber.toString()
+                            invoice.invoiceNumber = invoiceNumber
                             viewModel.saveInvoice(classID, scholarNumber, invoice)
                         }
                     }
@@ -383,13 +432,23 @@ fun StudentInvoice(
                 }
                 is Resource.FailureMessage -> {}
                 is Resource.Success -> {
-
                 }
                 else -> {}
             }
         }
     }
 }
+
+fun customShape() = object : Shape {
+    override fun createOutline(
+        size: Size,
+        layoutDirection: LayoutDirection,
+        density: Density
+    ): Outline {
+        return Outline.Rectangle(Rect(0f, 0f, 700f /* width */, size.height /* height */))
+    }
+}
+
 
 
 

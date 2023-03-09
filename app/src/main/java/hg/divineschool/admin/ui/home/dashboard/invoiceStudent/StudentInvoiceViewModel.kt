@@ -37,4 +37,12 @@ class StudentInvoiceViewModel @Inject constructor(
             _saveInvoice.value = result
         }
 
+    fun getAllInvoices(classID: String, studentScholarNumber: String): List<Invoice> {
+        var invoiceList = emptyList<Invoice>()
+        viewModelScope.launch {
+            invoiceList = repository.getAllInvoices(classID, studentScholarNumber)
+        }
+        return invoiceList
+    }
 }
+

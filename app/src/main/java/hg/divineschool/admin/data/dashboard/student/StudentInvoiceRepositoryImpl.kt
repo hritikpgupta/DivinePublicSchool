@@ -7,7 +7,6 @@ import hg.divineschool.admin.data.models.Invoice
 import hg.divineschool.admin.data.models.MonthFee
 import hg.divineschool.admin.data.models.Student
 import hg.divineschool.admin.data.models.StudentMonthFee
-import hg.divineschool.admin.data.utils.await
 import hg.divineschool.admin.data.utils.awaitDocument
 import hg.divineschool.admin.ui.utils.convertIdToPath
 import javax.inject.Inject
@@ -27,7 +26,6 @@ class StudentInvoiceRepositoryImpl @Inject constructor(
                 .collection("students").document(studentScholarNumber).collection("tuitionFee")
                 .orderBy("monthIndex", Query.Direction.ASCENDING)
                 .get().awaitDocument()
-
 
             val stu = Student()
             result.data.let {
@@ -93,6 +91,48 @@ class StudentInvoiceRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             Resource.Failure(e)
         }
+    }
+
+    override suspend fun getAllInvoices(
+        classID: String,
+        studentScholarNumber: String
+    ): List<Invoice> {
+        val invoiceList = ArrayList<Invoice>()
+        val result = db.collection("classes").document(classID.convertIdToPath())
+            .collection("students").document(studentScholarNumber).collection("invoices")
+            .get().awaitDocument()
+        result.documents.let {
+            if (it.isNotEmpty()) {
+                it.forEach { invo ->
+                    invoiceList.add(
+                        Invoice(
+                            invoiceNumber = invo.getLong("invoiceNumber") as Long,
+                            date = invo.getString("date") as String,
+                            tuitionFeeMonthList = invo.getString("tuitionFeeMonthList") as String,
+                            bookList = invo.getString("bookList") as String,
+                            supplementsList = invo.getString("supplementsList") as String,
+                            admissionFee = invo.getLong("admissionFee") as Long,
+                            annualCharge = invo.getLong("annualCharge") as Long,
+                            computerFee = invo.getLong("computerFee") as Long,
+                            examFee = invo.getLong("examFee") as Long,
+                            lateFee = invo.getLong("lateFee") as Long,
+                            tuitionFee = invo.getLong("tuitionFee") as Long,
+                            transportFee = invo.getLong("transportFee") as Long,
+                            supplementaryFee = invo.getLong("supplementaryFee") as Long,
+                            bookFee = invo.getLong("bookFee") as Long,
+                            total = invo.getLong("total") as Long,
+                            className = invo.getString("className") as String,
+                            studentName = invo.getString("studentName") as String,
+                            guardianName = invo.getString("guardianName") as String,
+                            address = invo.getString("address") as String,
+                            rollNumber = invo.getLong("rollNumber") as Long,
+                            placeName = invo.getString("placeName") as String,
+                    ))
+                }
+            }
+        }
+        return invoiceList
+
     }
 
 }

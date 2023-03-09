@@ -10,7 +10,10 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -45,6 +48,40 @@ fun DPSBar(onBackPressed: () -> Unit, className: String) {
                     fontWeight = FontWeight.SemiBold
                 )
             )
+        },
+        backgroundColor = MaterialTheme.colors.background,
+        navigationIcon = {
+            IconButton(onClick = onBackPressed) {
+                Icon(
+                    Icons.Filled.ArrowBack, null, modifier = Modifier.requiredSize(28.dp)
+                )
+            }
+        }
+    )
+}
+
+@Composable
+fun DPSBarWithAction(onBackPressed: () -> Unit, onActionPressed: () -> Unit, className: String) {
+    TopAppBar(
+        elevation = 4.dp,
+        title = {
+            Text(
+                text = className, style = TextStyle(
+                    fontFamily = boldFont,
+                    fontSize = 26.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            )
+        },
+        actions = {
+            IconButton(onClick = onActionPressed) {
+                Icon(
+                    ImageVector.vectorResource(id = R.drawable.ic_invoice),
+                    null,
+                    tint = Color.Black,
+                    modifier = Modifier.requiredSize(28.dp)
+                )
+            }
         },
         backgroundColor = MaterialTheme.colors.background,
         navigationIcon = {
