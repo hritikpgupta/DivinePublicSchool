@@ -23,6 +23,9 @@ class StudentInvoiceViewModel @Inject constructor(
     private var _saveInvoice = MutableStateFlow<Resource<Invoice>?>(null)
     val saveInvoice: StateFlow<Resource<Invoice>?> = _saveInvoice
 
+    private var _studentInvoices = MutableStateFlow<Resource<List<Invoice>>?>(null)
+    val studentInvoices: StateFlow<Resource<List<Invoice>>?> = _studentInvoices
+
 
     fun getStudent(classID: String, scholarNumber: String) = viewModelScope.launch {
         _studentInformation.value = Resource.Loading
@@ -37,12 +40,11 @@ class StudentInvoiceViewModel @Inject constructor(
             _saveInvoice.value = result
         }
 
-    fun getAllInvoices(classID: String, studentScholarNumber: String): List<Invoice> {
-        var invoiceList = emptyList<Invoice>()
-        viewModelScope.launch {
-            invoiceList = repository.getAllInvoices(classID, studentScholarNumber)
-        }
-        return invoiceList
+    fun getAllInvoices(classID: String, studentScholarNumber: String) = viewModelScope.launch {
+        _studentInvoices.value = Resource.Loading
+        val result = repository.getAllInvoices(classID, studentScholarNumber)
+        _studentInvoices.value = result
     }
+
 }
 

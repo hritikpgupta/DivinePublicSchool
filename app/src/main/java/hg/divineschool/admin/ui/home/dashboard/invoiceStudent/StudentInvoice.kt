@@ -37,6 +37,7 @@ import hg.divineschool.admin.ui.home.dashboard.registerStudent.FormRow
 import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.cardColors
 import hg.divineschool.admin.ui.theme.mediumFont
+import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.*
 import kotlinx.coroutines.launch
 import java.util.*
@@ -58,9 +59,8 @@ fun StudentInvoice(
     val scaffoldState = rememberScaffoldState()
     val studentInfoState = viewModel.studentInformation.collectAsState()
     val invoiceState = viewModel.saveInvoice.collectAsState()
-    val studentInvoiceList = remember {
-        mutableStateOf(emptyList<Invoice>())
-    }
+    val studentInvoices = viewModel.studentInvoices.collectAsState()
+
     val selectedSupplement = remember {
         mutableStateOf(emptyList<Supplement>())
     }
@@ -107,7 +107,7 @@ fun StudentInvoice(
     val classColor = cardColors[classID.toInt()]
     LaunchedEffect(Unit) {
         viewModel.getStudent(classID, scholarNumber)
-        studentInvoiceList.value = viewModel.getAllInvoices(classID, scholarNumber)
+        viewModel.getAllInvoices(classID, scholarNumber)
     }
 
     Scaffold(
@@ -142,14 +142,59 @@ fun StudentInvoice(
                     color = Color.Black
                 )
                 Divider(thickness = 4.dp, color = Color.LightGray)
-                LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                    items(studentInvoiceList.value) { item ->
-                        ListItem {
-                            Text(text = item.invoiceNumber.toString())
+                studentInvoices.value.let {
+                    when (it) {
+                        is Resource.Loading -> {
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                CircularProgressIndicator()
+                            }
                         }
+                        is Resource.Failure -> {
+                            it.exception.message?.let { it1 -> context.toast(it1) }
+                        }
+                        is Resource.FailureMessage -> {}
+                        is Resource.Success -> {
+                            if (it.result.isNotEmpty()) {
+                                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                                    items(it.result) { item ->
+                                        Card(elevation = 4.dp, modifier = Modifier.padding(8.dp)) {
+                                            Text(
+                                                text = item.invoiceNumber.toString(),
+                                                style = TextStyle(
+                                                    fontSize = 20.sp,
+                                                    fontFamily = regularFont,
+                                                    fontWeight = FontWeight.Bold
+                                                ),
+                                                textAlign = TextAlign.Center,
+                                                color = Color.Black
+                                            )
+                                        }
+                                    }
+                                }
+                            } else {
+                                Box(
+                                    contentAlignment = Alignment.Center,
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    Text(
+                                        text = "Empty",
+                                        style = TextStyle(
+                                            fontSize = 26.sp,
+                                            fontFamily = boldFont,
+                                            fontWeight = FontWeight.Bold
+                                        ),
+                                        textAlign = TextAlign.Center,
+                                        color = Color.Black
+                                    )
+                                }
+                            }
+                        }
+                        else -> {}
                     }
                 }
-
             }
         },
     ) {
