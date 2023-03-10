@@ -1,5 +1,9 @@
 package hg.divineschool.admin.ui.home.dashboard.invoiceStudent
 
+import android.content.Intent
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,6 +37,7 @@ import hg.divineschool.admin.data.utils.getPlaces
 import hg.divineschool.admin.data.utils.getSupplement
 import hg.divineschool.admin.data.utils.getTuitionFee
 import hg.divineschool.admin.ui.home.DPSBarWithAction
+import hg.divineschool.admin.ui.home.dashboard.invoiceWebView.InvoiceScreen
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.FormRow
 import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.cardColors
@@ -109,19 +114,23 @@ fun StudentInvoice(
         viewModel.getStudent(classID, scholarNumber)
         viewModel.getAllInvoices(classID, scholarNumber)
     }
+    val startInvoiceScreen =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            Log.i(Log_Tag, "Activity Result")
+            scope.launch {
+                scaffoldState.drawerState.close()
+            }
+        }
 
     Scaffold(
         scaffoldState = scaffoldState,
         drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
         topBar = {
-            DPSBarWithAction(
-                onBackPressed = { navController.popBackStack() },
-                onActionPressed = {
-                    scope.launch {
-                        scaffoldState.drawerState.open()
-                    }
-                },
-                className = "Generate Bill"
+            DPSBarWithAction(onBackPressed = { navController.popBackStack() }, onActionPressed = {
+                scope.launch {
+                    scaffoldState.drawerState.open()
+                }
+            }, className = "Generate Bill"
             )
         },
         drawerShape = customShape(),
@@ -134,12 +143,11 @@ fun StudentInvoice(
                 Text(
                     text = "Previous Invoices",
                     style = TextStyle(
-                        fontSize = 32.sp,
-                        fontFamily = boldFont,
-                        fontWeight = FontWeight.Bold
+                        fontSize = 30.sp, fontFamily = boldFont, fontWeight = FontWeight.Bold
                     ),
                     textAlign = TextAlign.Center,
-                    color = Color.Black
+                    color = Color.Black,
+                    modifier = Modifier.padding(start = 2.dp)
                 )
                 Divider(thickness = 4.dp, color = Color.LightGray)
                 studentInvoices.value.let {
@@ -160,17 +168,34 @@ fun StudentInvoice(
                             if (it.result.isNotEmpty()) {
                                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                                     items(it.result) { item ->
-                                        Card(elevation = 4.dp, modifier = Modifier.padding(8.dp)) {
-                                            Text(
-                                                text = item.invoiceNumber.toString(),
-                                                style = TextStyle(
-                                                    fontSize = 20.sp,
-                                                    fontFamily = regularFont,
-                                                    fontWeight = FontWeight.Bold
-                                                ),
-                                                textAlign = TextAlign.Center,
-                                                color = Color.Black
-                                            )
+                                        Card(
+                                            elevation = 8.dp,
+                                            onClick = {
+                                                startInvoiceScreen.launch(
+                                                    Intent(
+                                                        context,
+                                                        InvoiceScreen::class.java
+                                                    )
+                                                )
+                                            },
+                                            modifier = Modifier
+                                                .padding(12.dp)
+                                                .requiredHeight(50.dp)
+                                                .requiredWidth(300.dp)
+                                        ) {
+                                            Column(
+                                                verticalArrangement = Arrangement.Center,
+                                                horizontalAlignment = Alignment.CenterHorizontally
+                                            ) {
+                                                Text(
+                                                    text = "$INR ${item.total}  ${item.date.splitDateTime()}",
+                                                    style = TextStyle(
+                                                        fontSize = 26.sp, fontFamily = regularFont
+                                                    ),
+                                                    textAlign = TextAlign.Center,
+                                                    color = Color.Black
+                                                )
+                                            }
                                         }
                                     }
                                 }
@@ -180,14 +205,11 @@ fun StudentInvoice(
                                     modifier = Modifier.fillMaxSize()
                                 ) {
                                     Text(
-                                        text = "Empty",
-                                        style = TextStyle(
+                                        text = "Empty", style = TextStyle(
                                             fontSize = 26.sp,
                                             fontFamily = boldFont,
                                             fontWeight = FontWeight.Bold
-                                        ),
-                                        textAlign = TextAlign.Center,
-                                        color = Color.Black
+                                        ), textAlign = TextAlign.Center, color = Color.Black
                                     )
                                 }
                             }
@@ -486,9 +508,7 @@ fun StudentInvoice(
 
 fun customShape() = object : Shape {
     override fun createOutline(
-        size: Size,
-        layoutDirection: LayoutDirection,
-        density: Density
+        size: Size, layoutDirection: LayoutDirection, density: Density
     ): Outline {
         return Outline.Rectangle(Rect(0f, 0f, 700f /* width */, size.height /* height */))
     }

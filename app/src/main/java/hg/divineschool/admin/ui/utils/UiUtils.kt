@@ -284,5 +284,9 @@ fun List<MonthFee>.getFormattedMonthString(): String {
     return "${stringBuilder.toString().substring(0, stringBuilder.length - 1)}]"
 }
 
+fun String.splitDateTime():String{
+    val values = this.split("at")
+    return values[0].trim()
+}
 
 
