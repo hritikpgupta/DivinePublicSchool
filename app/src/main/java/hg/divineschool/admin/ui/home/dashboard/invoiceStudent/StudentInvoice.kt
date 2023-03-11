@@ -499,6 +499,16 @@ fun StudentInvoice(
                 }
                 is Resource.FailureMessage -> {}
                 is Resource.Success -> {
+                    LaunchedEffect(Unit) {
+                        viewModel.getStudent(classID, scholarNumber)
+                        viewModel.getAllInvoices(classID, scholarNumber)
+                    }
+                    var intent = Intent(
+                        context,
+                        InvoiceScreen::class.java
+                    )
+                    intent.putExtra("invoiceObject", it.result )
+                    startInvoiceScreen.launch(intent)
                 }
                 else -> {}
             }

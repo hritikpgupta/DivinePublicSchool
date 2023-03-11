@@ -79,14 +79,9 @@ class InvoiceScreen : ComponentActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.i(Log_Tag, "onStart $count")
-    }
 
     override fun onResume() {
         super.onResume()
-        Log.i(Log_Tag, "onResume $count")
         if (count != 1) {
             finish()
         }
@@ -95,7 +90,6 @@ class InvoiceScreen : ComponentActivity() {
     override fun onPause() {
         super.onPause()
         count = 2
-        Log.i(Log_Tag, "onPause $count")
     }
 
 }
