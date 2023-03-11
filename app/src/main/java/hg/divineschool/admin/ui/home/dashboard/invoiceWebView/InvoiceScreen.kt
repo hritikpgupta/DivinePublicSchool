@@ -1,7 +1,6 @@
 package hg.divineschool.admin.ui.home.dashboard.invoiceWebView
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.print.PrintAttributes
 import android.print.PrintManager
@@ -10,25 +9,26 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
 import hg.divineschool.admin.R
+import hg.divineschool.admin.data.models.Invoice
 import hg.divineschool.admin.data.utils.HtmlString
+import hg.divineschool.admin.data.utils.getSerializable
 import hg.divineschool.admin.ui.utils.Log_Tag
-import hg.divineschool.admin.ui.utils.getActivity
 
 class InvoiceScreen : ComponentActivity() {
     private var mWebView: WebView? = null
     private var count = 0
+    private lateinit var invoice: Invoice
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i(Log_Tag, "onCreate")
+        invoice = intent.getSerializable("invoiceObject", Invoice::class.java)
         setContentView(R.layout.activity_invoice_screen)
         count = 1
         mWebView = findViewById(R.id.myWeb)
         webView()
     }
+
     private fun webView() {
         val webView = WebView(this)
         webView.webViewClient = object : WebViewClient() {
@@ -43,28 +43,15 @@ class InvoiceScreen : ComponentActivity() {
             }
         }
         // Generate an HTML document on the fly:
-        HtmlString.pdfStr = HtmlString.getHtmlForPdf(
-            232,
-            "24-10-1996",
-            "Class One",
-            "Hritik Gupta",
-            250,
-            100,
-            300,
-            120,
-            0,
-            100,
-            0,
-            3340,
-            0,
-            4532,
-            "Jan"
-        )
 
-        val htmlDocument = HtmlString.getString()
+        val htmlDocument = HtmlString.getString(invoice.invoiceNumber.toString(),invoice.studentName, invoice.guardianName,invoice.rollNumber.toString(),
+        invoice.className, invoice.address, invoice.date, invoice.computerFee.toString(),invoice.annualCharge.toString(),invoice.lateFee.toString(),
+        invoice.admissionFee.toString(), invoice.transportFee.toString(), invoice.examFee.toString(), invoice.supplementaryFee.toString(),
+        invoice.tuitionFee.toString(),invoice.bookFee.toString(),invoice.total.toString(),"","","","")
         webView.loadDataWithBaseURL(null, htmlDocument, "text/HTML", "UTF-8", null)
         mWebView = webView
     }
+
     private fun createWebPrintJob(webView: WebView) {
 
         (this.getSystemService(Context.PRINT_SERVICE) as? PrintManager)?.let { printManager ->
@@ -79,13 +66,13 @@ class InvoiceScreen : ComponentActivity() {
                 PrintAttributes.Builder().build()
             ).also { printJob ->
 
-                if (printJob.isCompleted){
+                if (printJob.isCompleted) {
                     this.finishActivity(RESULT_OK)
-                }else if (printJob.isCancelled){
+                } else if (printJob.isCancelled) {
                     this.finishActivity(RESULT_OK)
-                }else if (printJob.isFailed){
+                } else if (printJob.isFailed) {
                     this.finishActivity(RESULT_OK)
-                }else{
+                } else {
                     this.finishActivity(RESULT_OK)
                 }
             }
@@ -100,7 +87,7 @@ class InvoiceScreen : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         Log.i(Log_Tag, "onResume $count")
-        if (count!= 1){
+        if (count != 1) {
             finish()
         }
     }

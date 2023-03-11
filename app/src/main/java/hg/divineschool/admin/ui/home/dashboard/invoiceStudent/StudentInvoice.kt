@@ -171,12 +171,12 @@ fun StudentInvoice(
                                         Card(
                                             elevation = 8.dp,
                                             onClick = {
-                                                startInvoiceScreen.launch(
-                                                    Intent(
-                                                        context,
-                                                        InvoiceScreen::class.java
-                                                    )
+                                                var intent = Intent(
+                                                    context,
+                                                    InvoiceScreen::class.java
                                                 )
+                                                intent.putExtra("invoiceObject", item )
+                                                startInvoiceScreen.launch(intent)
                                             },
                                             modifier = Modifier
                                                 .padding(12.dp)

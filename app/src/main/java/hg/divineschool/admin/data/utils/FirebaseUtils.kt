@@ -1,10 +1,13 @@
 package hg.divineschool.admin.data.utils
 
+import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import com.google.android.gms.tasks.Task
 import com.google.firebase.storage.StorageReference
 import hg.divineschool.admin.data.models.*
 import kotlinx.coroutines.suspendCancellableCoroutine
+import java.io.Serializable
 import kotlin.coroutines.resumeWithException
 
 suspend fun <T> Task<T>.await(): T {
@@ -187,4 +190,10 @@ fun FeeStructure.getSupplement(): List<Supplement>{
     supplements.add(Supplement(itemName = "Senior Tie", price = this.tieFeeSenior))
 
     return supplements
+}
+fun <T : Serializable?> Intent.getSerializable(key: String, m_class: Class<T>): T {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        this.getSerializableExtra(key, m_class)!!
+    else
+        this.getSerializableExtra(key) as T
 }

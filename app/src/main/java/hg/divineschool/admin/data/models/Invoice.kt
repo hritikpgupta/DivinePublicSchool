@@ -1,5 +1,6 @@
 package hg.divineschool.admin.data.models
 
+import android.os.Parcelable
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -27,4 +28,4 @@ data class Invoice(
     var address: String = "",
     var rollNumber: Long = 0,
     var placeName: String = "",
-)
+) : java.io.Serializable
