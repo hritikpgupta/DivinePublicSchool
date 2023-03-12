@@ -147,7 +147,7 @@ fun StudentInvoice(
                     ),
                     textAlign = TextAlign.Center,
                     color = Color.Black,
-                    modifier = Modifier.padding(start = 2.dp)
+                    modifier = Modifier.padding(start = 4.dp)
                 )
                 Divider(thickness = 4.dp, color = Color.LightGray)
                 studentInvoices.value.let {
@@ -172,10 +172,9 @@ fun StudentInvoice(
                                             elevation = 8.dp,
                                             onClick = {
                                                 var intent = Intent(
-                                                    context,
-                                                    InvoiceScreen::class.java
+                                                    context, InvoiceScreen::class.java
                                                 )
-                                                intent.putExtra("invoiceObject", item )
+                                                intent.putExtra("invoiceObject", item)
                                                 startInvoiceScreen.launch(intent)
                                             },
                                             modifier = Modifier
@@ -200,16 +199,25 @@ fun StudentInvoice(
                                     }
                                 }
                             } else {
-                                Box(
-                                    contentAlignment = Alignment.Center,
-                                    modifier = Modifier.fillMaxSize()
+                                Log.i(Log_Tag, "Show Empty Text")
+                                Column(
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier
+                                        .fillMaxHeight()
+                                        .requiredWidth(300.dp)
+                                        .padding(
+                                            start = 2.dp, end = 0.dp, top = 0.dp, bottom = 0.dp
+                                        )
                                 ) {
                                     Text(
-                                        text = "Empty", style = TextStyle(
-                                            fontSize = 26.sp,
-                                            fontFamily = boldFont,
-                                            fontWeight = FontWeight.Bold
-                                        ), textAlign = TextAlign.Center, color = Color.Black
+                                        text = "No Invoice Available",
+                                        style = TextStyle(
+                                            fontSize = 30.sp,
+                                            fontFamily = regularFont,
+                                        ),
+                                        textAlign = TextAlign.Center,
+                                        color = Color.Black.copy(0.75f)
                                     )
                                 }
                             }
@@ -500,15 +508,30 @@ fun StudentInvoice(
                 is Resource.FailureMessage -> {}
                 is Resource.Success -> {
                     LaunchedEffect(Unit) {
+                        var intent = Intent(
+                            context, InvoiceScreen::class.java
+                        )
+                        intent.putExtra("invoiceObject", it.result)
+                        startInvoiceScreen.launch(intent)
+                        tuitionFee.value = 0
+                        admissionFee.value = 0
+                        transportFee.value = 0
+                        bookFee.value = 0
+                        supplementFee.value = 0
+                        examinationFee.value = 0
+                        annualFee.value = 0
+                        computerFee.value = 0
+                        selectedSupplement.value = emptyList()
+                        selectedBooks.value = emptyList()
+                        selectedMonthFee.value = emptyList()
+                        transportPlace.value = ""
+                        transportFee.value = 0
+
+
                         viewModel.getStudent(classID, scholarNumber)
                         viewModel.getAllInvoices(classID, scholarNumber)
                     }
-                    var intent = Intent(
-                        context,
-                        InvoiceScreen::class.java
-                    )
-                    intent.putExtra("invoiceObject", it.result )
-                    startInvoiceScreen.launch(intent)
+
                 }
                 else -> {}
             }

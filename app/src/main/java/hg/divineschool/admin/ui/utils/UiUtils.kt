@@ -294,9 +294,11 @@ fun String.splitDateTime(): String {
 }
 
 fun String.isBookListLong(): Boolean {
-    val result = this.substring(1, this.length - 1).split(",")
-    if (result.size > 4) {
-        return true
+    if (this.isNotEmpty()){
+        val result = this.substring(1, this.length - 1).split(",")
+        if (result.size > 4) {
+            return true
+        }
     }
     return false
 }
@@ -325,14 +327,24 @@ fun String.splitBookList(): ArrayList<String> {
 
 }
 
-fun String.isFeeZero():String{
+fun String.isFeeZero(): String {
     this.trim()
-    return if (this == "0"){
+    return if (this == "0") {
         ""
-    }else{
+    } else {
         this
     }
 }
+
+fun String.getMonthName(): ArrayList<String> {
+    val list = ArrayList<String>()
+    val result = this.substring(1, this.length - 1).split(",")
+    result.forEach {
+        list.add(it)
+    }
+    return list
+}
+
 
 
 

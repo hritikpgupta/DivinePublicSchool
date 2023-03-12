@@ -9,6 +9,7 @@ import hg.divineschool.admin.data.models.Student
 import hg.divineschool.admin.data.models.StudentMonthFee
 import hg.divineschool.admin.data.utils.awaitDocument
 import hg.divineschool.admin.ui.utils.convertIdToPath
+import hg.divineschool.admin.ui.utils.getMonthName
 import javax.inject.Inject
 
 class StudentInvoiceRepositoryImpl @Inject constructor(
@@ -87,6 +88,12 @@ class StudentInvoiceRepositoryImpl @Inject constructor(
             db.collection("classes").document(classID.convertIdToPath())
                 .collection("students").document(studentScholarNumber).collection("invoices")
                 .document(invoice.invoiceNumber.toString()).set(invoice).awaitDocument()
+            var monthList = invoice.tuitionFeeMonthList.getMonthName()
+            monthList.forEach { month->
+                db.collection("classes").document(classID.convertIdToPath()).collection("students").document(studentScholarNumber)
+                    .collection("tuitionFee").document(month.trim()).update("paid",true).awaitDocument()
+            }
+
             Resource.Success(invoice)
         } catch (e: Exception) {
             Resource.Failure(e)
