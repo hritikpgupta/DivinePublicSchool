@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.print.PrintAttributes
 import android.print.PrintManager
-import android.util.Log
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -13,7 +12,8 @@ import hg.divineschool.admin.R
 import hg.divineschool.admin.data.models.Invoice
 import hg.divineschool.admin.data.utils.HtmlString
 import hg.divineschool.admin.data.utils.getSerializable
-import hg.divineschool.admin.ui.utils.Log_Tag
+import hg.divineschool.admin.ui.utils.isBookListLong
+import hg.divineschool.admin.ui.utils.splitDateTime
 
 class InvoiceScreen : ComponentActivity() {
     private var mWebView: WebView? = null
@@ -43,11 +43,39 @@ class InvoiceScreen : ComponentActivity() {
             }
         }
         // Generate an HTML document on the fly:
+        var bookText1 =""
+        var bookText2 =""
+        if (invoice.bookList.isBookListLong()){
 
-        val htmlDocument = HtmlString.getString(invoice.invoiceNumber.toString(),invoice.studentName, invoice.guardianName,invoice.rollNumber.toString(),
-        invoice.className, invoice.address, invoice.date, invoice.computerFee.toString(),invoice.annualCharge.toString(),invoice.lateFee.toString(),
-        invoice.admissionFee.toString(), invoice.transportFee.toString(), invoice.examFee.toString(), invoice.supplementaryFee.toString(),
-        invoice.tuitionFee.toString(),invoice.bookFee.toString(),invoice.total.toString(),"","","","")
+        }else{
+            bookText1 = invoice.bookList
+            bookText2 =""
+        }
+
+
+        val htmlDocument = HtmlString.getString(
+            invoice.invoiceNumber.toString(),
+            invoice.studentName,
+            invoice.guardianName,
+            invoice.rollNumber.toString(),
+            invoice.className,
+            invoice.address,
+            invoice.date.splitDateTime(),
+            invoice.computerFee.toString(),
+            invoice.annualCharge.toString(),
+            invoice.lateFee.toString(),
+            invoice.admissionFee.toString(),
+            invoice.transportFee.toString(),
+            invoice.examFee.toString(),
+            invoice.supplementaryFee.toString(),
+            invoice.tuitionFee.toString(),
+            invoice.bookFee.toString(),
+            invoice.total.toString(),
+            invoice.supplementsList,
+            invoice.tuitionFeeMonthList,
+            bookText1,
+            bookText2
+        )
         webView.loadDataWithBaseURL(null, htmlDocument, "text/HTML", "UTF-8", null)
         mWebView = webView
     }

@@ -259,6 +259,8 @@ fun List<Supplement>.getFormattedSupplementString(): String {
     stringBuilder.append("[")
     this.forEach { supplement ->
         stringBuilder.append(supplement.itemName)
+        stringBuilder.append(" $INR")
+        stringBuilder.append(supplement.price)
         stringBuilder.append(",")
     }
     return "${stringBuilder.toString().substring(0, stringBuilder.length - 1)}]"
@@ -269,6 +271,8 @@ fun List<Book>.getFormattedBookString(): String {
     stringBuilder.append("[")
     this.forEach { book ->
         stringBuilder.append(book.bookName)
+        stringBuilder.append(" $INR")
+        stringBuilder.append(book.bookPrice)
         stringBuilder.append(",")
     }
     return "${stringBuilder.toString().substring(0, stringBuilder.length - 1)}]"
@@ -284,9 +288,27 @@ fun List<MonthFee>.getFormattedMonthString(): String {
     return "${stringBuilder.toString().substring(0, stringBuilder.length - 1)}]"
 }
 
-fun String.splitDateTime():String{
+fun String.splitDateTime(): String {
     val values = this.split("at")
     return values[0].trim()
 }
+
+fun String.isBookListLong(): Boolean {
+    val result = this.substring(1, this.length - 1).split(",")
+    if (result.size > 4) {
+        return true
+    }
+    return false
+}
+
+fun String.splitBookList(): List<String> {
+    val result = this.substring(1, this.length - 1).split(",")
+    if (result.size > 4) {
+
+    }
+    return emptyList()
+}
+
+
 
 
