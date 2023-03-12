@@ -301,12 +301,37 @@ fun String.isBookListLong(): Boolean {
     return false
 }
 
-fun String.splitBookList(): List<String> {
+fun String.splitBookList(): ArrayList<String> {
+    val list = ArrayList<String>()
     val result = this.substring(1, this.length - 1).split(",")
-    if (result.size > 4) {
+    val length = result.size
+    if (length in 1..4) {
+        list.add(result.slice(0 until length).toString())
+        list.add("")
+        list.add("")
 
+    } else if (length in 5..8) {
+        list.add(result.slice(0..3).toString())
+        list.add(result.slice(4 until length).toString())
+        list.add("")
+
+    } else if (length in 9..12) {
+        list.add(result.slice(0..3).toString())
+        list.add(result.slice(4..7).toString())
+        list.add(result.slice(8 until length).toString())
     }
-    return emptyList()
+
+    return list
+
+}
+
+fun String.isFeeZero():String{
+    this.trim()
+    return if (this == "0"){
+        ""
+    }else{
+        this
+    }
 }
 
 

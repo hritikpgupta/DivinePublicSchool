@@ -13,6 +13,8 @@ import hg.divineschool.admin.data.models.Invoice
 import hg.divineschool.admin.data.utils.HtmlString
 import hg.divineschool.admin.data.utils.getSerializable
 import hg.divineschool.admin.ui.utils.isBookListLong
+import hg.divineschool.admin.ui.utils.isFeeZero
+import hg.divineschool.admin.ui.utils.splitBookList
 import hg.divineschool.admin.ui.utils.splitDateTime
 
 class InvoiceScreen : ComponentActivity() {
@@ -43,13 +45,19 @@ class InvoiceScreen : ComponentActivity() {
             }
         }
         // Generate an HTML document on the fly:
-        var bookText1 =""
-        var bookText2 =""
-        if (invoice.bookList.isBookListLong()){
+        var bookText1 = ""
+        var bookText2 = ""
+        var bookText3 = ""
+        if (invoice.bookList.isBookListLong()) {
+            val list = invoice.bookList.splitBookList()
+            bookText1 = list[0]
+            bookText2 = list[1]
+            bookText3 = list[2]
 
-        }else{
+        } else {
             bookText1 = invoice.bookList
-            bookText2 =""
+            bookText2 = ""
+            bookText3 = ""
         }
 
 
@@ -60,21 +68,22 @@ class InvoiceScreen : ComponentActivity() {
             invoice.rollNumber.toString(),
             invoice.className,
             invoice.address,
-            invoice.date.splitDateTime(),
-            invoice.computerFee.toString(),
-            invoice.annualCharge.toString(),
-            invoice.lateFee.toString(),
-            invoice.admissionFee.toString(),
-            invoice.transportFee.toString(),
-            invoice.examFee.toString(),
-            invoice.supplementaryFee.toString(),
-            invoice.tuitionFee.toString(),
-            invoice.bookFee.toString(),
+            invoice.date.splitDateTime().trim(),
+            invoice.computerFee.toString().isFeeZero(),
+            invoice.annualCharge.toString().isFeeZero(),
+            invoice.lateFee.toString().isFeeZero(),
+            invoice.admissionFee.toString().isFeeZero(),
+            invoice.transportFee.toString().isFeeZero(),
+            invoice.examFee.toString().isFeeZero(),
+            invoice.supplementaryFee.toString().isFeeZero(),
+            invoice.tuitionFee.toString().isFeeZero(),
+            invoice.bookFee.toString().isFeeZero(),
             invoice.total.toString(),
             invoice.supplementsList,
             invoice.tuitionFeeMonthList,
             bookText1,
-            bookText2
+            bookText2,
+            bookText3
         )
         webView.loadDataWithBaseURL(null, htmlDocument, "text/HTML", "UTF-8", null)
         mWebView = webView
