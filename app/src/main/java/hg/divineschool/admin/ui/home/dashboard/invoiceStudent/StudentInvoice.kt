@@ -197,7 +197,6 @@ fun StudentInvoice(
                                     }
                                 }
                             } else {
-                                Log.i(Log_Tag, "Show Empty Text")
                                 Column(
                                     verticalArrangement = Arrangement.Center,
                                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -499,7 +498,7 @@ fun StudentInvoice(
                 is Resource.FailureMessage -> {}
                 is Resource.Success -> {
                     LaunchedEffect(Unit) {
-                        var intent = Intent(
+                        val intent = Intent(
                             context, InvoiceScreen::class.java
                         )
                         intent.putExtra("invoiceObject", it.result)

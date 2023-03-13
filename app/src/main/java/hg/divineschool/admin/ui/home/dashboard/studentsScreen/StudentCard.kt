@@ -122,7 +122,5 @@ fun StudentCard(
                 }
             }
         }
-
-
     }
 }

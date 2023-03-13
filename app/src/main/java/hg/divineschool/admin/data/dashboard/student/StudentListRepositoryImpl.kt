@@ -24,6 +24,7 @@ class StudentListRepositoryImpl @Inject constructor(
             val result =
                 db.collection("classes").document(classID.convertIdToPath()).collection("students")
                     .orderBy("active", Query.Direction.DESCENDING)
+                    .orderBy("firstName" )
                     .get().awaitDocument()
 
             result.documents.let {
