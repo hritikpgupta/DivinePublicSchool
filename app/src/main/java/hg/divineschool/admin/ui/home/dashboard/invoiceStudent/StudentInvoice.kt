@@ -516,8 +516,6 @@ fun StudentInvoice(
                         selectedMonthFee.value = emptyList()
                         transportPlace.value = ""
                         transportFee.value = 0
-
-
                         viewModel.getStudent(classID, scholarNumber)
                         viewModel.getAllInvoices(classID, scholarNumber)
                     }

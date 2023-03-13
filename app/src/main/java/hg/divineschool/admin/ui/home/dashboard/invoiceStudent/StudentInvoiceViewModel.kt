@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hg.divineschool.admin.data.Resource
+import hg.divineschool.admin.data.dashboard.settings.SettingRepositoryImpl
 import hg.divineschool.admin.data.dashboard.student.StudentInvoiceRepository
 import hg.divineschool.admin.data.models.Invoice
 import hg.divineschool.admin.data.models.StudentMonthFee
@@ -14,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StudentInvoiceViewModel @Inject constructor(
-    private val repository: StudentInvoiceRepository
+    private val repository: StudentInvoiceRepository,
 ) : ViewModel() {
 
     private var _studentInformation = MutableStateFlow<Resource<StudentMonthFee>?>(null)

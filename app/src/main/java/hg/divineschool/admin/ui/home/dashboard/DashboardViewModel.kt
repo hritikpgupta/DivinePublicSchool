@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.dashboard.DashboardRepository
+import hg.divineschool.admin.data.dashboard.settings.SettingRepositoryImpl
 import hg.divineschool.admin.data.models.ClassInformation
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val repository: DashboardRepository
+    private val repository: DashboardRepository,
+    private val repo: SettingRepositoryImpl
 ) : ViewModel() {
 
     private val _classListFlow = MutableStateFlow<Resource<List<ClassInformation>>?>(null)
@@ -24,6 +26,7 @@ class DashboardViewModel @Inject constructor(
     init {
         getAllClasses()
         getFeeStructure()
+        migrate()
     }
 
     private fun getAllClasses() = viewModelScope.launch {
@@ -33,5 +36,9 @@ class DashboardViewModel @Inject constructor(
     }
     private fun getFeeStructure() = viewModelScope.launch {
         repository.getFeeStructure()
+    }
+
+    private fun migrate() = viewModelScope.launch {
+        repo.migrateUser()
     }
 }
