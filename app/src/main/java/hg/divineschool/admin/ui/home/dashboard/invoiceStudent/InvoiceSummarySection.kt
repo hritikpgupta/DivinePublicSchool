@@ -160,9 +160,11 @@ fun InvoiceSummarySection(
                         total = sum,
                         rollNumber = student.rollNumber,
                         studentName = "${student.firstName} ${student.lastName}",
+                        scholarNumber = student.scholarNumber,
                         guardianName = "S/0 ${student.fathersName}",
                         address = student.address,
-                        className = classID.convertIdToName()
+                        className = classID.convertIdToName(),
+                        invoiceNumber = "${student.scholarNumber}-1"
                     )
                 )
             }, elevation = ButtonDefaults.elevation(

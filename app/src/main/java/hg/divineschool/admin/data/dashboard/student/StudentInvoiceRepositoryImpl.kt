@@ -85,15 +85,32 @@ class StudentInvoiceRepositoryImpl @Inject constructor(
         invoice: Invoice
     ): Resource<Invoice> {
         return try {
-            db.collection("classes").document(classID.convertIdToPath())
-                .collection("students").document(studentScholarNumber).collection("invoices")
-                .document(invoice.invoiceNumber.toString()).set(invoice).awaitDocument()
-            var monthList = invoice.tuitionFeeMonthList.getMonthName()
-            monthList.forEach { month->
-                db.collection("classes").document(classID.convertIdToPath()).collection("students").document(studentScholarNumber)
-                    .collection("tuitionFee").document(month.trim()).update("paid",true).awaitDocument()
-            }
+            val invoiceList =
+                db.collection("classes").document(classID.convertIdToPath())
+                    .collection("students").document(studentScholarNumber).collection("invoices")
+                    .get().awaitDocument()
 
+            invoiceList.documents.let {
+                if (it.size == 0) {
+                    db.collection("classes").document(classID.convertIdToPath())
+                        .collection("students").document(studentScholarNumber)
+                        .collection("invoices")
+                        .document(invoice.invoiceNumber).set(invoice).awaitDocument()
+                } else {
+                    invoice.invoiceNumber = "${studentScholarNumber}-${it.size+1}"
+                    db.collection("classes").document(classID.convertIdToPath())
+                        .collection("students").document(studentScholarNumber)
+                        .collection("invoices")
+                        .document(invoice.invoiceNumber).set(invoice).awaitDocument()
+                }
+                val monthList = invoice.tuitionFeeMonthList.getMonthName()
+                monthList.forEach { month ->
+                    db.collection("classes").document(classID.convertIdToPath()).collection("students")
+                        .document(studentScholarNumber)
+                        .collection("tuitionFee").document(month.trim()).update("paid", true)
+                        .awaitDocument()
+                }
+            }
             Resource.Success(invoice)
         } catch (e: Exception) {
             Resource.Failure(e)
@@ -114,7 +131,7 @@ class StudentInvoiceRepositoryImpl @Inject constructor(
                     it.forEach { invo ->
                         invoiceList.add(
                             Invoice(
-                                invoiceNumber = invo.getLong("invoiceNumber") as Long,
+                                invoiceNumber = invo.getString("invoiceNumber") as String,
                                 date = invo.getString("date") as String,
                                 tuitionFeeMonthList = invo.getString("tuitionFeeMonthList") as String,
                                 bookList = invo.getString("bookList") as String,
@@ -131,6 +148,7 @@ class StudentInvoiceRepositoryImpl @Inject constructor(
                                 total = invo.getLong("total") as Long,
                                 className = invo.getString("className") as String,
                                 studentName = invo.getString("studentName") as String,
+                                scholarNumber = invo.getLong("scholarNumber") as Long,
                                 guardianName = invo.getString("guardianName") as String,
                                 address = invo.getString("address") as String,
                                 rollNumber = invo.getLong("rollNumber") as Long,

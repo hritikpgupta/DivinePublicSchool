@@ -1,11 +1,10 @@
 package hg.divineschool.admin.data.models
 
-import android.os.Parcelable
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 data class Invoice(
-    var invoiceNumber: Long = 0,
+    var invoiceNumber: String = "",
     var date: String = LocalDateTime.now()
         .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) + " at " + LocalDateTime.now()
         .format(DateTimeFormatter.ofPattern("HH:mm")),
@@ -24,6 +23,7 @@ data class Invoice(
     var total: Long = 0,
     var className: String = "",
     var studentName: String = "",
+    var scholarNumber: Long = 0,
     var guardianName: String = "",
     var address: String = "",
     var rollNumber: Long = 0,

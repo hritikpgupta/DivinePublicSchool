@@ -479,13 +479,6 @@ fun StudentInvoice(
                                 invoice.tuitionFeeMonthList =
                                     selectedMonthFee.value.getFormattedMonthString()
                             }
-                            var invoiceNumber: Long =
-                                (random.nextInt(99999999) + random.nextInt(99999999) + random.nextInt(
-                                    99999999
-                                )).toLong() - random.nextInt(999999)
-                            invoiceNumber /= (random.nextInt(9999) + 1)
-                            invoiceNumber *= (random.nextInt(999999) + 1)
-                            invoice.invoiceNumber = invoiceNumber
                             viewModel.saveInvoice(classID, scholarNumber, invoice)
                         }
                     }
