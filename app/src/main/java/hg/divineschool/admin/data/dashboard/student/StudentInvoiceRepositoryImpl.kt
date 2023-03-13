@@ -125,6 +125,7 @@ class StudentInvoiceRepositoryImpl @Inject constructor(
             val invoiceList = ArrayList<Invoice>()
             val result = db.collection("classes").document(classID.convertIdToPath())
                 .collection("students").document(studentScholarNumber).collection("invoices")
+                .orderBy("invoiceNumber", Query.Direction.DESCENDING)
                 .get().awaitDocument()
             result.documents.let {
                 if (it.isNotEmpty()) {
