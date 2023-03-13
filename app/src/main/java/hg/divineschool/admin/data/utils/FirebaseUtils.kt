@@ -77,39 +77,39 @@ fun FeeStructure.getBooks(classID: String): List<Book> {
     val bookList = ArrayList<Book>()
     when (classID.toInt()) {
         0 -> {
-            returnBookList(this.pgBooks,bookList)
+            returnBookList(this.pgBooks, bookList)
         }
         1 -> {
-            returnBookList(this.lnBooks,bookList)
+            returnBookList(this.lnBooks, bookList)
         }
         2 -> {
-            returnBookList(this.unBooks,bookList)
+            returnBookList(this.unBooks, bookList)
         }
         3 -> {
-            returnBookList(this.classOneBooks,bookList)
+            returnBookList(this.classOneBooks, bookList)
         }
         4 -> {
-            returnBookList(this.classTwoBooks,bookList)
+            returnBookList(this.classTwoBooks, bookList)
         }
         5 -> {
-            returnBookList(this.classThreeBooks,bookList)
+            returnBookList(this.classThreeBooks, bookList)
         }
         6 -> {
-            returnBookList(this.classFourBooks,bookList)
+            returnBookList(this.classFourBooks, bookList)
         }
         7 -> {
-            returnBookList(this.classFiveBooks,bookList)
+            returnBookList(this.classFiveBooks, bookList)
         }
         8 -> {
-            returnBookList(this.classSixBooks,bookList)
+            returnBookList(this.classSixBooks, bookList)
         }
         9 -> {
-            returnBookList(this.classSevenBooks,bookList)
+            returnBookList(this.classSevenBooks, bookList)
         }
         10 -> {
-            returnBookList(this.classEightBooks,bookList)
+            returnBookList(this.classEightBooks, bookList)
         }
-        else ->{
+        else -> {
             return bookList
         }
     }
@@ -123,15 +123,15 @@ fun returnBookList(dataMap: Map<*, *>, bookList: ArrayList<Book>): List<Book> {
     return bookList
 }
 
-fun FeeStructure.getPlaces() : List<Place>{
+fun FeeStructure.getPlaces(): List<Place> {
     val places = ArrayList<Place>()
-    for ((key,value) in this.transportPlaces){
-        places.add(Place(key.toString(),value.toString().toInt()))
+    for ((key, value) in this.transportPlaces) {
+        places.add(Place(key.toString(), value.toString().toInt()))
     }
     return places
 }
 
-fun FeeStructure.getTuitionFee(classID: String) : Int{
+fun FeeStructure.getTuitionFee(classID: String): Int {
     val fee = 0
     when (classID.toInt()) {
         0 -> {
@@ -167,21 +167,21 @@ fun FeeStructure.getTuitionFee(classID: String) : Int{
         10 -> {
             return this.classEightTuition
         }
-        else ->{
+        else -> {
             return fee
         }
     }
 }
 
-fun Boolean.toYesOrNo() : String{
-    return if (this){
+fun Boolean.toYesOrNo(): String {
+    return if (this) {
         "Yes"
-    }else{
+    } else {
         "No"
     }
 }
 
-fun FeeStructure.getSupplement(): List<Supplement>{
+fun FeeStructure.getSupplement(): List<Supplement> {
     val supplements = ArrayList<Supplement>()
     supplements.add(Supplement(itemName = "Belt", price = this.beltPrice))
     supplements.add(Supplement(itemName = "Diary", price = this.diaryFee))
@@ -191,6 +191,7 @@ fun FeeStructure.getSupplement(): List<Supplement>{
 
     return supplements
 }
+
 fun <T : Serializable?> Intent.getSerializable(key: String, m_class: Class<T>): T {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
         this.getSerializableExtra(key, m_class)!!

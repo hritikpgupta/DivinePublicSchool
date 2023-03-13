@@ -1,6 +1,7 @@
 package hg.divineschool.admin.data.dashboard.student
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Student
 import hg.divineschool.admin.data.utils.awaitDocument
@@ -22,6 +23,7 @@ class StudentListRepositoryImpl @Inject constructor(
         return try {
             val result =
                 db.collection("classes").document(classID.convertIdToPath()).collection("students")
+                    .orderBy("active", Query.Direction.DESCENDING)
                     .get().awaitDocument()
 
             result.documents.let {

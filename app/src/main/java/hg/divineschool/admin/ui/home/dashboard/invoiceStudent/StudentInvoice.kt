@@ -56,8 +56,6 @@ fun StudentInvoice(
     navController: NavController,
     viewModel: StudentInvoiceViewModel
 ) {
-
-    val random = Random()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
