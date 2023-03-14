@@ -33,7 +33,6 @@ class SettingRepositoryImpl @Inject constructor(
             Resource.Failure(e)
         }
     }
-
     private suspend fun moveAndDeleteClassEightStudentFirst() {
         try {
             val studentList =
@@ -272,6 +271,5 @@ class SettingRepositoryImpl @Inject constructor(
         }
 
     }
-
 
 }

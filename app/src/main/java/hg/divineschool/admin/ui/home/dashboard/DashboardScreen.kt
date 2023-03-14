@@ -21,8 +21,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.firebase.auth.FirebaseAuth
 import hg.divineschool.admin.AppScreen
 import hg.divineschool.admin.BottomNavItem
+import hg.divineschool.admin.BuildConfig
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.ui.home.DPSAppBar
 import hg.divineschool.admin.ui.theme.boldFont
@@ -36,31 +38,35 @@ fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController)
     val classListFlow = viewModel.classListFlow.collectAsState()
     val context = LocalContext.current
 
-    Scaffold(topBar = { DPSAppBar() }, floatingActionButton = {
-        ExtendedFloatingActionButton(onClick = {
-            navController.navigate(BottomNavItem.AdminSettings.route)
-        },
-            modifier = Modifier.padding(bottom = 70.dp, end = 10.dp),
-            elevation = FloatingActionButtonDefaults.elevation(4.dp),
-            shape = RoundedCornerShape(8.dp),
-            icon = {
-                Icon(
-                    Icons.Filled.Settings,
-                    null,
-                    tint = Color.White,
-                    modifier = Modifier.requiredSize(30.dp)
-                )
-            },
-            text = {
-                Text(
-                    text = "Admin", style = TextStyle(
-                        fontFamily = boldFont,
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.SemiBold
-                    ), color = Color.White
-                )
-            })
-    }) { padding ->
+    Scaffold(topBar = { DPSAppBar() },
+        floatingActionButton = {
+            if (FirebaseAuth.getInstance().currentUser?.email.equals("admin@dps.com")) {
+                ExtendedFloatingActionButton(onClick = {
+                    navController.navigate(BottomNavItem.AdminSettings.route)
+                },
+                    modifier = Modifier.padding(bottom = 70.dp, end = 10.dp),
+                    elevation = FloatingActionButtonDefaults.elevation(4.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    icon = {
+                        Icon(
+                            Icons.Filled.Settings,
+                            null,
+                            tint = Color.White,
+                            modifier = Modifier.requiredSize(30.dp)
+                        )
+                    },
+                    text = {
+                        Text(
+                            text = "Admin", style = TextStyle(
+                                fontFamily = boldFont,
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.SemiBold
+                            ), color = Color.White
+                        )
+                    })
+            }
+        }
+    ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()

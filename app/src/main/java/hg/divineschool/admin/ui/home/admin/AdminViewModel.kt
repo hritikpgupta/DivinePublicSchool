@@ -19,7 +19,7 @@ class AdminViewModel @Inject constructor(
     val adminSettingFlow: StateFlow<Resource<Boolean>?> = _adminSettingFlow
 
     init {
-        migrateClassEightUser()
+        //migrateClassEightUser()
     }
 
     private fun migrateClassEightUser() = viewModelScope.launch {

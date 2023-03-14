@@ -2,4 +2,5 @@ Things to do
 
 -- Add button to change active status of a student
 -- Need functionality to change class teacher name
--- Extract Progress Bar as a composable function
+-- Extract Progress Bar as a composable function -Done
+-- Implement (Show admin setting for a specific user logon) - Done
