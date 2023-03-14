@@ -1,5 +1,7 @@
 package hg.divineschool.admin.data.dashboard.settings
 
+import hg.divineschool.admin.data.Resource
+
 interface SettingRepository {
-    suspend fun migrateUser()
+    suspend fun migrateClassEightUser(): Resource<Boolean>
 }

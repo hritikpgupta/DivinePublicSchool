@@ -1,0 +1,5 @@
+Things to do
+
+-- Add button to change active status of a student
+-- Need functionality to change class teacher name
+-- Extract Progress Bar as a composable function

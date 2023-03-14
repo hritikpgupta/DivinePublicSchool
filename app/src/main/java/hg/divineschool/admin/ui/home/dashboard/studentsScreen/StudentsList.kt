@@ -32,6 +32,7 @@ import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.cardColors
 import hg.divineschool.admin.ui.theme.lightFont
 import hg.divineschool.admin.ui.theme.mediumFont
+import hg.divineschool.admin.ui.utils.CircularProgress
 import hg.divineschool.admin.ui.utils.toast
 
 @Composable
@@ -45,6 +46,7 @@ fun StudentsList(
     val searchText = viewModel.searchText.collectAsState()
     val students = viewModel.students.collectAsState()
     val isSearching = viewModel.isSearching.collectAsState()
+    val classColor = cardColors[classID.toInt()]
     val context = LocalContext.current
     val searchWidth = remember { mutableStateOf(0.0f) }
 
@@ -159,11 +161,7 @@ fun StudentsList(
             studentListFlow.value.let {
                 when (it) {
                     is Resource.Loading -> {
-                        Box(
-                            contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
-                        ) {
-                            CircularProgressIndicator()
-                        }
+                        CircularProgress(color = classColor)
                     }
                     is Resource.Failure -> {
                         it.exception.message?.let { it1 -> context.toast(it1) }

@@ -21,4 +21,6 @@ sealed class BottomNavItem( @StringRes val title: Int, @DrawableRes val icon: In
     object Home : BottomNavItem(R.string.bottom_nav_home, R.drawable.baseline_home_24, "home")
     object Attendance : BottomNavItem(R.string.bottom_nav_attendance, R.drawable.attendance, "attendance")
     object Notification : BottomNavItem(R.string.bottom_nav_notification, R.drawable.baseline_notifications_active_24, "notification")
+    object AdminSettings : AppScreen(null, null,"admin_settings")
+
 }

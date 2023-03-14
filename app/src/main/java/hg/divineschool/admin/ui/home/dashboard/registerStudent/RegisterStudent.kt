@@ -55,6 +55,7 @@ import hg.divineschool.admin.ui.theme.NoImageBackground
 import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.cardColors
 import hg.divineschool.admin.ui.theme.regularFont
+import hg.divineschool.admin.ui.utils.CircularProgress
 import hg.divineschool.admin.ui.utils.Log_Tag
 import hg.divineschool.admin.ui.utils.toast
 import id.zelory.compressor.Compressor
@@ -521,11 +522,7 @@ fun RegisterStudent(
                     }
                 }
                 is Resource.Loading -> {
-                    Box(
-                        contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
-                    ) {
-                        CircularProgressIndicator()
-                    }
+                    CircularProgress(color = classColor)
                 }
                 is Resource.FailureMessage -> {
                     Toast.makeText(context, value.message, Toast.LENGTH_LONG).show()

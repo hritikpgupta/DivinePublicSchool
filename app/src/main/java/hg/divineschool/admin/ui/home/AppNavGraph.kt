@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import hg.divineschool.admin.AppScreen
 import hg.divineschool.admin.BottomNavItem
+import hg.divineschool.admin.ui.home.admin.AdminScreen
 import hg.divineschool.admin.ui.home.attendance.AttendanceScreen
 import hg.divineschool.admin.ui.home.dashboard.DashboardScreen
 import hg.divineschool.admin.ui.home.dashboard.invoiceStudent.StudentInvoice
@@ -32,6 +33,9 @@ fun AppNavigationGraph(navController: NavHostController, modifier: Modifier) {
             NotificationScreen()
         }
         studentListNav(navController)
+        composable(BottomNavItem.AdminSettings.route) {
+            AdminScreen(hiltViewModel(), navController)
+        }
     }
 }
 

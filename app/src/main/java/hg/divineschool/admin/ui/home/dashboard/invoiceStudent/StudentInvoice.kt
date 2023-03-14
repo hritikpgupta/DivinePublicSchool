@@ -86,7 +86,7 @@ fun StudentInvoice(
     val transportFee = remember {
         mutableStateOf(0)
     }
-    var transportPlace = remember {
+    val transportPlace = remember {
         mutableStateOf("")
     }
 
@@ -228,11 +228,7 @@ fun StudentInvoice(
         studentInfoState.value.let {
             when (it) {
                 is Resource.Loading -> {
-                    Box(
-                        contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
-                    ) {
-                        CircularProgressIndicator()
-                    }
+                    CircularProgress(color = classColor)
                 }
                 is Resource.Failure -> {
                     it.exception.message?.let { it1 -> context.toast(it1) }
@@ -486,11 +482,7 @@ fun StudentInvoice(
         invoiceState.value.let {
             when (it) {
                 is Resource.Loading -> {
-                    Box(
-                        contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
-                    ) {
-                        CircularProgressIndicator()
-                    }
+                    CircularProgress(color = classColor)
                 }
                 is Resource.Failure -> {
                     it.exception.message?.let { it1 -> context.toast(it1) }

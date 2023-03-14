@@ -25,7 +25,8 @@ import hg.divineschool.admin.ui.theme.boldFont
 fun DPSAppBar() {
     TopAppBar(
         backgroundColor = MaterialTheme.colors.background,
-        elevation = 4.dp
+        elevation = 4.dp,
+
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -35,7 +36,6 @@ fun DPSAppBar() {
         }
     }
 }
-
 @Composable
 fun DPSBar(onBackPressed: () -> Unit, className: String) {
     TopAppBar(

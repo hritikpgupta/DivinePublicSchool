@@ -9,16 +9,23 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import hg.divineschool.admin.data.models.Book
 import hg.divineschool.admin.data.models.FeeStructure
 import hg.divineschool.admin.data.models.MonthFee
 import hg.divineschool.admin.data.models.Supplement
+import hg.divineschool.admin.ui.theme.Purple700
 import java.io.Serializable
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -294,7 +301,7 @@ fun String.splitDateTime(): String {
 }
 
 fun String.isBookListLong(): Boolean {
-    if (this.isNotEmpty()){
+    if (this.isNotEmpty()) {
         val result = this.substring(1, this.length - 1).split(",")
         if (result.size > 4) {
             return true
@@ -343,6 +350,15 @@ fun String.getMonthName(): ArrayList<String> {
         list.add(it)
     }
     return list
+}
+
+@Composable
+fun CircularProgress(color: Color = Purple700) {
+    Box(
+        contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
+    ) {
+        CircularProgressIndicator(color = color, strokeWidth = 4.dp)
+    }
 }
 
 

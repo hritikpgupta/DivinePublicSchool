@@ -16,8 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val repository: DashboardRepository,
-    private val repo: SettingRepositoryImpl
+    private val repository: DashboardRepository
 ) : ViewModel() {
 
     private val _classListFlow = MutableStateFlow<Resource<List<ClassInformation>>?>(null)
@@ -26,7 +25,6 @@ class DashboardViewModel @Inject constructor(
     init {
         getAllClasses()
         getFeeStructure()
-        migrate()
     }
 
     private fun getAllClasses() = viewModelScope.launch {
@@ -36,9 +34,5 @@ class DashboardViewModel @Inject constructor(
     }
     private fun getFeeStructure() = viewModelScope.launch {
         repository.getFeeStructure()
-    }
-
-    private fun migrate() = viewModelScope.launch {
-        repo.migrateUser()
     }
 }
