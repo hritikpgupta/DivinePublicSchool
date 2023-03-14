@@ -362,3 +362,147 @@ fun FormCheckboxes(
 
 }
 
+@Composable
+fun UpdateFormCheckboxes(
+    color: Color,
+    transportStudent: Boolean,
+    newStudent: Boolean,
+    isOrphan: Boolean,
+    isRte: Boolean,
+    active : Boolean,
+    onTransportChange: (status: Boolean) -> Unit,
+    onNewStudentChange: (status: Boolean) -> Unit,
+    onIsOrphanChange: (status: Boolean) -> Unit,
+    onRteChange: (status: Boolean) -> Unit,
+    onActiveChange: (status: Boolean) -> Unit
+) {
+    FormRow(padding = 24) {
+        Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.bus),
+                contentDescription = "",
+                modifier = Modifier.requiredSize(40.dp)
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(
+                text = "Vehicle",
+                overflow = TextOverflow.Ellipsis,
+                style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp),
+                maxLines = 1,
+                softWrap = true,
+            )
+            Checkbox(
+                checked = transportStudent,
+                modifier = Modifier.requiredSize(60.dp),
+                colors = CheckboxDefaults.colors(checkedColor = color),
+                onCheckedChange = { onTransportChange(it) },
+            )
+        }
+        Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.new_student),
+                contentDescription = "",
+                modifier = Modifier.requiredSize(40.dp)
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(
+                text = "New",
+                overflow = TextOverflow.Ellipsis,
+                style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp),
+                maxLines = 1,
+                softWrap = true,
+            )
+            Checkbox(
+                checked = newStudent,
+                modifier = Modifier.requiredSize(60.dp),
+                colors = CheckboxDefaults.colors(checkedColor = color),
+                onCheckedChange = { onNewStudentChange(it) },
+            )
+        }
+        Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.orphan),
+                contentDescription = "",
+                modifier = Modifier.requiredSize(40.dp)
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(
+                text = "Orphan",
+                overflow = TextOverflow.Ellipsis,
+                style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp),
+                maxLines = 1,
+                softWrap = true,
+            )
+            Checkbox(
+                checked = isOrphan,
+                modifier = Modifier.requiredSize(60.dp),
+                colors = CheckboxDefaults.colors(checkedColor = color),
+                onCheckedChange = { onIsOrphanChange(it) },
+            )
+        }
+        Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.right_to_education),
+                contentDescription = "",
+                modifier = Modifier.requiredSize(40.dp)
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(
+                text = "RTE",
+                overflow = TextOverflow.Ellipsis,
+                style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp),
+                maxLines = 1,
+                softWrap = true,
+            )
+            Checkbox(
+                checked = isRte,
+                modifier = Modifier.requiredSize(60.dp),
+                colors = CheckboxDefaults.colors(checkedColor = color),
+                onCheckedChange = { onRteChange(it) },
+            )
+        }
+        Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.student_present),
+                contentDescription = "",
+                modifier = Modifier.requiredSize(40.dp)
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(
+                text = "Active",
+                overflow = TextOverflow.Ellipsis,
+                style = TextStyle(fontFamily = mediumFont, fontSize = 30.sp),
+                maxLines = 1,
+                softWrap = true,
+            )
+            Checkbox(
+                checked = active,
+                modifier = Modifier.requiredSize(60.dp),
+                colors = CheckboxDefaults.colors(checkedColor = color),
+                onCheckedChange = { onActiveChange(it) },
+            )
+        }
+    }
+
+}
+

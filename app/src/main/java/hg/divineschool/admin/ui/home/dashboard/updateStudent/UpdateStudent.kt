@@ -121,6 +121,7 @@ fun UpdateStudent(
     var newStudent by remember { mutableStateOf(currentStudent?.newStudent) }
     var isOrphan by remember { mutableStateOf(currentStudent?.orphan) }
     var isRte by remember { mutableStateOf(currentStudent?.rte) }
+    var active by remember { mutableStateOf(currentStudent?.active) }
     val birthDateDialogState = rememberMaterialDialogState()
     val admissionDateDialogState = rememberMaterialDialogState()
     var genderExpanded by remember { mutableStateOf(false) }
@@ -188,6 +189,7 @@ fun UpdateStudent(
                         newStudent = newStudent!!,
                         orphan = isOrphan!!,
                         rte = isRte!!,
+                        active = active!!,
                         image = currentStudent!!.image
                     )
                     val formValidation = validateStudentObjectBeforeUpload(student)
@@ -260,8 +262,7 @@ fun UpdateStudent(
                                 if (uriString.value.startsWith("https")) {
                                     AsyncImage(
                                         model = ImageRequest.Builder(LocalContext.current)
-                                            .data(uriString.value)
-                                            .crossfade(true).build(),
+                                            .data(uriString.value).crossfade(true).build(),
                                         contentScale = ContentScale.Crop,
                                         contentDescription = "Profile Image",
                                         modifier = Modifier
@@ -290,8 +291,7 @@ fun UpdateStudent(
                             )
                         }
                     }
-                    Icon(
-                        Icons.Filled.AddAPhoto,
+                    Icon(Icons.Filled.AddAPhoto,
                         null,
                         tint = classColor,
                         modifier = Modifier
@@ -300,12 +300,10 @@ fun UpdateStudent(
                             .clickable {
                                 clickImage.launch(
                                     Intent(
-                                        context,
-                                        CameraActivity::class.java
+                                        context, CameraActivity::class.java
                                     )
                                 )
-                            }
-                    )
+                            })
                 }
             }
             FormRow(padding = 24) {
@@ -509,16 +507,17 @@ fun UpdateStudent(
                 )
 
             }
-            FormCheckboxes(color = classColor,
+            UpdateFormCheckboxes(color = classColor,
                 transportStudent = transportStudent!!,
                 newStudent = newStudent!!,
                 isOrphan = isOrphan!!,
                 isRte = isRte!!,
+                active = active!!,
                 onTransportChange = { transportStudent = it },
                 onNewStudentChange = { newStudent = it },
                 onIsOrphanChange = { isOrphan = it },
-                onRteChange = { isRte = it }
-            )
+                onRteChange = { isRte = it },
+                onActiveChange = { active = it })
             Spacer(modifier = Modifier.height(70.dp))
         }
         updateState.value.let { value ->
