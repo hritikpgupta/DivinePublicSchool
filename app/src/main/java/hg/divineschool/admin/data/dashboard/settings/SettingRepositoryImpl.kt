@@ -1,23 +1,55 @@
 package hg.divineschool.admin.data.dashboard.settings
 
 import android.util.Log
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Invoice
 import hg.divineschool.admin.data.models.Student
 import hg.divineschool.admin.data.utils.awaitDocument
 import hg.divineschool.admin.ui.utils.Log_Tag
-import hg.divineschool.admin.ui.utils.convertIdToPath
 import hg.divineschool.admin.ui.utils.defaultTuitionFeeList
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
+
+sealed class MigrationEvent {
+    data class SendLog(val msg: String) : MigrationEvent()
+}
 
 class SettingRepositoryImpl @Inject constructor(
     private val db: FirebaseFirestore
 ) : SettingRepository {
 
+    private val dbMigrationEventChannel = Channel<MigrationEvent>()
+
+    override val migrationEvent: Flow<MigrationEvent>?
+        get() = dbMigrationEventChannel.receiveAsFlow()
+
     override suspend fun migrateClassEightUser(): Resource<Boolean> {
         return try {
-            moveAndDeleteClassEightStudentFirst()
+
+            dbMigrationEventChannel.send(MigrationEvent.SendLog("Started Database Migration"))
+            dbMigrationEventChannel.send(MigrationEvent.SendLog("Started Moving Class Eight Student"))
+            delay(1000)
+            dbMigrationEventChannel.send(MigrationEvent.SendLog("Started Moving Class Seven Student"))
+            delay(1000)
+            dbMigrationEventChannel.send(MigrationEvent.SendLog("Started Moving Class Six Student"))
+            delay(1000)
+            dbMigrationEventChannel.send(MigrationEvent.SendLog("Started Moving Class Five Student"))
+            delay(1000)
+            dbMigrationEventChannel.send(MigrationEvent.SendLog("Started Moving Class Four Student"))
+            delay(1000)
+            dbMigrationEventChannel.send(MigrationEvent.SendLog("Started Moving Class Three Student"))
+            delay(1000)
+            dbMigrationEventChannel.send(MigrationEvent.SendLog("Started Moving Class Two Student"))
+            delay(1000)
+            dbMigrationEventChannel.send(MigrationEvent.SendLog("Started Moving Class One Student"))
+            delay(1000)
+
+/*            moveAndDeleteClassEightStudentFirst()
             moveAndDeleteStudentsFromOneClassToAnother("classSeven", "classEight")
             moveAndDeleteStudentsFromOneClassToAnother("classSix", "classSeven")
             moveAndDeleteStudentsFromOneClassToAnother("classFive", "classSix")
@@ -27,12 +59,13 @@ class SettingRepositoryImpl @Inject constructor(
             moveAndDeleteStudentsFromOneClassToAnother("classOne", "classTwo")
             moveAndDeleteStudentsFromOneClassToAnother("classUpperNursery", "classOne")
             moveAndDeleteStudentsFromOneClassToAnother("classLowerNursery", "classUpperNursery")
-            moveAndDeleteStudentsFromOneClassToAnother("classPlayGroup", "classLowerNursery")
+            moveAndDeleteStudentsFromOneClassToAnother("classPlayGroup", "classLowerNursery")*/
             Resource.Success(true)
         } catch (e: java.lang.Exception) {
             Resource.Failure(e)
         }
     }
+
     private suspend fun moveAndDeleteClassEightStudentFirst() {
         try {
             val studentList =
@@ -147,7 +180,11 @@ class SettingRepositoryImpl @Inject constructor(
             throw InterruptedException()
         }
     }
-    private suspend fun moveAndDeleteStudentsFromOneClassToAnother( fromClass : String, toClass : String){
+
+    private suspend fun moveAndDeleteStudentsFromOneClassToAnother(
+        fromClass: String,
+        toClass: String
+    ) {
         val studentList =
             db.collection("classes").document(fromClass).collection("students").get()
                 .awaitDocument()
@@ -221,7 +258,7 @@ class SettingRepositoryImpl @Inject constructor(
             }
         }
         studentSet.entries.forEach {
-            if (it.key.active){
+            if (it.key.active) {
                 // Copy Values to Destination Class
                 db.collection("classes").document(toClass).collection("students")
                     .document(it.key.scholarNumber.toString()).set(it.key).awaitDocument()
@@ -231,12 +268,12 @@ class SettingRepositoryImpl @Inject constructor(
                         .document(invoice.invoiceNumber).set(invoice).awaitDocument()
                 }
                 // Add new month list
-                defaultTuitionFeeList.forEach {m ->
+                defaultTuitionFeeList.forEach { m ->
                     db.collection("classes").document(toClass)
                         .collection("students").document(it.key.scholarNumber.toString())
                         .collection("tuitionFee").document(m.month).set(m).awaitDocument()
                 }
-            }else{
+            } else {
                 // Copy Left Student to Old Student List (Source Class)
                 db.collection("oldStudents").document(fromClass).collection("students")
                     .document(it.key.scholarNumber.toString()).set(it.key).awaitDocument()
