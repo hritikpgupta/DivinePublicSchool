@@ -11,23 +11,25 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import hg.divineschool.admin.data.Resource
+import com.google.firebase.firestore.FirebaseFirestore
+import hg.divineschool.admin.data.dashboard.settings.SettingRepository
+import hg.divineschool.admin.data.dashboard.settings.SettingRepositoryImpl
 import hg.divineschool.admin.ui.home.DPSBar
 import hg.divineschool.admin.ui.theme.lightFont
-import hg.divineschool.admin.ui.utils.CircularProgress
-import hg.divineschool.admin.ui.utils.toast
+import kotlinx.coroutines.launch
 
 @Composable
 fun AdminScreen(viewModel: AdminViewModel, navController: NavController) {
 
-    val adminSettingFlow = viewModel.adminSettingFlow.collectAsState()
-    val logFlow = viewModel.logFlow.collectAsState()
     val context = LocalContext.current
     val scroll = rememberScrollState()
-    var logString by remember { mutableStateOf("") }
+    var logString by remember { mutableStateOf("Test") }
+    val scope = rememberCoroutineScope()
+    val repository: SettingRepository = SettingRepositoryImpl(db = FirebaseFirestore.getInstance())
 
     Scaffold(topBar = {
         DPSBar(onBackPressed = {
@@ -44,31 +46,28 @@ fun AdminScreen(viewModel: AdminViewModel, navController: NavController) {
                 text = logString,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .requiredHeight(300.dp)
+                    .requiredHeight(200.dp)
                     .verticalScroll(scroll),
-                style = TextStyle(fontFamily = lightFont, fontSize = 20.sp)
+                style = TextStyle(fontFamily = lightFont, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
             )
 
-            adminSettingFlow.value.let {
-                when (it) {
-                    is Resource.Loading -> {
-                        CircularProgress()
+
+            LaunchedEffect(Unit) {
+                scope.launch {
+                    viewModel.migrationEvent.collect { event ->
+                        when (event) {
+                            is MigrationEvent.SendLog -> {
+                                logString = event.msg
+                            }
+                            is MigrationEvent.Success -> {}
+                            is MigrationEvent.Failure -> {
+
+                            }
+                        }
                     }
-                    is Resource.Success -> {
-                        context.toast("Success")
-                    }
-                    is Resource.Failure -> {
-                        it.exception.message?.let { it1 -> context.toast(it1) }
-                    }
-                    is Resource.FailureMessage -> {}
-                    else -> {}
                 }
             }
-            logFlow.value.let {
-                if (it != null) {
-                    logString = it
-                }
-            }
+
         }
     }
 }

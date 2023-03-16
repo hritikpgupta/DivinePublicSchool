@@ -6,7 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface SettingRepository {
 
-    val migrationEvent: Flow<MigrationEvent>?
-
     suspend fun migrateClassEightUser(): Resource<Boolean>
 }

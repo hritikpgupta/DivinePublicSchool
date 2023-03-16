@@ -15,39 +15,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
 
-sealed class MigrationEvent {
-    data class SendLog(val msg: String) : MigrationEvent()
-}
+
 
 class SettingRepositoryImpl @Inject constructor(
     private val db: FirebaseFirestore
 ) : SettingRepository {
 
-    private val dbMigrationEventChannel = Channel<MigrationEvent>()
-
-    override val migrationEvent: Flow<MigrationEvent>?
-        get() = dbMigrationEventChannel.receiveAsFlow()
-
     override suspend fun migrateClassEightUser(): Resource<Boolean> {
-        return try {
-
-            dbMigrationEventChannel.send(MigrationEvent.SendLog("Started Database Migration"))
-            dbMigrationEventChannel.send(MigrationEvent.SendLog("Started Moving Class Eight Student"))
-            delay(1000)
-            dbMigrationEventChannel.send(MigrationEvent.SendLog("Started Moving Class Seven Student"))
-            delay(1000)
-            dbMigrationEventChannel.send(MigrationEvent.SendLog("Started Moving Class Six Student"))
-            delay(1000)
-            dbMigrationEventChannel.send(MigrationEvent.SendLog("Started Moving Class Five Student"))
-            delay(1000)
-            dbMigrationEventChannel.send(MigrationEvent.SendLog("Started Moving Class Four Student"))
-            delay(1000)
-            dbMigrationEventChannel.send(MigrationEvent.SendLog("Started Moving Class Three Student"))
-            delay(1000)
-            dbMigrationEventChannel.send(MigrationEvent.SendLog("Started Moving Class Two Student"))
-            delay(1000)
-            dbMigrationEventChannel.send(MigrationEvent.SendLog("Started Moving Class One Student"))
-            delay(1000)
+         try {
 
 /*            moveAndDeleteClassEightStudentFirst()
             moveAndDeleteStudentsFromOneClassToAnother("classSeven", "classEight")
@@ -60,9 +35,9 @@ class SettingRepositoryImpl @Inject constructor(
             moveAndDeleteStudentsFromOneClassToAnother("classUpperNursery", "classOne")
             moveAndDeleteStudentsFromOneClassToAnother("classLowerNursery", "classUpperNursery")
             moveAndDeleteStudentsFromOneClassToAnother("classPlayGroup", "classLowerNursery")*/
-            Resource.Success(true)
+            return Resource.Success(true)
         } catch (e: java.lang.Exception) {
-            Resource.Failure(e)
+            return Resource.Failure(e)
         }
     }
 
