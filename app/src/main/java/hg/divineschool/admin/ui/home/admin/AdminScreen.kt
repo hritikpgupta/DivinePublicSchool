@@ -9,15 +9,15 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextIndent
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.google.firebase.firestore.FirebaseFirestore
-import hg.divineschool.admin.data.dashboard.settings.SettingRepository
-import hg.divineschool.admin.data.dashboard.settings.SettingRepositoryImpl
 import hg.divineschool.admin.ui.home.DPSBar
 import hg.divineschool.admin.ui.theme.lightFont
 import kotlinx.coroutines.launch
@@ -27,9 +27,8 @@ fun AdminScreen(viewModel: AdminViewModel, navController: NavController) {
 
     val context = LocalContext.current
     val scroll = rememberScrollState()
-    var logString by remember { mutableStateOf("Test") }
+    var logString by remember { mutableStateOf("Started Database Migration...") }
     val scope = rememberCoroutineScope()
-    val repository: SettingRepository = SettingRepositoryImpl(db = FirebaseFirestore.getInstance())
 
     Scaffold(topBar = {
         DPSBar(onBackPressed = {
@@ -38,26 +37,32 @@ fun AdminScreen(viewModel: AdminViewModel, navController: NavController) {
     }) { padding ->
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
+                .requiredHeight(500.dp)
                 .padding(padding)
-                .background(color = MaterialTheme.colors.background.copy(0.8f))
+                .padding(20.dp)
+                .background(color = Color.DarkGray.copy(0.20f))
         ) {
             Text(
                 text = logString,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .requiredHeight(200.dp)
+                    .fillMaxSize()
                     .verticalScroll(scroll),
-                style = TextStyle(fontFamily = lightFont, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
+                style = TextStyle(
+                    fontFamily = lightFont,
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.Medium,
+                    textIndent = TextIndent(firstLine = 12.sp, restLine = 0.sp),
+                ),
+                lineHeight = 28.sp,
+                letterSpacing = 1.sp, color = Color.Black
             )
-
-
             LaunchedEffect(Unit) {
                 scope.launch {
                     viewModel.migrationEvent.collect { event ->
                         when (event) {
                             is MigrationEvent.SendLog -> {
-                                logString = event.msg
+                                logString = logString + "\n" + event.msg
                             }
                             is MigrationEvent.Success -> {}
                             is MigrationEvent.Failure -> {
