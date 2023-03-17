@@ -41,7 +41,7 @@ fun AdminScreen(viewModel: AdminViewModel, navController: NavController) {
                 .requiredHeight(500.dp)
                 .padding(padding)
                 .padding(20.dp)
-                .background(color = Color.DarkGray.copy(0.20f))
+                .background(color = Color.Black)
         ) {
             Text(
                 text = logString,
@@ -55,7 +55,7 @@ fun AdminScreen(viewModel: AdminViewModel, navController: NavController) {
                     textIndent = TextIndent(firstLine = 12.sp, restLine = 0.sp),
                 ),
                 lineHeight = 28.sp,
-                letterSpacing = 1.sp, color = Color.Black
+                letterSpacing = 1.sp, color = Color.White
             )
             LaunchedEffect(Unit) {
                 scope.launch {
@@ -65,9 +65,7 @@ fun AdminScreen(viewModel: AdminViewModel, navController: NavController) {
                                 logString = logString + "\n" + event.msg
                             }
                             is MigrationEvent.Success -> {}
-                            is MigrationEvent.Failure -> {
-
-                            }
+                            is MigrationEvent.Failure -> {}
                         }
                     }
                 }
