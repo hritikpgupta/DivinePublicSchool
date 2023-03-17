@@ -15,4 +15,6 @@ interface DashboardRepository {
 
     suspend fun getFeeStructure()
 
+    suspend fun updateClassTeacher(classID : String, name : String) : Resource<Boolean>
+
 }

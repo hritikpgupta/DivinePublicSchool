@@ -2,15 +2,17 @@ package hg.divineschool.admin.ui.home.dashboard
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -26,24 +28,36 @@ import hg.divineschool.admin.ui.theme.regularFont
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ClassCard(
-    classInformation: ClassInformation, cardColor: Color, onCardClick: (id: Long, name : String) -> Unit
+    classInformation: ClassInformation,
+    cardColor: Color,
+    onCardClick: (id: Long, name: String) -> Unit,
+    onLongPress:(id:Long) -> Unit
+
 ) {
     Card(
         elevation = 6.dp,
         backgroundColor = MaterialTheme.colors.background,
-        modifier = Modifier.requiredSize(280.dp, 170.dp),
-        onClick = { onCardClick(classInformation.id, classInformation.name) },
+        modifier = Modifier
+            .requiredSize(280.dp, 170.dp),
     ) {
         Column(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top,
+            modifier = Modifier.pointerInput(Unit) {
+                detectTapGestures(onLongPress = {
+                    onLongPress(classInformation.id)
+                }, onTap = {
+                    onCardClick(classInformation.id, classInformation.name)
+                })
+            }
         ) {
             Text(
                 text = " ${classInformation.name}",
                 style = TextStyle(
                     color = Color.Black.copy(0.80f),
                     fontSize = 30.sp,
-                    fontFamily = mediumFont, textAlign = TextAlign.Start
+                    fontFamily = mediumFont,
+                    textAlign = TextAlign.Start
                 ),
                 overflow = TextOverflow.Clip,
                 maxLines = 1,

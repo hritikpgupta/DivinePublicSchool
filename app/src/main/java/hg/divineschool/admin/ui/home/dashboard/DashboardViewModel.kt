@@ -8,6 +8,7 @@ import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.dashboard.DashboardRepository
 import hg.divineschool.admin.data.dashboard.settings.SettingRepositoryImpl
 import hg.divineschool.admin.data.models.ClassInformation
+import hg.divineschool.admin.ui.utils.convertIdToPath
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -22,17 +23,24 @@ class DashboardViewModel @Inject constructor(
     private val _classListFlow = MutableStateFlow<Resource<List<ClassInformation>>?>(null)
     val classListFlow: StateFlow<Resource<List<ClassInformation>>?> = _classListFlow
 
+    private val _nameUpdateFlow = MutableStateFlow<Resource<Boolean>?>(null)
+    val nameUpdateFlow: StateFlow<Resource<Boolean>?> = _nameUpdateFlow
+
     init {
         getAllClasses()
         getFeeStructure()
     }
 
-    private fun getAllClasses() = viewModelScope.launch {
+    fun getAllClasses() = viewModelScope.launch {
         _classListFlow.value = Resource.Loading
         val result = repository.getAllClasses()
         _classListFlow.value = result
     }
     private fun getFeeStructure() = viewModelScope.launch {
         repository.getFeeStructure()
+    }
+    fun updateClassTeacherName(classID : Long, name : String) = viewModelScope.launch {
+        _nameUpdateFlow.value = Resource.Loading
+        _nameUpdateFlow.value = repository.updateClassTeacher(classID.convertIdToPath(),name)
     }
 }

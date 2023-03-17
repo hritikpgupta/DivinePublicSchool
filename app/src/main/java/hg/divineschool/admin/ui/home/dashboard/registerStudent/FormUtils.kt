@@ -120,6 +120,8 @@ fun decideTextFieldColors(b: Boolean, color: Color): TextFieldColors {
         TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = color,
             cursorColor = color,
+            disabledBorderColor = color,
+            unfocusedBorderColor = color
         )
     } else {
         TextFieldDefaults.outlinedTextFieldColors(

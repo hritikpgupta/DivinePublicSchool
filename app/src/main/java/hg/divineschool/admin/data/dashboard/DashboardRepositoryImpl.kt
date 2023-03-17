@@ -71,7 +71,7 @@ class DashboardRepositoryImpl @Inject constructor(
 
     }
 
-    override suspend fun getFeeStructure(){
+    override suspend fun getFeeStructure() {
         Log.i(Log_Tag, "Getting Fee Structure")
         val result = db.collection("fees").document("feeStructure").get().awaitDocument()
         val feeStructure = FeeStructure()
@@ -113,7 +113,15 @@ class DashboardRepositoryImpl @Inject constructor(
             }
         }
         FeeStructure.FEE_STRUCT = feeStructure
+    }
 
-
+    override suspend fun updateClassTeacher(classID: String, name: String): Resource<Boolean> {
+        return try {
+            db.collection("classes").document(classID).update("classTeacherName",name).awaitDocument()
+            Resource.Success(true)
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
     }
 }
