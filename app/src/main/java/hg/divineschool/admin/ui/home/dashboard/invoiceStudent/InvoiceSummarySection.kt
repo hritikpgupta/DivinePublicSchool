@@ -7,6 +7,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -145,39 +146,46 @@ fun InvoiceSummarySection(
         }
         Divider(thickness = 2.dp, color = Color.LightGray)
         Spacer(modifier = Modifier.requiredHeight(8.dp))
-        Button(
-            colors = ButtonDefaults.buttonColors(backgroundColor = color), onClick = {
-                onGenerateClicked(
-                    Invoice(
-                        tuitionFee = tuitionFee,
-                        admissionFee = admissionFee,
-                        transportFee = transportFee,
-                        bookFee = bookFee,
-                        supplementaryFee = supplementFee,
-                        examFee = examinationFee,
-                        annualCharge = annualFee,
-                        computerFee = computerFee,
-                        total = sum,
-                        rollNumber = student.rollNumber,
-                        studentName = "${student.firstName} ${student.lastName}",
-                        scholarNumber = student.scholarNumber,
-                        guardianName = "S/0 ${student.fathersName}",
-                        address = student.address,
-                        className = classID.convertIdToName(),
-                        invoiceNumber = "${student.scholarNumber}-1"
-                    )
-                )
-            }, elevation = ButtonDefaults.elevation(
-                defaultElevation = 10.dp,
-                pressedElevation = 15.dp,
-                disabledElevation = 0.dp
-            ), modifier = Modifier.fillMaxWidth()
+
+        Box(
+            contentAlignment = Alignment.BottomCenter, modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 10.dp, start = 2.dp, end = 2.dp, top = 0.dp)
         ) {
-            Text(
-                text = "Generate Invoice",
-                color = Color.White,
-                style = TextStyle(fontSize = 24.sp)
-            )
+            Button(
+                colors = ButtonDefaults.buttonColors(backgroundColor = color), onClick = {
+                    onGenerateClicked(
+                        Invoice(
+                            tuitionFee = tuitionFee,
+                            admissionFee = admissionFee,
+                            transportFee = transportFee,
+                            bookFee = bookFee,
+                            supplementaryFee = supplementFee,
+                            examFee = examinationFee,
+                            annualCharge = annualFee,
+                            computerFee = computerFee,
+                            total = sum,
+                            rollNumber = student.rollNumber,
+                            studentName = "${student.firstName} ${student.lastName}",
+                            scholarNumber = student.scholarNumber,
+                            guardianName = "S/0 ${student.fathersName}",
+                            address = student.address,
+                            className = classID.convertIdToName(),
+                            invoiceNumber = "${student.scholarNumber}-1"
+                        )
+                    )
+                }, elevation = ButtonDefaults.elevation(
+                    defaultElevation = 5.dp,
+                    pressedElevation = 5.dp,
+                    disabledElevation = 0.dp
+                ), modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Generate Invoice",
+                    color = Color.White,
+                    style = TextStyle(fontSize = 24.sp)
+                )
+            }
         }
 
 
