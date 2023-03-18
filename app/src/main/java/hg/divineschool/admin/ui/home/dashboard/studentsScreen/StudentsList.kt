@@ -1,5 +1,6 @@
 package hg.divineschool.admin.ui.home.dashboard.studentsScreen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -27,11 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import hg.divineschool.admin.AppScreen
+import hg.divineschool.admin.R
 import hg.divineschool.admin.data.Resource
-import hg.divineschool.admin.ui.theme.boldFont
-import hg.divineschool.admin.ui.theme.cardColors
-import hg.divineschool.admin.ui.theme.lightFont
-import hg.divineschool.admin.ui.theme.mediumFont
+import hg.divineschool.admin.ui.theme.*
 import hg.divineschool.admin.ui.utils.CircularProgress
 import hg.divineschool.admin.ui.utils.toast
 
@@ -58,9 +58,7 @@ fun StudentsList(
         TopAppBar(elevation = 4.dp, title = {
             Text(
                 text = className, style = TextStyle(
-                    fontFamily = boldFont,
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.SemiBold
+                    fontFamily = boldFont, fontSize = 26.sp, fontWeight = FontWeight.SemiBold
                 )
             )
         }, backgroundColor = MaterialTheme.colors.background, navigationIcon = {
@@ -69,62 +67,58 @@ fun StudentsList(
                     Icons.Filled.ArrowBack, null, modifier = Modifier.requiredSize(28.dp)
                 )
             }
-        },
-            actions = {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    IconButton(onClick = {
-                        if (searchWidth.value == 0.4f) {
-                            searchWidth.value = 0.0f
-                        } else {
-                            searchWidth.value = 0.4f
-                        }
-
-                    }) {
-                        Icon(
-                            Icons.Filled.Search,
-                            null,
-                            modifier = Modifier.requiredSize(30.dp),
-                            tint = cardColors[classID.toInt()],
-                        )
+        }, actions = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(onClick = {
+                    if (searchWidth.value == 0.4f) {
+                        searchWidth.value = 0.0f
+                    } else {
+                        searchWidth.value = 0.4f
                     }
-                    TextField(value = searchText.value,
-                        shape = RoundedCornerShape(2.dp),
-                        textStyle = TextStyle(
-                            fontFamily = mediumFont,
-                            fontSize = 22.sp
-                        ),
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Done,
-                            keyboardType = KeyboardType.Text,
-                            autoCorrect = false,
-                            capitalization = KeyboardCapitalization.None,
-                        ),
-                        colors = TextFieldDefaults.textFieldColors(
-                            backgroundColor = MaterialTheme.colors.background.copy(
-                                0.8f
-                            ),
-                            placeholderColor = MaterialTheme.colors.background,
-                            cursorColor = cardColors[classID.toInt()],
-                            focusedIndicatorColor = Color.Transparent,
-                            disabledIndicatorColor = Color.Transparent,
-                        ),
-                        onValueChange = viewModel::onSearchTextChange,
-                        modifier = Modifier
-                            .fillMaxWidth(searchWidth.value),
-                        placeholder = {
-                            Text(
-                                text = "Search Student", style = TextStyle(
-                                    fontFamily = lightFont,
-                                    fontSize = 22.sp
-                                )
-                            )
-                        })
+
+                }) {
+                    Icon(
+                        Icons.Filled.Search,
+                        null,
+                        modifier = Modifier.requiredSize(30.dp),
+                        tint = cardColors[classID.toInt()],
+                    )
                 }
-            })
+                TextField(value = searchText.value,
+                    shape = RoundedCornerShape(2.dp),
+                    textStyle = TextStyle(
+                        fontFamily = mediumFont, fontSize = 22.sp
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Text,
+                        autoCorrect = false,
+                        capitalization = KeyboardCapitalization.None,
+                    ),
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = MaterialTheme.colors.background.copy(
+                            0.8f
+                        ),
+                        placeholderColor = MaterialTheme.colors.background,
+                        cursorColor = cardColors[classID.toInt()],
+                        focusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent,
+                    ),
+                    onValueChange = viewModel::onSearchTextChange,
+                    modifier = Modifier.fillMaxWidth(searchWidth.value),
+                    placeholder = {
+                        Text(
+                            text = "Search Student", style = TextStyle(
+                                fontFamily = lightFont, fontSize = 22.sp
+                            )
+                        )
+                    })
+            }
+        })
     }, floatingActionButton = {
         ExtendedFloatingActionButton(onClick = {
             searchWidth.value = 0.0f
-            if (searchText.value.isNotEmpty()){
+            if (searchText.value.isNotEmpty()) {
                 viewModel.onClearSearchText()
             }
             navController.navigate(AppScreen.StudentScreen.RegisterStudent.route + "/${classID}/$className")
@@ -214,8 +208,7 @@ fun StudentsList(
                         columns = GridCells.Adaptive(200.dp)
                     ) {
                         items(it) { studentInfo ->
-                            StudentCard(
-                                student = studentInfo,
+                            StudentCard(student = studentInfo,
                                 color = cardColors[classID.toInt()],
                                 onViewClick = {
                                     navController.currentBackStackEntry?.arguments?.apply {
@@ -223,7 +216,7 @@ fun StudentsList(
                                     }
                                     navController.navigate(AppScreen.StudentScreen.UpdateStudent.route + "/${classID}/$className")
                                     searchWidth.value = 0.0f
-                                    if (searchText.value.isNotEmpty()){
+                                    if (searchText.value.isNotEmpty()) {
                                         viewModel.onClearSearchText()
                                     }
                                 },
@@ -231,12 +224,35 @@ fun StudentsList(
                                     navController.currentBackStackEntry?.arguments?.apply {
                                         putSerializable("studentObj", studentInfo)
                                     }
-                                    navController.navigate(AppScreen.StudentScreen.StudentInvoice.route+ "/${classID}/$className/${studentInfo.scholarNumber}")
+                                    navController.navigate(AppScreen.StudentScreen.StudentInvoice.route + "/${classID}/$className/${studentInfo.scholarNumber}")
                                     searchWidth.value = 0.0f
-                                    if (searchText.value.isNotEmpty()){
+                                    if (searchText.value.isNotEmpty()) {
                                         viewModel.onClearSearchText()
                                     }
-                                }
+                                })
+                        }
+                    }
+                } else {
+                    Box(
+                        contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                            ,modifier = Modifier
+                                .wrapContentHeight()
+                                .wrapContentWidth()
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.student_record),
+                                contentDescription = "Student_Record",
+                                modifier = Modifier.requiredSize(100.dp)
+                            )
+                            Spacer(modifier = Modifier.requiredHeight(5.dp))
+                            Text(
+                                text = "Empty Records",
+                                style = TextStyle(fontFamily = regularFont,
+                                    fontSize = 34.sp, fontWeight = FontWeight.Medium),
+                                color = Color.DarkGray
                             )
                         }
                     }

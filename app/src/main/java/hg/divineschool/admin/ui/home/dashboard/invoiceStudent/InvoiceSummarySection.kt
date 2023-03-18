@@ -2,6 +2,8 @@ package hg.divineschool.admin.ui.home.dashboard.invoiceStudent
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
@@ -38,11 +40,14 @@ fun InvoiceSummarySection(
 ) {
     val sum =
         tuitionFee + admissionFee + transportFee + bookFee + supplementFee + examinationFee + annualFee + computerFee
+    val scrollState = rememberScrollState()
 
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(color = Color.LightGray.copy(0.2f))
+            .verticalScroll(scrollState)
+
 
     ) {
 
