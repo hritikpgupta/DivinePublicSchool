@@ -1,6 +1,8 @@
 Things to do
 
 -- Add button to change active status of a student - Done
--- Need functionality to change class teacher name
+-- Need functionality to change class teacher name -Done
 -- Extract Progress Bar as a composable function -Done
 -- Implement (Show admin setting for a specific user logon) - Done
+-- Need functionality to view students who have not paid for a particular month
+-- Do the above check before migration -Done

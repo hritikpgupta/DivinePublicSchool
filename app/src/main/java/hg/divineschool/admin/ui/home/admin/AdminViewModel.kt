@@ -31,10 +31,108 @@ class AdminViewModel @Inject constructor(
     val migrationEvent = dbMigrationEventChannel.receiveAsFlow()
 
     init {
-       // migrateClassEightUser()
+        checkIfAllStudentsHavePaidTuitionFee()
     }
 
-    private fun migrateClassEightUser() = viewModelScope.launch {
+    private fun `checkIfAllStudentsHavePaidTuitionFee`() = viewModelScope.launch {
+        dbMigrationEventChannel.send(MigrationEvent.SendLog("Checking if all classes have paid their dues"))
+        dbMigrationEventChannel.send(MigrationEvent.SendLog("--Checking if all Class 8 students have paid"))
+        val hasClassEightPaid = checkIfAClassHasPaid("classEight")
+        dbMigrationEventChannel.send(MigrationEvent.SendLog("--Checking if all Class 7 students have paid"))
+        val hasClassSevenPaid = checkIfAClassHasPaid("classSeven")
+        dbMigrationEventChannel.send(MigrationEvent.SendLog("--Checking if all Class 6 students have paid"))
+        val hasClassSixPaid = checkIfAClassHasPaid("classSix")
+        dbMigrationEventChannel.send(MigrationEvent.SendLog("--Checking if all Class 5 students have paid"))
+        val hasClassFivePaid = checkIfAClassHasPaid("classFive")
+        dbMigrationEventChannel.send(MigrationEvent.SendLog("--Checking if all Class 4 students have paid"))
+        val hasClassFourPaid = checkIfAClassHasPaid("classFour")
+        dbMigrationEventChannel.send(MigrationEvent.SendLog("--Checking if all Class 3 students have paid"))
+        val hasClassThreePaid = checkIfAClassHasPaid("classThree")
+        dbMigrationEventChannel.send(MigrationEvent.SendLog("--Checking if all Class 2 students have paid"))
+        val hasClassTwoPaid = checkIfAClassHasPaid("classTwo")
+        dbMigrationEventChannel.send(MigrationEvent.SendLog("--Checking if all Class 1 students have paid"))
+        val hasClassOnePaid = checkIfAClassHasPaid("classOne")
+        dbMigrationEventChannel.send(MigrationEvent.SendLog("--Checking if all Class U.N students have paid"))
+        val hasClassUNPaid = checkIfAClassHasPaid("classUpperNursery")
+        dbMigrationEventChannel.send(MigrationEvent.SendLog("--Checking if all Class L.N students have paid"))
+        val hasClassLNPaid = checkIfAClassHasPaid("classLowerNursery")
+        dbMigrationEventChannel.send(MigrationEvent.SendLog("--Checking if all Class Play Group students have paid"))
+        val hasClassPGPaid = checkIfAClassHasPaid("classPlayGroup")
+        dbMigrationEventChannel.send(MigrationEvent.SendLog("Finished Checking Dues For All Classes"))
+
+        if (hasClassEightPaid && hasClassSevenPaid && hasClassSixPaid && hasClassFivePaid && hasClassFourPaid && hasClassThreePaid && hasClassTwoPaid && hasClassOnePaid
+            && hasClassUNPaid && hasClassLNPaid && hasClassPGPaid
+        )
+        {
+            migrate()
+        }
+        else {
+            if (!hasClassEightPaid){
+                dbMigrationEventChannel.send(MigrationEvent.SendLog("---Some Students in Class Eight have not paid their dues."))
+            }
+            if (!hasClassSevenPaid){
+                dbMigrationEventChannel.send(MigrationEvent.SendLog("---Some Students in Class Seven have not paid their dues."))
+            }
+            if (!hasClassSixPaid){
+                dbMigrationEventChannel.send(MigrationEvent.SendLog("---Some Students in Class Six have not paid their dues."))
+            }
+            if (!hasClassFivePaid){
+                dbMigrationEventChannel.send(MigrationEvent.SendLog("---Some Students in Class Five have not paid their dues."))
+            }
+            if (!hasClassFourPaid){
+                dbMigrationEventChannel.send(MigrationEvent.SendLog("---Some Students in Class Four have not paid their dues."))
+            }
+            if (!hasClassThreePaid){
+                dbMigrationEventChannel.send(MigrationEvent.SendLog("---Some Students in Class Three have not paid their dues."))
+            }
+            if (!hasClassTwoPaid){
+                dbMigrationEventChannel.send(MigrationEvent.SendLog("---Some Students in Class Two have not paid their dues."))
+            }
+            if (!hasClassOnePaid){
+                dbMigrationEventChannel.send(MigrationEvent.SendLog("---Some Students in Class One have not paid their dues."))
+            }
+            if (!hasClassUNPaid){
+                dbMigrationEventChannel.send(MigrationEvent.SendLog("---Some Students in Class UN have not paid their dues."))
+            }
+            if (!hasClassLNPaid){
+                dbMigrationEventChannel.send(MigrationEvent.SendLog("---Some Students in Class LN have not paid their dues."))
+            }
+            if (!hasClassPGPaid){
+                dbMigrationEventChannel.send(MigrationEvent.SendLog("---Some Students in Class PG have not paid their dues."))
+            }
+
+        }
+
+    }
+
+    private suspend fun checkIfAClassHasPaid(className: String): Boolean {
+        val classStudentList =
+            db.collection("classes").document(className).collection("students").get()
+                .awaitDocument()
+        classStudentList.documents.let { studentList ->
+            if (studentList.isNotEmpty()) {
+                studentList.forEach { doc ->
+                    val scholarNum = doc.getLong("scholarNumber") as Long
+                    val currentStudentTuitionFee =
+                        db.collection("classes").document(className).collection("students")
+                            .document(scholarNum.toString()).collection("tuitionFee")
+                            .get().awaitDocument()
+                    currentStudentTuitionFee.documents.let { it ->
+                        if (it.isNotEmpty()) {
+                            it.forEach { doc ->
+                                if (!(doc.getBoolean("paid") as Boolean)) {
+                                    return false
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return true
+    }
+
+    private fun migrate() = viewModelScope.launch {
         try {
             dbMigrationEventChannel.send(MigrationEvent.SendLog("Started Moving Class Eight Students to Old Collection"))
             moveAndDeleteClassEightStudentFirst()

@@ -190,6 +190,7 @@ fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController)
                     Button(
                         modifier = Modifier.fillMaxWidth(), onClick = {
                             showDialog.value = false
+                            context.toast("Please Wait")
                             if (classTeacherText.isNotEmpty()) {
                                 viewModel.updateClassTeacherName(
                                     selectedClassID, classTeacherText

@@ -38,11 +38,11 @@ fun <A : Activity> Context.startNewActivity(activity: Class<A>) {
 }
 
 fun Context.toast(message: String) {
-    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 }
 
 fun Context.toast(@StringRes message: Int) {
-    Toast.makeText(this, getString(message), Toast.LENGTH_SHORT).show()
+    Toast.makeText(this, getString(message), Toast.LENGTH_LONG).show()
 }
 
 fun String?.toStringOrEmpty(): String {

@@ -103,13 +103,15 @@ fun StudentsList(
                         cursorColor = cardColors[classID.toInt()],
                         focusedIndicatorColor = Color.Transparent,
                         disabledIndicatorColor = Color.Transparent,
+                        disabledPlaceholderColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
                     ),
                     onValueChange = viewModel::onSearchTextChange,
                     modifier = Modifier.fillMaxWidth(searchWidth.value),
                     placeholder = {
                         Text(
                             text = "Search Student", style = TextStyle(
-                                fontFamily = lightFont, fontSize = 22.sp
+                                fontFamily = mediumFont, fontSize = 22.sp
                             )
                         )
                     })
