@@ -152,6 +152,7 @@ fun LoginScreen(viewModel: AuthViewModel) {
                 }
             }
             is Resource.FailureMessage -> {}
+            else -> {}
         }
     }
 
