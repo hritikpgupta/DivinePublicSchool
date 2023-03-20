@@ -80,7 +80,6 @@ fun StudentCard(
                     fontFamily = lightFont, fontSize = 24.sp, fontWeight = FontWeight.SemiBold
                 )
             )
-
         }
         if (student.active) {
             Box(contentAlignment = Alignment.TopEnd) {
