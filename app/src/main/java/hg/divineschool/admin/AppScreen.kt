@@ -12,8 +12,14 @@ sealed class AppScreen(@StringRes val title: Int?, @DrawableRes val icon: Int?, 
         object UpdateStudent : AppScreen(null, null,"update_student")
         object StudentInvoice : AppScreen(null, null,"invoice_student")
     }
+    object SettingScreen : AppScreen(null, null, "nav_setting_screen"){
+        object CheckDues : AppScreen(null, null,"check_dues")
+        object ManageFees : AppScreen(null, null,"manage_fees")
+        object Transaction : AppScreen(null, null,"transactions")
+        object ManageBooks : AppScreen(null, null,"manage_books")
+        object LogOut : AppScreen(null, null,"log_out")
 
-
+    }
 
 }
 

@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import hg.divineschool.admin.AppScreen
 import hg.divineschool.admin.BottomNavItem
+import hg.divineschool.admin.ui.auth.LoginScreen
 import hg.divineschool.admin.ui.home.admin.AdminScreen
 import hg.divineschool.admin.ui.home.attendance.AttendanceScreen
 import hg.divineschool.admin.ui.home.dashboard.DashboardScreen
@@ -25,19 +26,40 @@ fun AppNavigationGraph(navController: NavHostController, modifier: Modifier) {
         composable(BottomNavItem.Home.route) {
             DashboardScreen(hiltViewModel(), navController)
         }
-
         composable(BottomNavItem.Attendance.route) {
             AttendanceScreen()
         }
-        composable(BottomNavItem.Settings.route) {
-            SettingScreen(navController)
-        }
-        studentListNav(navController)
         composable(BottomNavItem.AdminSettings.route) {
             AdminScreen(hiltViewModel(), navController)
         }
+        settingsNav(navController)
+        studentListNav(navController)
     }
 }
+
+fun NavGraphBuilder.settingsNav(navController: NavHostController) {
+    navigation(
+        startDestination = AppScreen.SettingScreen.CheckDues.route,
+        route = BottomNavItem.Settings.route
+    ) {
+        composable(AppScreen.SettingScreen.CheckDues.route){
+            SettingScreen(navController)
+        }
+        composable(AppScreen.SettingScreen.ManageFees.route){
+
+        }
+        composable(AppScreen.SettingScreen.Transaction.route){
+
+        }
+        composable(AppScreen.SettingScreen.ManageBooks.route){
+
+        }
+        composable(AppScreen.SettingScreen.LogOut.route){
+            LoginScreen(hiltViewModel())
+        }
+    }
+}
+
 
 fun NavGraphBuilder.studentListNav(navController: NavHostController) {
     navigation(

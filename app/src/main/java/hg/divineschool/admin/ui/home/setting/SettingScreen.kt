@@ -21,17 +21,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
+import hg.divineschool.admin.AppScreen
+import hg.divineschool.admin.BottomNavItem
 import hg.divineschool.admin.R
 import hg.divineschool.admin.data.models.SettingItem
 import hg.divineschool.admin.ui.home.DPSAppBar
 import hg.divineschool.admin.ui.theme.regularFont
-import hg.divineschool.admin.ui.utils.findActivity
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SettingScreen(navController: NavController) {
     val context = LocalContext.current
-
     val settings = listOf(
         SettingItem(1, "Check Dues", R.drawable.due_date),
         SettingItem(2, "Manage Fees", R.drawable.manage_fees),
@@ -39,6 +39,7 @@ fun SettingScreen(navController: NavController) {
         SettingItem(4, "Manage Books", R.drawable.manage_books),
         SettingItem(5, "Log Out", R.drawable.logout)
     )
+
     Scaffold(topBar = { DPSAppBar() }) { padding ->
         Column(
             modifier = Modifier
@@ -68,13 +69,23 @@ fun SettingScreen(navController: NavController) {
                             .requiredWidth(280.dp)
                             .requiredHeight(150.dp), onClick = {
                             when (str.id) {
-                                1 -> {}
-                                2 -> {}
-                                3 -> {}
-                                4 -> {}
+                                1 -> {
+                                    navController.navigate(AppScreen.SettingScreen.CheckDues.route)
+                                }
+                                2 -> {
+                                    navController.navigate(AppScreen.SettingScreen.ManageFees.route)
+                                }
+                                3 -> {
+                                    navController.navigate(AppScreen.SettingScreen.Transaction.route)
+                                }
+                                4 -> {
+                                    navController.navigate(AppScreen.SettingScreen.ManageBooks.route)
+                                }
                                 5 -> {
                                     FirebaseAuth.getInstance().signOut()
-                                    context.findActivity()?.finish()
+                                    navController.navigate(AppScreen.SettingScreen.LogOut.route) {
+                                        popUpTo(BottomNavItem.Home.route) { inclusive = true }
+                                    }
                                 }
                             }
                         }
