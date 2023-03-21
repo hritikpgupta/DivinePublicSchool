@@ -7,33 +7,37 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.firebase.auth.FirebaseAuth
 import hg.divineschool.admin.R
 import hg.divineschool.admin.data.models.SettingItem
 import hg.divineschool.admin.ui.home.DPSAppBar
 import hg.divineschool.admin.ui.theme.regularFont
+import hg.divineschool.admin.ui.utils.findActivity
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SettingScreen(navController: NavController) {
+    val context = LocalContext.current
 
     val settings = listOf(
-        SettingItem("Check Dues", R.drawable.due_date),
-        SettingItem("Manage Fees", R.drawable.manage_fees),
-        SettingItem("Transaction", R.drawable.transaction),
-        SettingItem("Manage Books", R.drawable.manage_books)
+        SettingItem(1, "Check Dues", R.drawable.due_date),
+        SettingItem(2, "Manage Fees", R.drawable.manage_fees),
+        SettingItem(3, "Transaction", R.drawable.transaction),
+        SettingItem(4, "Manage Books", R.drawable.manage_books),
+        SettingItem(5, "Log Out", R.drawable.logout)
     )
     Scaffold(topBar = { DPSAppBar() }) { padding ->
         Column(
@@ -63,7 +67,16 @@ fun SettingScreen(navController: NavController) {
                         modifier = Modifier
                             .requiredWidth(280.dp)
                             .requiredHeight(150.dp), onClick = {
-
+                            when (str.id) {
+                                1 -> {}
+                                2 -> {}
+                                3 -> {}
+                                4 -> {}
+                                5 -> {
+                                    FirebaseAuth.getInstance().signOut()
+                                    context.findActivity()?.finish()
+                                }
+                            }
                         }
                     ) {
                         Column(
