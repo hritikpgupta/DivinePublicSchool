@@ -17,7 +17,7 @@ import hg.divineschool.admin.ui.home.dashboard.invoiceStudent.StudentInvoice
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.RegisterStudent
 import hg.divineschool.admin.ui.home.dashboard.studentsScreen.StudentsList
 import hg.divineschool.admin.ui.home.dashboard.updateStudent.UpdateStudent
-import hg.divineschool.admin.ui.home.notification.NotificationScreen
+import hg.divineschool.admin.ui.home.setting.SettingScreen
 
 @Composable
 fun AppNavigationGraph(navController: NavHostController, modifier: Modifier) {
@@ -29,8 +29,8 @@ fun AppNavigationGraph(navController: NavHostController, modifier: Modifier) {
         composable(BottomNavItem.Attendance.route) {
             AttendanceScreen()
         }
-        composable(BottomNavItem.Notification.route) {
-            NotificationScreen()
+        composable(BottomNavItem.Settings.route) {
+            SettingScreen()
         }
         studentListNav(navController)
         composable(BottomNavItem.AdminSettings.route) {

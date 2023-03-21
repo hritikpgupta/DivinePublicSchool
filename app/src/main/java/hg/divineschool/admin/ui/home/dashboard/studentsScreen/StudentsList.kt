@@ -234,7 +234,8 @@ fun StudentsList(
                                 })
                         }
                     }
-                } else {
+                }
+                else {
                     Box(
                         contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
                     ) {

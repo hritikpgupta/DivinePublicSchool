@@ -6,7 +6,7 @@
     <string name="login_btn_text">Proceed</string>
     <string name="bottom_nav_home">Home</string>
     <string name="bottom_nav_attendance">Attendance</string>
-    <string name="bottom_nav_notification">Notification</string>
+    <string name="bottom_nav_settings">Setting</string>
     <string name="bottom_nav_invoice">Invoice</string>
     <string name="students_icon_content_description">Invoice</string>
 </resources>

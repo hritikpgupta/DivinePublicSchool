@@ -22,7 +22,7 @@ fun AppBottomNavigation(navController: NavController) {
     val navItems = listOf(
         BottomNavItem.Home,
         BottomNavItem.Attendance,
-        BottomNavItem.Notification
+        BottomNavItem.Settings
     )
     BottomAppBar(
         backgroundColor = MaterialTheme.colors.background,

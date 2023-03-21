@@ -6,3 +6,7 @@ Things to do
 -- Implement (Show admin setting for a specific user logon) - Done
 -- Need functionality to view students who have not paid for a particular month
 -- Do the above check before migration -Done
+-- Need functionality to view tuition fee collected
+-- Need functionality to set tuition fee
+-- Need functionality to manage books
+-- Need functionality to set school information (isOpen, start and end time )
