@@ -1,28 +1,41 @@
 package hg.divineschool.admin.ui.home.setting
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import hg.divineschool.admin.R
+import hg.divineschool.admin.data.models.SettingItem
 import hg.divineschool.admin.ui.home.DPSAppBar
+import hg.divineschool.admin.ui.theme.regularFont
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SettingScreen(navController: NavController) {
 
-    val settings = listOf("Check Dues", "Manage Fees", "Transaction Summary", "Manage Books")
-    val scrollState = rememberScrollState()
-    Scaffold(topBar = { DPSAppBar() })
-    { padding ->
+    val settings = listOf(
+        SettingItem("Check Dues", R.drawable.due_date),
+        SettingItem("Manage Fees", R.drawable.manage_fees),
+        SettingItem("Transaction", R.drawable.transaction),
+        SettingItem("Manage Books", R.drawable.manage_books)
+    )
+    Scaffold(topBar = { DPSAppBar() }) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -42,7 +55,35 @@ fun SettingScreen(navController: NavController) {
                 columns = GridCells.Adaptive(280.dp)
             ) {
                 items(settings) { str ->
-                    Text(text = str)
+                    Card(
+                        backgroundColor = Color.LightGray.copy(0.2f),
+                        shape = RoundedCornerShape(4.dp),
+                        elevation = 2.dp,
+                        border = BorderStroke(4.dp, Color.Black.copy(0.6f)),
+                        modifier = Modifier
+                            .requiredWidth(280.dp)
+                            .requiredHeight(150.dp), onClick = {
+
+                        }
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier.padding(start = 4.dp)
+                        ) {
+                            Image(
+                                painter = painterResource(id = str.icon),
+                                contentDescription = str.name,
+                                modifier = Modifier.requiredSize(80.dp)
+                            )
+                            Spacer(modifier = Modifier.requiredHeight(12.dp))
+                            Text(
+                                text = str.name, fontSize = 30.sp, style = TextStyle(
+                                    fontFamily = regularFont, fontWeight = FontWeight.Bold
+                                )
+                            )
+                        }
+                    }
                 }
             }
 
