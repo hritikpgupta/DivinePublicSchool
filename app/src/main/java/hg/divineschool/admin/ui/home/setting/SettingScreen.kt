@@ -31,11 +31,10 @@ import hg.divineschool.admin.ui.theme.regularFont
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SettingScreen(navController: NavController) {
-    val context = LocalContext.current
     val settings = listOf(
         SettingItem(1, "Check Dues", R.drawable.due_date),
         SettingItem(2, "Manage Fees", R.drawable.manage_fees),
-        SettingItem(3, "Transaction", R.drawable.transaction),
+        SettingItem(3, "Transactions", R.drawable.transaction),
         SettingItem(4, "Manage Books", R.drawable.manage_books),
         SettingItem(5, "Log Out", R.drawable.logout)
     )

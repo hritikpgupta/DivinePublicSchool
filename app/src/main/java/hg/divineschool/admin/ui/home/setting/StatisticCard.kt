@@ -15,7 +15,7 @@ fun StatisticCard() {
     Card( backgroundColor = Color.LightGray.copy(0.7f),
         modifier = Modifier
             .fillMaxWidth()
-            .requiredHeight(300.dp).padding(4.dp)
+            .requiredHeight(300.dp).padding(6.dp)
     ) {
 
     }

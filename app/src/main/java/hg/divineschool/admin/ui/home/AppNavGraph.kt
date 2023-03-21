@@ -19,6 +19,10 @@ import hg.divineschool.admin.ui.home.dashboard.registerStudent.RegisterStudent
 import hg.divineschool.admin.ui.home.dashboard.studentsScreen.StudentsList
 import hg.divineschool.admin.ui.home.dashboard.updateStudent.UpdateStudent
 import hg.divineschool.admin.ui.home.setting.SettingScreen
+import hg.divineschool.admin.ui.home.setting.Transactions
+import hg.divineschool.admin.ui.home.setting.checkDues.CheckDue
+import hg.divineschool.admin.ui.home.setting.manageBooks.ManageBook
+import hg.divineschool.admin.ui.home.setting.manageFees.ManageFee
 
 @Composable
 fun AppNavigationGraph(navController: NavHostController, modifier: Modifier) {
@@ -29,32 +33,36 @@ fun AppNavigationGraph(navController: NavHostController, modifier: Modifier) {
         composable(BottomNavItem.Attendance.route) {
             AttendanceScreen()
         }
+        composable(BottomNavItem.Settings.route) {
+            SettingScreen(navController)
+        }
         composable(BottomNavItem.AdminSettings.route) {
             AdminScreen(hiltViewModel(), navController)
         }
         settingsNav(navController)
         studentListNav(navController)
+
     }
 }
 
 fun NavGraphBuilder.settingsNav(navController: NavHostController) {
     navigation(
         startDestination = AppScreen.SettingScreen.CheckDues.route,
-        route = BottomNavItem.Settings.route
+        route = AppScreen.SettingScreen.route
     ) {
-        composable(AppScreen.SettingScreen.CheckDues.route){
-            SettingScreen(navController)
+        composable(AppScreen.SettingScreen.CheckDues.route) {
+            CheckDue(navController)
         }
-        composable(AppScreen.SettingScreen.ManageFees.route){
-
+        composable(AppScreen.SettingScreen.ManageFees.route) {
+            ManageFee(navController)
         }
-        composable(AppScreen.SettingScreen.Transaction.route){
-
+        composable(AppScreen.SettingScreen.Transaction.route) {
+            Transactions(navController)
         }
-        composable(AppScreen.SettingScreen.ManageBooks.route){
-
+        composable(AppScreen.SettingScreen.ManageBooks.route) {
+            ManageBook(navController)
         }
-        composable(AppScreen.SettingScreen.LogOut.route){
+        composable(AppScreen.SettingScreen.LogOut.route) {
             LoginScreen(hiltViewModel())
         }
     }

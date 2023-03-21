@@ -71,7 +71,6 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 
-@RequiresApi(Build.VERSION_CODES.Q)
 @OptIn(
     ExperimentalGlideComposeApi::class,
     ExperimentalFoundationApi::class,
