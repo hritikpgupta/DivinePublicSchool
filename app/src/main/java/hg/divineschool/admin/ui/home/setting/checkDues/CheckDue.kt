@@ -1,17 +1,17 @@
 package hg.divineschool.admin.ui.home.setting.checkDues
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
-import androidx.compose.material.Icon
+import androidx.compose.material.Card
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,13 +23,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
 import hg.divineschool.admin.ui.home.DPSBar
+import hg.divineschool.admin.ui.theme.lightFont
 import hg.divineschool.admin.ui.theme.regularFont
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CheckDue(navController: NavController) {
-    val pagerState1 = rememberPagerState()
-    val pagerState2 = rememberPagerState()
+    val classPagerState = rememberPagerState()
+    val monthPagerState = rememberPagerState()
     val classList = listOf(
         "Play Group",
         "Lower Nursery",
@@ -57,6 +58,23 @@ fun CheckDue(navController: NavController) {
         "November",
         "December"
     )
+    val classPosition = remember {
+        mutableStateOf(0)
+    }
+    val monthPosition = remember {
+        mutableStateOf(0)
+    }
+    LaunchedEffect(classPagerState) {
+        snapshotFlow { classPagerState.currentPage }.collect { page ->
+            classPosition.value = page
+        }
+    }
+    LaunchedEffect(monthPagerState) {
+        snapshotFlow { monthPagerState.currentPage }.collect { page ->
+            monthPosition.value = page
+        }
+    }
+
     Scaffold(
         scaffoldState = rememberScaffoldState(), topBar = {
             DPSBar(onBackPressed = {
@@ -69,65 +87,85 @@ fun CheckDue(navController: NavController) {
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            Card(
+                elevation = 2.dp,
+                backgroundColor = Color.LightGray.copy(0.1f),
+                shape = RoundedCornerShape(2.dp),
+                border = BorderStroke(2.dp, Color.LightGray.copy(0.1f)),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(10.dp)
+                    .wrapContentWidth()
+                    .padding(8.dp)
             ) {
-                HorizontalPager(
-                    pageCount = classList.size,
-                    state = pagerState1,
-                    modifier = Modifier
-                        .weight(0.4f)
-                        .background(color = Color.LightGray.copy(0.7f))
-                        .padding(8.dp)
-                ) { page ->
+                Column(modifier = Modifier.background(color = Color.LightGray.copy(0.1f))) {
                     Text(
-                        text = classList[page], textAlign = TextAlign.Center, style = TextStyle(
-                            fontFamily = regularFont,
+                        text = "Slide Left To Select", style = TextStyle(
+                            fontFamily = lightFont,
                             fontSize = 35.sp,
                             color = Color.Black,
-                            fontWeight = FontWeight.SemiBold
-                        )
+                            fontWeight = FontWeight.Bold
+                        ), modifier = Modifier.padding(start = 8.dp, top = 4.dp)
                     )
-                }
-                HorizontalPager(
-                    pageCount = monthList.size,
-                    state = pagerState2,
-                    modifier = Modifier
-                        .weight(0.4f)
-                        .background(color = Color.LightGray.copy(0.7f))
-                        .padding(8.dp)
-                ) { page ->
-                    Text(
-                        text = monthList[page], textAlign = TextAlign.Center, style = TextStyle(
-                            fontFamily = regularFont,
-                            fontSize = 35.sp,
-                            color = Color.Black,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    )
-                }
-                Button(
-                    onClick = { }, modifier = Modifier
-                        .padding(8.dp)
-                        .weight(0.2f)
-                ) {
-                    Icon(
-                        Icons.Filled.Search,
-                        null,
-                        modifier = Modifier.requiredSize(30.dp),
-                    )
-                    Text(
-                        text = "Search", textAlign = TextAlign.Center, style = TextStyle(
-                            fontFamily = regularFont,
-                            fontSize = 30.sp,
-                            color = Color.White,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp)
+                    ) {
+                        HorizontalPager(
+                            pageCount = classList.size,
+                            state = classPagerState,
+                            modifier = Modifier
+                                .weight(0.4f)
+                                .background(color = Color.LightGray.copy(0.6f))
+                                .padding(8.dp)
+                        ) { page ->
+                            Text(
+                                text = classList[page],
+                                textAlign = TextAlign.Center,
+                                style = TextStyle(
+                                    fontFamily = regularFont,
+                                    fontSize = 35.sp,
+                                    color = Color.Black,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            )
+                        }
+                        HorizontalPager(
+                            pageCount = monthList.size,
+                            state = monthPagerState,
+                            modifier = Modifier
+                                .weight(0.4f)
+                                .background(color = Color.LightGray.copy(0.6f))
+                                .padding(8.dp)
+                        ) { page ->
+                            Text(
+                                text = monthList[page],
+                                textAlign = TextAlign.Center,
+                                style = TextStyle(
+                                    fontFamily = regularFont,
+                                    fontSize = 35.sp,
+                                    color = Color.Black,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            )
+                        }
+                        Button(
+                            onClick = { }, modifier = Modifier
+                                .padding(8.dp)
+                                .weight(0.2f)
+                        ) {
+                            Text(
+                                text = "Search", textAlign = TextAlign.Center, style = TextStyle(
+                                    fontFamily = regularFont,
+                                    fontSize = 30.sp,
+                                    color = Color.White,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            )
+                        }
+                    }
                 }
             }
         }
