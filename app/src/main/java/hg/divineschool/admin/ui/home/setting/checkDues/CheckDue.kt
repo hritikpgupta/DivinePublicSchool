@@ -23,14 +23,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
 import hg.divineschool.admin.ui.home.DPSBar
+import hg.divineschool.admin.ui.home.dashboard.registerStudent.DropDown
+import hg.divineschool.admin.ui.home.dashboard.registerStudent.dropDownModifier
+import hg.divineschool.admin.ui.home.dashboard.registerStudent.genderOptions
 import hg.divineschool.admin.ui.theme.lightFont
 import hg.divineschool.admin.ui.theme.regularFont
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CheckDue(navController: NavController) {
-    val classPagerState = rememberPagerState()
-    val monthPagerState = rememberPagerState()
+
     val classList = listOf(
         "Play Group",
         "Lower Nursery",
@@ -58,23 +60,12 @@ fun CheckDue(navController: NavController) {
         "November",
         "December"
     )
-    val classPosition = remember {
-        mutableStateOf(0)
-    }
-    val monthPosition = remember {
-        mutableStateOf(0)
-    }
-    LaunchedEffect(classPagerState) {
-        snapshotFlow { classPagerState.currentPage }.collect { page ->
-            classPosition.value = page
-        }
-    }
-    LaunchedEffect(monthPagerState) {
-        snapshotFlow { monthPagerState.currentPage }.collect { page ->
-            monthPosition.value = page
-        }
-    }
 
+    var monthExpanded by remember { mutableStateOf(false) }
+    var month by remember { mutableStateOf(monthList[0]) }
+    var classExpanded by remember { mutableStateOf(false) }
+    var className by remember { mutableStateOf(classList[0]) }
+    
     Scaffold(
         scaffoldState = rememberScaffoldState(), topBar = {
             DPSBar(onBackPressed = {
@@ -99,58 +90,48 @@ fun CheckDue(navController: NavController) {
             ) {
                 Column(modifier = Modifier.background(color = Color.LightGray.copy(0.1f))) {
                     Text(
-                        text = "Slide Left To Select", style = TextStyle(
+                        text = "Select Class & Month", style = TextStyle(
                             fontFamily = lightFont,
-                            fontSize = 35.sp,
+                            fontSize = 30.sp,
                             color = Color.Black,
                             fontWeight = FontWeight.Bold
                         ), modifier = Modifier.padding(start = 8.dp, top = 4.dp)
                     )
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(2.dp),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(10.dp)
+                            .padding(4.dp)
                     ) {
-                        HorizontalPager(
-                            pageCount = classList.size,
-                            state = classPagerState,
-                            modifier = Modifier
-                                .weight(0.4f)
-                                .background(color = Color.LightGray.copy(0.6f))
-                                .padding(8.dp)
-                        ) { page ->
-                            Text(
-                                text = classList[page],
-                                textAlign = TextAlign.Center,
-                                style = TextStyle(
-                                    fontFamily = regularFont,
-                                    fontSize = 35.sp,
-                                    color = Color.Black,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                            )
-                        }
-                        HorizontalPager(
-                            pageCount = monthList.size,
-                            state = monthPagerState,
-                            modifier = Modifier
-                                .weight(0.4f)
-                                .background(color = Color.LightGray.copy(0.6f))
-                                .padding(8.dp)
-                        ) { page ->
-                            Text(
-                                text = monthList[page],
-                                textAlign = TextAlign.Center,
-                                style = TextStyle(
-                                    fontFamily = regularFont,
-                                    fontSize = 35.sp,
-                                    color = Color.Black,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                            )
-                        }
+                        DropDown(
+                            lableText = "Select Class",
+                            expanded = classExpanded,
+                            onExpand = { classExpanded = !classExpanded },
+                            onItemClick = {
+                                className = it
+                                classExpanded = false
+                            },
+                            onDismiss = { classExpanded = false },
+                            values = classList,
+                            color = Color.Black,
+                            selectedValue = className,
+                            modifier = dropDownModifier.weight(0.4f)
+                        )
+                        DropDown(
+                            lableText = "Select Month",
+                            expanded = monthExpanded,
+                            onExpand = { monthExpanded = !monthExpanded },
+                            onItemClick = {
+                                month = it
+                                monthExpanded = false
+                            },
+                            onDismiss = { monthExpanded = false },
+                            values = monthList,
+                            color = Color.Black,
+                            selectedValue = month,
+                            modifier = dropDownModifier.weight(0.4f)
+                        )
                         Button(
                             onClick = { }, modifier = Modifier
                                 .padding(8.dp)
