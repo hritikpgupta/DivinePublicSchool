@@ -58,7 +58,6 @@ object AppModule {
 
 }
 
-
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
 annotation class DPSContext

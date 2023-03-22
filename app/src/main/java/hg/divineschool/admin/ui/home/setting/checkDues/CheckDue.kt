@@ -29,9 +29,8 @@ import hg.divineschool.admin.ui.home.dashboard.registerStudent.genderOptions
 import hg.divineschool.admin.ui.theme.lightFont
 import hg.divineschool.admin.ui.theme.regularFont
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CheckDue(navController: NavController) {
+fun CheckDue(viewModel: CheckDueViewModel,navController: NavController) {
 
     val classList = listOf(
         "Play Group",
@@ -65,7 +64,7 @@ fun CheckDue(navController: NavController) {
     var month by remember { mutableStateOf(monthList[0]) }
     var classExpanded by remember { mutableStateOf(false) }
     var className by remember { mutableStateOf(classList[0]) }
-    
+
     Scaffold(
         scaffoldState = rememberScaffoldState(), topBar = {
             DPSBar(onBackPressed = {
