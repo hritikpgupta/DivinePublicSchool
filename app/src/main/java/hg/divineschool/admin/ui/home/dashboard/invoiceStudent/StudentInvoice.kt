@@ -169,7 +169,7 @@ fun StudentInvoice(
                                         Card(
                                             elevation = 8.dp,
                                             onClick = {
-                                                var intent = Intent(
+                                                val intent = Intent(
                                                     context, InvoiceScreen::class.java
                                                 )
                                                 intent.putExtra("invoiceObject", item)

@@ -1,20 +1,20 @@
 package hg.divineschool.admin.ui.home.setting.checkDues
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.Text
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -22,48 +22,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
+import hg.divineschool.admin.R
+import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.ui.home.DPSBar
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.DropDown
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.dropDownModifier
-import hg.divineschool.admin.ui.home.dashboard.registerStudent.genderOptions
 import hg.divineschool.admin.ui.theme.lightFont
 import hg.divineschool.admin.ui.theme.regularFont
+import hg.divineschool.admin.ui.utils.*
 
 @Composable
-fun CheckDue(viewModel: CheckDueViewModel,navController: NavController) {
+fun CheckDue(viewModel: CheckDueViewModel, navController: NavController) {
 
-    val classList = listOf(
-        "Play Group",
-        "Lower Nursery",
-        "Upper Nursery",
-        "Class One",
-        "Class Two",
-        "Class Three",
-        "Class Four",
-        "Class Five",
-        "Class Six",
-        "Class Seven",
-        "Class Eight"
-    )
-    val monthList = listOf(
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
-    )
 
+    val studentListFlow = viewModel.studentListFlow.collectAsState()
     var monthExpanded by remember { mutableStateOf(false) }
     var month by remember { mutableStateOf(monthList[0]) }
     var classExpanded by remember { mutableStateOf(false) }
-    var className by remember { mutableStateOf(classList[0]) }
+    var className by remember { mutableStateOf(classNames[0]) }
+    val context = LocalContext.current
 
     Scaffold(
         scaffoldState = rememberScaffoldState(), topBar = {
@@ -112,7 +89,7 @@ fun CheckDue(viewModel: CheckDueViewModel,navController: NavController) {
                                 classExpanded = false
                             },
                             onDismiss = { classExpanded = false },
-                            values = classList,
+                            values = classNames,
                             color = Color.Black,
                             selectedValue = className,
                             modifier = dropDownModifier.weight(0.4f)
@@ -132,7 +109,11 @@ fun CheckDue(viewModel: CheckDueViewModel,navController: NavController) {
                             modifier = dropDownModifier.weight(0.4f)
                         )
                         Button(
-                            onClick = { }, modifier = Modifier
+                            onClick = {
+                                viewModel.getAllDueStudents(
+                                    className.convertClassNameToPath(), month
+                                )
+                            }, modifier = Modifier
                                 .padding(8.dp)
                                 .weight(0.2f)
                         ) {
@@ -148,6 +129,85 @@ fun CheckDue(viewModel: CheckDueViewModel,navController: NavController) {
                     }
                 }
             }
+            studentListFlow.value.let {
+                when (it) {
+                    is Resource.Loading -> {
+                        CircularProgress()
+                    }
+                    is Resource.Failure -> {
+                        it.exception.message?.let { it1 -> context.toast(it1) }
+                    }
+                    is Resource.Success -> {
+                        if (it.result.isNotEmpty()) {
+                            LazyVerticalGrid(
+                                verticalArrangement = Arrangement.spacedBy(18.dp),
+                                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                userScrollEnabled = true,
+                                contentPadding = PaddingValues(
+                                    top = 15.dp, start = 10.dp, end = 10.dp, bottom = 80.dp
+                                ),
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(color = MaterialTheme.colors.background.copy(0.6f)),
+                                columns = GridCells.Adaptive(280.dp)
+                            ) {
+                                items(it.result) { studentDue ->
+                                    Card(
+                                        backgroundColor = Color.LightGray.copy(0.2f),
+                                        shape = RoundedCornerShape(4.dp),
+                                        elevation = 2.dp,
+                                        border = BorderStroke(4.dp, Color.Black.copy(0.6f)),
+                                        modifier = Modifier
+                                            .requiredWidth(280.dp)
+                                            .requiredHeight(150.dp)
+                                    ) {
+                                        Column(
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            verticalArrangement = Arrangement.Center,
+                                            modifier = Modifier.padding(start = 4.dp)
+                                        ) {
+                                            Text(
+                                                text = studentDue.name, fontSize = 24.sp, style = TextStyle(
+                                                    fontFamily = regularFont, fontWeight = FontWeight.Bold
+                                                )
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier
+                                        .wrapContentHeight()
+                                        .wrapContentWidth()
+                                ) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.student_record),
+                                        contentDescription = "Student_Record",
+                                        modifier = Modifier.requiredSize(100.dp)
+                                    )
+                                    Spacer(modifier = Modifier.requiredHeight(5.dp))
+                                    androidx.compose.material3.Text(
+                                        text = "Empty Records", style = TextStyle(
+                                            fontFamily = regularFont,
+                                            fontSize = 34.sp,
+                                            fontWeight = FontWeight.Medium
+                                        ), color = Color.DarkGray
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    else -> {}
+                }
+            }
+
+
         }
     }
 }

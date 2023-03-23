@@ -49,7 +49,7 @@ suspend fun <T> Task<T>.uploadFile(reference: StorageReference): Uri {
     }
 }
 
-fun `validateStudentObjectBeforeUpload`(student: Student): String? {
+fun validateStudentObjectBeforeUpload(student: Student): String? {
     if (student.contactNumber.toString().trim().length != 10) {
         return "Contact Number Must Be Of Length 10."
     }
