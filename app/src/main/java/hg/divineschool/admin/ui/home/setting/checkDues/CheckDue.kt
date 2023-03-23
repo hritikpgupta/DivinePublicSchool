@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -153,23 +154,51 @@ fun CheckDue(viewModel: CheckDueViewModel, navController: NavController) {
                             ) {
                                 items(it.result) { studentDue ->
                                     Card(
-                                        backgroundColor = Color.LightGray.copy(0.2f),
+                                        backgroundColor = Color.LightGray.copy(0.4f),
                                         shape = RoundedCornerShape(4.dp),
                                         elevation = 2.dp,
-                                        border = BorderStroke(4.dp, Color.Black.copy(0.6f)),
+                                        border = BorderStroke(4.dp, Color.Black.copy(0.4f)),
                                         modifier = Modifier
                                             .requiredWidth(280.dp)
-                                            .requiredHeight(150.dp)
+                                            .requiredHeight(130.dp)
                                     ) {
                                         Column(
                                             horizontalAlignment = Alignment.CenterHorizontally,
-                                            verticalArrangement = Arrangement.Center,
+                                            verticalArrangement = Arrangement.SpaceEvenly,
                                             modifier = Modifier.padding(start = 4.dp)
                                         ) {
                                             Text(
-                                                text = studentDue.name, fontSize = 24.sp, style = TextStyle(
-                                                    fontFamily = regularFont, fontWeight = FontWeight.Bold
-                                                )
+                                                text = studentDue.name,
+                                                fontSize = 28.sp,
+                                                style = TextStyle(
+                                                    fontFamily = regularFont,
+                                                    fontWeight = FontWeight.Bold
+                                                ),
+                                                maxLines = 1,
+                                                softWrap = true,
+                                                overflow = TextOverflow.Ellipsis
+                                            )
+                                            Text(
+                                                text = "S/O ${studentDue.guardianName}",
+                                                fontSize = 26.sp,
+                                                style = TextStyle(
+                                                    fontFamily = regularFont,
+                                                    fontWeight = FontWeight.Bold
+                                                ),
+                                                maxLines = 1,
+                                                softWrap = true,
+                                                overflow = TextOverflow.Ellipsis
+                                            )
+                                            Text(
+                                                text = "Roll Number ${studentDue.rollNumber}",
+                                                fontSize = 26.sp,
+                                                style = TextStyle(
+                                                    fontFamily = regularFont,
+                                                    fontWeight = FontWeight.Bold
+                                                ),
+                                                maxLines = 1,
+                                                softWrap = true,
+                                                overflow = TextOverflow.Ellipsis
                                             )
                                         }
                                     }
@@ -206,8 +235,6 @@ fun CheckDue(viewModel: CheckDueViewModel, navController: NavController) {
                     else -> {}
                 }
             }
-
-
         }
     }
 }
