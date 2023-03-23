@@ -19,10 +19,11 @@ import hg.divineschool.admin.ui.home.dashboard.registerStudent.RegisterStudent
 import hg.divineschool.admin.ui.home.dashboard.studentsScreen.StudentsList
 import hg.divineschool.admin.ui.home.dashboard.updateStudent.UpdateStudent
 import hg.divineschool.admin.ui.home.setting.SettingScreen
-import hg.divineschool.admin.ui.home.setting.Transactions
 import hg.divineschool.admin.ui.home.setting.checkDues.CheckDue
 import hg.divineschool.admin.ui.home.setting.manageBooks.ManageBook
 import hg.divineschool.admin.ui.home.setting.manageFees.ManageFee
+import hg.divineschool.admin.ui.home.setting.manageLocation.ManageTransportLocation
+import hg.divineschool.admin.ui.home.setting.transactions.Transactions
 
 @Composable
 fun AppNavigationGraph(navController: NavHostController, modifier: Modifier) {
@@ -61,6 +62,9 @@ fun NavGraphBuilder.settingsNav(navController: NavHostController) {
         }
         composable(AppScreen.SettingScreen.ManageBooks.route) {
             ManageBook(navController)
+        }
+        composable(AppScreen.SettingScreen.ManageLocation.route) {
+            ManageTransportLocation(navController)
         }
         composable(AppScreen.SettingScreen.LogOut.route) {
             LoginScreen(hiltViewModel())

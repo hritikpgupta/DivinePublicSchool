@@ -1,4 +1,4 @@
-package hg.divineschool.admin.ui.home.setting.transactions
+package hg.divineschool.admin.ui.home.setting.manageLocation
 
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -7,14 +7,15 @@ import com.google.accompanist.insets.ui.Scaffold
 import hg.divineschool.admin.ui.home.DPSBar
 
 @Composable
-fun Transactions(navController: NavController) {
+fun ManageTransportLocation(navController: NavController) {
     Scaffold(scaffoldState = rememberScaffoldState(),
         topBar = {
             DPSBar(onBackPressed = {
                 navController.popBackStack()
-            }, className = "Transactions")
+            }, className = "Manage Transport Location")
         }
     ) {
 
     }
+
 }

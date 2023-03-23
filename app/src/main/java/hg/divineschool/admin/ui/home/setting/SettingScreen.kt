@@ -12,8 +12,8 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -32,11 +32,12 @@ import hg.divineschool.admin.ui.theme.regularFont
 @Composable
 fun SettingScreen(navController: NavController) {
     val settings = listOf(
-        SettingItem(1, "Check Dues", R.drawable.due_date),
-        SettingItem(2, "Manage Fees", R.drawable.manage_fees),
-        SettingItem(3, "Transactions", R.drawable.transaction),
-        SettingItem(4, "Manage Books", R.drawable.manage_books),
-        SettingItem(5, "Log Out", R.drawable.logout)
+        SettingItem(1, "Check Dues", R.drawable.due_date, true),
+        SettingItem(3, "Transactions", R.drawable.transaction, true),
+        SettingItem(2, "Manage Fees", R.drawable.manage_fees, true),
+        SettingItem(4, "Manage Books", R.drawable.manage_books, true),
+        SettingItem(6, "Manage Location", R.drawable.manage_navigation, true),
+        SettingItem(5, "Log Out", R.drawable.logout, false)
     )
 
     Scaffold(topBar = { DPSAppBar() }) { padding ->
@@ -59,14 +60,27 @@ fun SettingScreen(navController: NavController) {
                 columns = GridCells.Adaptive(280.dp)
             ) {
                 items(settings) { str ->
-                    Card(
-                        backgroundColor = Color.LightGray.copy(0.2f),
+                    val cardModifier = if (str.enabled) {
+                        Modifier
+                            .requiredWidth(280.dp)
+                            .requiredHeight(150.dp)
+                    } else {
+                        Modifier
+                            .requiredWidth(280.dp)
+                            .requiredHeight(150.dp)
+                            .drawWithContent {
+                                drawContent()
+                                drawRect(color = Color.LightGray.copy(0.7f))
+                            }
+                    }
+
+                    Card(backgroundColor = Color.LightGray.copy(0.2f),
                         shape = RoundedCornerShape(4.dp),
                         elevation = 2.dp,
+                        enabled = str.enabled,
                         border = BorderStroke(4.dp, Color.Black.copy(0.6f)),
-                        modifier = Modifier
-                            .requiredWidth(280.dp)
-                            .requiredHeight(150.dp), onClick = {
+                        modifier = cardModifier,
+                        onClick = {
                             when (str.id) {
                                 1 -> {
                                     navController.navigate(AppScreen.SettingScreen.CheckDues.route)
@@ -86,9 +100,11 @@ fun SettingScreen(navController: NavController) {
                                         popUpTo(BottomNavItem.Home.route) { inclusive = true }
                                     }
                                 }
+                                6 -> {
+                                    navController.navigate(AppScreen.SettingScreen.ManageLocation.route)
+                                }
                             }
-                        }
-                    ) {
+                        }) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center,
