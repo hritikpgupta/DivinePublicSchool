@@ -2,6 +2,7 @@ package hg.divineschool.admin.data.dashboard.settings
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Invoice
@@ -21,26 +22,9 @@ class SettingRepositoryImpl @Inject constructor(
     private val db: FirebaseFirestore
 ) : SettingRepository {
 
-    override suspend fun migrateClassEightUser(): Resource<Boolean> {
-         try {
-
-/*            moveAndDeleteClassEightStudentFirst()
-            moveAndDeleteStudentsFromOneClassToAnother("classSeven", "classEight")
-            moveAndDeleteStudentsFromOneClassToAnother("classSix", "classSeven")
-            moveAndDeleteStudentsFromOneClassToAnother("classFive", "classSix")
-            moveAndDeleteStudentsFromOneClassToAnother("classFour", "classFive")
-            moveAndDeleteStudentsFromOneClassToAnother("classThree", "classFour")
-            moveAndDeleteStudentsFromOneClassToAnother("classTwo", "classThree")
-            moveAndDeleteStudentsFromOneClassToAnother("classOne", "classTwo")
-            moveAndDeleteStudentsFromOneClassToAnother("classUpperNursery", "classOne")
-            moveAndDeleteStudentsFromOneClassToAnother("classLowerNursery", "classUpperNursery")
-            moveAndDeleteStudentsFromOneClassToAnother("classPlayGroup", "classLowerNursery")*/
-            return Resource.Success(true)
-        } catch (e: java.lang.Exception) {
-            return Resource.Failure(e)
-        }
+    override suspend fun getAllStudents(className: String, monthName: String) {
+        db.collection("classes").document(className).collection("students").document().collection("tuitionFee").document(monthName)
     }
-
 
 
 }
