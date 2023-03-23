@@ -72,7 +72,6 @@ class DashboardRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getFeeStructure() {
-        Log.i(Log_Tag, "Getting Fee Structure")
         val result = db.collection("fees").document("feeStructure").get().awaitDocument()
         val feeStructure = FeeStructure()
         result.data.let { it ->
