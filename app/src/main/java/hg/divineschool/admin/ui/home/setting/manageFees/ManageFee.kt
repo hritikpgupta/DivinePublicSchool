@@ -76,104 +76,165 @@ fun ManageFee(navController: NavController) {
                     fontWeight = FontWeight.Bold
                 ), modifier = Modifier.padding(start = 8.dp, top = 4.dp)
             )
-            Card(
-                elevation = 4.dp,
-                shape = RoundedCornerShape(4.dp),
-                modifier = Modifier
-                    .wrapContentHeight()
-                    .padding(8.dp)
-            ) {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    FeeUnit(
-                        modifier = Modifier.weight(1f),
-                        editTextModifier = editTextModifier.padding(top = 10.dp, bottom = 8.dp),
-                        name = playGroup,
-                        textLable = "Play Group",
-                        keyboardType = KeyboardType.Number,
-                        onValueChanged = { playGroup = it }
-                    )
-                    FeeUnit(
-                        modifier = Modifier.weight(1f),
-                        editTextModifier = editTextModifier.padding(top = 10.dp, bottom = 8.dp),
-                        name = ln,
-                        textLable = "Lower Nursery",
-                        keyboardType = KeyboardType.Number,
-                        onValueChanged = { ln = it }
-                    )
-                    FeeUnit(
-                        modifier = Modifier.weight(1f),
-                        editTextModifier = editTextModifier.padding(top = 10.dp, bottom = 8.dp),
-                        name = un,
-                        textLable = "Upper Nursery",
-                        keyboardType = KeyboardType.Number,
-                        onValueChanged = { un = it }
-                    )
-                    FeeUnit(
-                        modifier = Modifier.weight(1f),
-                        editTextModifier = editTextModifier.padding(top = 10.dp, bottom = 8.dp),
-                        name = classOne,
-                        textLable = "Class One",
-                        keyboardType = KeyboardType.Number,
-                        onValueChanged = { classOne = it }
-                    )
-                    FeeUnit(
-                        modifier = Modifier.weight(1f),
-                        editTextModifier = editTextModifier.padding(top = 10.dp, bottom = 8.dp),
-                        name = classTwo,
-                        textLable = "Class Two",
-                        keyboardType = KeyboardType.Number,
-                        onValueChanged = { classTwo = it }
-                    )
-                }
-            }
-            Card(
-                elevation = 4.dp,
-                shape = RoundedCornerShape(4.dp),
-                modifier = Modifier
-                    .wrapContentHeight()
-                    .padding(8.dp)
-            ) {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    FeeUnit(
-                        modifier = Modifier.weight(1f),
-                        editTextModifier = editTextModifier.padding(top = 10.dp, bottom = 8.dp),
-                        name = classThree,
-                        textLable = "Class Three",
-                        keyboardType = KeyboardType.Number,
-                        onValueChanged = { classThree = it }
-                    )
-                    FeeUnit(
-                        modifier = Modifier.weight(1f),
-                        editTextModifier = editTextModifier.padding(top = 10.dp, bottom = 8.dp),
-                        name = classFour,
-                        textLable = "Class Four",
-                        keyboardType = KeyboardType.Number,
-                        onValueChanged = { classFour = it }
-                    )
-                    FeeUnit(
-                        modifier = Modifier.weight(1f),
-                        editTextModifier = editTextModifier.padding(top = 10.dp, bottom = 8.dp),
-                        name = classFive,
-                        textLable = "Class Five",
-                        keyboardType = KeyboardType.Number,
-                        onValueChanged = { classFive = it }
-                    )
-                    FeeUnit(
-                        modifier = Modifier.weight(1f),
-                        editTextModifier = editTextModifier.padding(top = 10.dp, bottom = 8.dp),
-                        name = classSix,
-                        textLable = "Class Six",
-                        keyboardType = KeyboardType.Number,
-                        onValueChanged = { classSix = it }
-                    )
-                    FeeUnit(
-                        modifier = Modifier.weight(1f),
-                        editTextModifier = editTextModifier.padding(top = 10.dp, bottom = 8.dp),
-                        name = classSeven,
-                        textLable = "Class Seven",
-                        keyboardType = KeyboardType.Number,
-                        onValueChanged = { classSeven = it }
-                    )
+            Card(elevation = 4.dp,modifier = Modifier
+                .padding(16.dp)
+                .background(color = Color.LightGray.copy(0.3f))) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = Color.LightGray.copy(0.3f))
+                ) {
+                    Card(
+                        elevation = 4.dp,
+                        shape = RoundedCornerShape(4.dp),
+                        modifier = Modifier
+                            .wrapContentHeight()
+                            .padding(8.dp)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            FeeUnit(
+                                modifier = Modifier.weight(1f),
+                                editTextModifier = editTextModifier.padding(
+                                    top = 10.dp,
+                                    bottom = 8.dp
+                                ),
+                                name = playGroup,
+                                textLable = "Play Group",
+                                keyboardType = KeyboardType.Number,
+                                onValueChanged = { playGroup = it }
+                            )
+                            FeeUnit(
+                                modifier = Modifier.weight(1f),
+                                editTextModifier = editTextModifier.padding(
+                                    top = 10.dp,
+                                    bottom = 8.dp
+                                ),
+                                name = ln,
+                                textLable = "Lower Nursery",
+                                keyboardType = KeyboardType.Number,
+                                onValueChanged = { ln = it }
+                            )
+                            FeeUnit(
+                                modifier = Modifier.weight(1f),
+                                editTextModifier = editTextModifier.padding(
+                                    top = 10.dp,
+                                    bottom = 8.dp
+                                ),
+                                name = un,
+                                textLable = "Upper Nursery",
+                                keyboardType = KeyboardType.Number,
+                                onValueChanged = { un = it }
+                            )
+                            FeeUnit(
+                                modifier = Modifier.weight(1f),
+                                editTextModifier = editTextModifier.padding(
+                                    top = 10.dp,
+                                    bottom = 8.dp
+                                ),
+                                name = classOne,
+                                textLable = "Class One",
+                                keyboardType = KeyboardType.Number,
+                                onValueChanged = { classOne = it }
+                            )
+                            FeeUnit(
+                                modifier = Modifier.weight(1f),
+                                editTextModifier = editTextModifier.padding(
+                                    top = 10.dp,
+                                    bottom = 8.dp
+                                ),
+                                name = classTwo,
+                                textLable = "Class Two",
+                                keyboardType = KeyboardType.Number,
+                                onValueChanged = { classTwo = it }
+                            )
+                        }
+                    }
+                    Card(
+                        elevation = 4.dp,
+                        shape = RoundedCornerShape(4.dp),
+                        modifier = Modifier
+                            .wrapContentHeight()
+                            .padding(8.dp)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            FeeUnit(
+                                modifier = Modifier.weight(1f),
+                                editTextModifier = editTextModifier.padding(
+                                    top = 10.dp,
+                                    bottom = 8.dp
+                                ),
+                                name = classThree,
+                                textLable = "Class Three",
+                                keyboardType = KeyboardType.Number,
+                                onValueChanged = { classThree = it }
+                            )
+                            FeeUnit(
+                                modifier = Modifier.weight(1f),
+                                editTextModifier = editTextModifier.padding(
+                                    top = 10.dp,
+                                    bottom = 8.dp
+                                ),
+                                name = classFour,
+                                textLable = "Class Four",
+                                keyboardType = KeyboardType.Number,
+                                onValueChanged = { classFour = it }
+                            )
+                            FeeUnit(
+                                modifier = Modifier.weight(1f),
+                                editTextModifier = editTextModifier.padding(
+                                    top = 10.dp,
+                                    bottom = 8.dp
+                                ),
+                                name = classFive,
+                                textLable = "Class Five",
+                                keyboardType = KeyboardType.Number,
+                                onValueChanged = { classFive = it }
+                            )
+                            FeeUnit(
+                                modifier = Modifier.weight(1f),
+                                editTextModifier = editTextModifier.padding(
+                                    top = 10.dp,
+                                    bottom = 8.dp
+                                ),
+                                name = classSix,
+                                textLable = "Class Six",
+                                keyboardType = KeyboardType.Number,
+                                onValueChanged = { classSix = it }
+                            )
+                            FeeUnit(
+                                modifier = Modifier.weight(1f),
+                                editTextModifier = editTextModifier.padding(
+                                    top = 10.dp,
+                                    bottom = 8.dp
+                                ),
+                                name = classSeven,
+                                textLable = "Class Seven",
+                                keyboardType = KeyboardType.Number,
+                                onValueChanged = { classSeven = it }
+                            )
+                        }
+                    }
+                    Card(
+                        elevation = 4.dp,
+                        shape = RoundedCornerShape(4.dp),
+                        modifier = Modifier
+                            .wrapContentHeight()
+                            .padding(8.dp)
+                    ) {
+                        Row(modifier = Modifier.wrapContentWidth()) {
+                            FeeUnit(
+                                modifier = Modifier.weight(0.2f),
+                                editTextModifier = editTextModifier.padding(
+                                    top = 10.dp,
+                                    bottom = 8.dp
+                                ),
+                                name = classEight,
+                                textLable = "Class Eight",
+                                keyboardType = KeyboardType.Number,
+                                onValueChanged = { classEight = it }
+                            )
+                        }
+                    }
                 }
             }
         }
