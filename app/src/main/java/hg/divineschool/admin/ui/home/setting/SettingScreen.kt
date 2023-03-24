@@ -73,7 +73,6 @@ fun SettingScreen(navController: NavController) {
                                 drawRect(color = Color.LightGray.copy(0.7f))
                             }
                     }
-
                     Card(backgroundColor = Color.LightGray.copy(0.2f),
                         shape = RoundedCornerShape(4.dp),
                         elevation = 2.dp,
