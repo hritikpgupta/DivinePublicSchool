@@ -22,6 +22,7 @@ fun FeeUnit(
     editTextModifier: Modifier,
     name: TextFieldValue,
     textLable : String,
+    keyboardType: KeyboardType,
     onValueChanged: (value: TextFieldValue) -> Unit
 ) {
     Column(modifier = modifier) {
@@ -30,12 +31,12 @@ fun FeeUnit(
                 fontFamily = mediumFont,
                 fontSize = 26.sp,
                 color = Color.Black,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.SemiBold
             ), modifier = Modifier.padding(start = 8.dp, top = 4.dp)
         )
         FormEditText(textValue = name,
             text = "Enter Tuition Fee",
-            keyboardType = KeyboardType.Text,
+            keyboardType = keyboardType,
             color = Color.Black,
             modifier = editTextModifier,
             isEnabled = true,

@@ -16,6 +16,7 @@ import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,6 +43,13 @@ fun ManageFee(navController: NavController) {
     var ln by remember { mutableStateOf(TextFieldValue("")) }
     var un by remember { mutableStateOf(TextFieldValue("")) }
     var classOne by remember { mutableStateOf(TextFieldValue("")) }
+    var classTwo by remember { mutableStateOf(TextFieldValue("")) }
+    var classThree by remember { mutableStateOf(TextFieldValue("")) }
+    var classFour by remember { mutableStateOf(TextFieldValue("")) }
+    var classFive by remember { mutableStateOf(TextFieldValue("")) }
+    var classSix by remember { mutableStateOf(TextFieldValue("")) }
+    var classSeven by remember { mutableStateOf(TextFieldValue("")) }
+    var classEight by remember { mutableStateOf(TextFieldValue("")) }
 
 
 
@@ -78,31 +86,93 @@ fun ManageFee(navController: NavController) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     FeeUnit(
                         modifier = Modifier.weight(1f),
-                        editTextModifier = editTextModifier.padding(start = 8.dp, top = 12.dp),
+                        editTextModifier = editTextModifier.padding(top = 10.dp, bottom = 8.dp),
                         name = playGroup,
                         textLable = "Play Group",
+                        keyboardType = KeyboardType.Number,
                         onValueChanged = { playGroup = it }
                     )
                     FeeUnit(
                         modifier = Modifier.weight(1f),
-                        editTextModifier = editTextModifier.padding(start = 8.dp, top = 12.dp),
+                        editTextModifier = editTextModifier.padding(top = 10.dp, bottom = 8.dp),
                         name = ln,
                         textLable = "Lower Nursery",
+                        keyboardType = KeyboardType.Number,
                         onValueChanged = { ln = it }
                     )
                     FeeUnit(
                         modifier = Modifier.weight(1f),
-                        editTextModifier = editTextModifier.padding(start = 8.dp, top = 12.dp),
+                        editTextModifier = editTextModifier.padding(top = 10.dp, bottom = 8.dp),
                         name = un,
                         textLable = "Upper Nursery",
+                        keyboardType = KeyboardType.Number,
                         onValueChanged = { un = it }
                     )
                     FeeUnit(
                         modifier = Modifier.weight(1f),
-                        editTextModifier = editTextModifier.padding(start = 8.dp, top = 12.dp),
+                        editTextModifier = editTextModifier.padding(top = 10.dp, bottom = 8.dp),
                         name = classOne,
                         textLable = "Class One",
+                        keyboardType = KeyboardType.Number,
                         onValueChanged = { classOne = it }
+                    )
+                    FeeUnit(
+                        modifier = Modifier.weight(1f),
+                        editTextModifier = editTextModifier.padding(top = 10.dp, bottom = 8.dp),
+                        name = classTwo,
+                        textLable = "Class Two",
+                        keyboardType = KeyboardType.Number,
+                        onValueChanged = { classTwo = it }
+                    )
+                }
+            }
+            Card(
+                elevation = 4.dp,
+                shape = RoundedCornerShape(4.dp),
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .padding(8.dp)
+            ) {
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    FeeUnit(
+                        modifier = Modifier.weight(1f),
+                        editTextModifier = editTextModifier.padding(top = 10.dp, bottom = 8.dp),
+                        name = classThree,
+                        textLable = "Class Three",
+                        keyboardType = KeyboardType.Number,
+                        onValueChanged = { classThree = it }
+                    )
+                    FeeUnit(
+                        modifier = Modifier.weight(1f),
+                        editTextModifier = editTextModifier.padding(top = 10.dp, bottom = 8.dp),
+                        name = classFour,
+                        textLable = "Class Four",
+                        keyboardType = KeyboardType.Number,
+                        onValueChanged = { classFour = it }
+                    )
+                    FeeUnit(
+                        modifier = Modifier.weight(1f),
+                        editTextModifier = editTextModifier.padding(top = 10.dp, bottom = 8.dp),
+                        name = classFive,
+                        textLable = "Class Five",
+                        keyboardType = KeyboardType.Number,
+                        onValueChanged = { classFive = it }
+                    )
+                    FeeUnit(
+                        modifier = Modifier.weight(1f),
+                        editTextModifier = editTextModifier.padding(top = 10.dp, bottom = 8.dp),
+                        name = classSix,
+                        textLable = "Class Six",
+                        keyboardType = KeyboardType.Number,
+                        onValueChanged = { classSix = it }
+                    )
+                    FeeUnit(
+                        modifier = Modifier.weight(1f),
+                        editTextModifier = editTextModifier.padding(top = 10.dp, bottom = 8.dp),
+                        name = classSeven,
+                        textLable = "Class Seven",
+                        keyboardType = KeyboardType.Number,
+                        onValueChanged = { classSeven = it }
                     )
                 }
             }
