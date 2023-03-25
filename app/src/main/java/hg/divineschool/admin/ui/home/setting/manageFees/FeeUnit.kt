@@ -22,6 +22,7 @@ fun FeeUnit(
     editTextModifier: Modifier,
     name: TextFieldValue,
     textLable : String,
+    enabled : Boolean,
     keyboardType: KeyboardType,
     onValueChanged: (value: TextFieldValue) -> Unit
 ) {
@@ -39,7 +40,7 @@ fun FeeUnit(
             keyboardType = keyboardType,
             color = Color.Black,
             modifier = editTextModifier,
-            isEnabled = true,
+            isEnabled = enabled,
             onValueChanged = { onValueChanged(it) })
     }
 }
