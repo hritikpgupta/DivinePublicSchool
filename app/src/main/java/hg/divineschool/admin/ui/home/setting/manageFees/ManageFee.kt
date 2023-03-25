@@ -237,6 +237,14 @@ fun ManageFee(navController: NavController) {
                     }
                 }
             }
+            Text(
+                text = "Supplement Fee", style = TextStyle(
+                    fontFamily = mediumFont,
+                    fontSize = 30.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold
+                ), modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+            )
         }
     }
 }
