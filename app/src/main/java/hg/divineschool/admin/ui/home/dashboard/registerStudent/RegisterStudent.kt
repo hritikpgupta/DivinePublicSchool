@@ -516,7 +516,6 @@ fun RegisterStudent(
                 }
                 is Resource.Success -> {
                     LaunchedEffect(Unit) {
-                        Log.i(Log_Tag, "Student Saved")
                         navController.popBackStack()
                     }
                 }

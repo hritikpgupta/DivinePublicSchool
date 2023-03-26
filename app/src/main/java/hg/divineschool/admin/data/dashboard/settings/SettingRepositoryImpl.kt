@@ -58,6 +58,57 @@ class SettingRepositoryImpl @Inject constructor(
     override suspend fun updatePrice(feeStructure: FeeStructure): Resource<Boolean> {
         return try {
 
+            db.collection("fees").document("feeStructure")
+                .update(mapOf(
+                    "admissionCharge" to feeStructure.admissionCharge,
+                    "annualCharge" to feeStructure.annualCharge,
+                    "beltPrice" to feeStructure.beltPrice,
+                    "classEightTuition" to feeStructure.classEightTuition,
+                    "classFiveTuition" to feeStructure.classFiveTuition,
+                    "classFourTuition" to feeStructure.classFourTuition,
+                    "classOneTuition" to feeStructure.classOneTuition,
+                    "classSevenTuition" to feeStructure.classSevenTuition,
+                    "classSixTuition" to feeStructure.classSixTuition,
+                    "classThreeTuition" to feeStructure.classThreeTuition,
+                    "classTwoTuition" to feeStructure.classTwoTuition,
+                    "computerFeeJunior" to feeStructure.computerFeeJunior,
+                    "computerFeeSenior" to feeStructure.computerFeeSenior,
+                    "diaryFee" to feeStructure.diaryFee,
+                    "examFee" to feeStructure.examFee,
+                    "idAndFeeCardPrice" to feeStructure.idAndFeeCardPrice,
+                    "lnTuition" to feeStructure.lnTuition,
+                    "pgTuition" to feeStructure.pgTuition,
+                    "tieFeeJunior" to feeStructure.tieFeeJunior,
+                    "tieFeeSenior" to feeStructure.tieFeeSenior,
+                    "unTuition" to feeStructure.unTuition,
+                )).awaitDocument()
+            FeeStructure.FEE_STRUCT.apply {
+                pgTuition = feeStructure.pgTuition
+                lnTuition = feeStructure.lnTuition
+                unTuition = feeStructure.unTuition
+                classOneTuition = feeStructure.classOneTuition
+                classTwoTuition = feeStructure.classTwoTuition
+                classThreeTuition = feeStructure.classThreeTuition
+                classFourTuition = feeStructure.classFourTuition
+                classFiveTuition = feeStructure.classFiveTuition
+                classSixTuition = feeStructure.classSixTuition
+                classSevenTuition = feeStructure.classSevenTuition
+                classEightTuition = feeStructure.classEightTuition
+
+                admissionCharge = feeStructure.admissionCharge
+                annualCharge = feeStructure.annualCharge
+                examFee = feeStructure.examFee
+                computerFeeJunior = feeStructure.computerFeeJunior
+                computerFeeSenior = feeStructure.computerFeeSenior
+
+                beltPrice = feeStructure.beltPrice
+                diaryFee = feeStructure.diaryFee
+                idAndFeeCardPrice = feeStructure.idAndFeeCardPrice
+                tieFeeJunior = feeStructure.tieFeeJunior
+                tieFeeSenior = feeStructure.tieFeeSenior
+            }
+
+
             Resource.Success(true)
         } catch (e: Exception) {
             Resource.Failure(e)

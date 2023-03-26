@@ -1,12 +1,9 @@
 package hg.divineschool.admin.ui.home.setting.manageFees
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.relocation.BringIntoViewRequester
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
@@ -14,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -23,10 +21,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
 import com.google.firebase.auth.FirebaseAuth
+import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.FeeStructure
 import hg.divineschool.admin.ui.home.DPSBar
 import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.mediumFont
+import hg.divineschool.admin.ui.utils.CircularProgress
+import hg.divineschool.admin.ui.utils.toast
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -67,6 +68,7 @@ fun ManageFee(navController: NavController, viewModel: ManageFeeViewModel) {
     var feeAndIdCardPrice by remember { mutableStateOf(TextFieldValue("${fee.idAndFeeCardPrice}")) }
     var juniorTiePrice by remember { mutableStateOf(TextFieldValue("${fee.tieFeeJunior}")) }
     var seniorTiePrice by remember { mutableStateOf(TextFieldValue("${fee.tieFeeSenior}")) }
+    val context = LocalContext.current
 
     val isAdmin = FirebaseAuth.getInstance().currentUser?.email.equals("admin@dps.com")
 
@@ -79,29 +81,31 @@ fun ManageFee(navController: NavController, viewModel: ManageFeeViewModel) {
         floatingActionButton = {
             if (isAdmin) {
                 ExtendedFloatingActionButton(onClick = {
-                    viewModel.updatePrice(FeeStructure(
-                        pgTuition = playGroup.text.toInt(),
-                        lnTuition = ln.text.toInt(),
-                        unTuition = un.text.toInt(),
-                        classOneTuition = classOne.text.toInt(),
-                        classTwoTuition = classTwo.text.toInt(),
-                        classThreeTuition = classThree.text.toInt(),
-                        classFourTuition = classFour.text.toInt(),
-                        classFiveTuition = classFive.text.toInt(),
-                        classSixTuition = classSix.text.toInt(),
-                        classSevenTuition = classSeven.text.toInt(),
-                        classEightTuition = classEight.text.toInt(),
-                        admissionCharge = admissionCharge.text.toInt(),
-                        annualCharge = annualCharge.text.toInt(),
-                        computerFeeJunior = juniorComputerFee.text.toInt(),
-                        computerFeeSenior = seniorComputerFee.text.toInt(),
-                        examFee = examFee.text.toInt(),
-                        beltPrice = beltPrice.text.toInt(),
-                        diaryFee = diaryPrice.text.toInt(),
-                        idAndFeeCardPrice = feeAndIdCardPrice.text.toInt(),
-                        tieFeeJunior = juniorTiePrice.text.toInt(),
-                        tieFeeSenior = seniorTiePrice.text.toInt()
-                    ))
+                    viewModel.updatePrice(
+                        FeeStructure(
+                            pgTuition = playGroup.text.toInt(),
+                            lnTuition = ln.text.toInt(),
+                            unTuition = un.text.toInt(),
+                            classOneTuition = classOne.text.toInt(),
+                            classTwoTuition = classTwo.text.toInt(),
+                            classThreeTuition = classThree.text.toInt(),
+                            classFourTuition = classFour.text.toInt(),
+                            classFiveTuition = classFive.text.toInt(),
+                            classSixTuition = classSix.text.toInt(),
+                            classSevenTuition = classSeven.text.toInt(),
+                            classEightTuition = classEight.text.toInt(),
+                            admissionCharge = admissionCharge.text.toInt(),
+                            annualCharge = annualCharge.text.toInt(),
+                            computerFeeJunior = juniorComputerFee.text.toInt(),
+                            computerFeeSenior = seniorComputerFee.text.toInt(),
+                            examFee = examFee.text.toInt(),
+                            beltPrice = beltPrice.text.toInt(),
+                            diaryFee = diaryPrice.text.toInt(),
+                            idAndFeeCardPrice = feeAndIdCardPrice.text.toInt(),
+                            tieFeeJunior = juniorTiePrice.text.toInt(),
+                            tieFeeSenior = seniorTiePrice.text.toInt()
+                        )
+                    )
                 },
                     modifier = Modifier.padding(bottom = 70.dp, end = 10.dp),
                     elevation = FloatingActionButtonDefaults.elevation(4.dp),
@@ -529,6 +533,23 @@ fun ManageFee(navController: NavController, viewModel: ManageFeeViewModel) {
                 }
             }
 
+        }
+        feeState.value.let {
+            when (it) {
+                is Resource.Loading -> {
+                    CircularProgress()
+                }
+                is Resource.Failure -> {
+                    it.exception.message?.let { it1 -> context.toast(it1) }
+                }
+                is Resource.Success -> {
+                    context.toast("Updated")
+                    LaunchedEffect(Unit) {
+                        navController.popBackStack()
+                    }
+                }
+                else -> {}
+            }
         }
     }
 }

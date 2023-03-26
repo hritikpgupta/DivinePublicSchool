@@ -22,6 +22,5 @@ class ManageFeeViewModel @Inject constructor(
     fun updatePrice(feeStructure: FeeStructure) = viewModelScope.launch {
         _priceUpdateFlow.value = Resource.Loading
         _priceUpdateFlow.value = repository.updatePrice(feeStructure)
-
     }
 }

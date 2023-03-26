@@ -55,7 +55,7 @@ fun NavGraphBuilder.settingsNav(navController: NavHostController) {
             CheckDue(hiltViewModel(),navController)
         }
         composable(AppScreen.SettingScreen.ManageFees.route) {
-            ManageFee(navController)
+            ManageFee(navController, hiltViewModel())
         }
         composable(AppScreen.SettingScreen.Transaction.route) {
             Transactions(navController)
