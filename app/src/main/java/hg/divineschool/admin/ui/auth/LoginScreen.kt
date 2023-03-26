@@ -45,10 +45,10 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LoginScreen(viewModel: AuthViewModel) {
-    var email by remember { mutableStateOf("test@test.com") }
-    var password by remember { mutableStateOf("123456") }
-/*    var email by remember { mutableStateOf("admin@dps.com") }
-    var password by remember { mutableStateOf("Hritik@0724") }*/
+/*    var email by remember { mutableStateOf("test@test.com") }
+    var password by remember { mutableStateOf("123456") }*/
+    var email by remember { mutableStateOf("admin@dps.com") }
+    var password by remember { mutableStateOf("Hritik@0724") }
     val coroutineScope = rememberCoroutineScope()
     val bringIntoViewRequester = BringIntoViewRequester()
     val focusManager = LocalFocusManager.current

@@ -46,7 +46,8 @@ fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController)
     var dialogColor by remember { mutableStateOf(Color.White) }
     var selectedClassID by remember { mutableStateOf(0L) }
 
-    Scaffold(topBar = { DPSAppBar() }, floatingActionButton = {
+    Scaffold(topBar = { DPSAppBar() },
+        floatingActionButton = {
         if (FirebaseAuth.getInstance().currentUser?.email.equals("admin@dps.com")) {
             ExtendedFloatingActionButton(onClick = {
                 navController.navigate(BottomNavItem.AdminSettings.route)

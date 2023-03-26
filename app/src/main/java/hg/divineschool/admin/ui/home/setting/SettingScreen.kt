@@ -37,7 +37,7 @@ fun SettingScreen(navController: NavController) {
         SettingItem(2, "Manage Fees", R.drawable.manage_fees, true),
         SettingItem(4, "Manage Books", R.drawable.manage_books, true),
         SettingItem(6, "Manage Location", R.drawable.manage_navigation, true),
-        SettingItem(5, "Log Out", R.drawable.logout, false)
+        SettingItem(5, "Log Out", R.drawable.logout, true)
     )
 
     Scaffold(topBar = { DPSAppBar() }) { padding ->

@@ -7,9 +7,9 @@ import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Card
-import androidx.compose.material.Text
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusEvent
@@ -22,14 +22,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
+import com.google.firebase.auth.FirebaseAuth
+import hg.divineschool.admin.data.models.FeeStructure
 import hg.divineschool.admin.ui.home.DPSBar
+import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.mediumFont
-import hg.divineschool.admin.ui.utils.INR
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ManageFee(navController: NavController) {
+fun ManageFee(navController: NavController, viewModel: ManageFeeViewModel) {
+    val feeState = viewModel.priceUpdateFlow.collectAsState()
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
     val bringIntoViewRequester = BringIntoViewRequester()
@@ -40,36 +43,87 @@ fun ManageFee(navController: NavController) {
                 coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
             }
         }
-    var playGroup by remember { mutableStateOf(TextFieldValue("248")) }
-    var ln by remember { mutableStateOf(TextFieldValue("")) }
-    var un by remember { mutableStateOf(TextFieldValue("")) }
-    var classOne by remember { mutableStateOf(TextFieldValue("")) }
-    var classTwo by remember { mutableStateOf(TextFieldValue("")) }
-    var classThree by remember { mutableStateOf(TextFieldValue("")) }
-    var classFour by remember { mutableStateOf(TextFieldValue("")) }
-    var classFive by remember { mutableStateOf(TextFieldValue("")) }
-    var classSix by remember { mutableStateOf(TextFieldValue("")) }
-    var classSeven by remember { mutableStateOf(TextFieldValue("")) }
-    var classEight by remember { mutableStateOf(TextFieldValue("")) }
-    var admissionCharge by remember { mutableStateOf(TextFieldValue("")) }
-    var annualCharge by remember { mutableStateOf(TextFieldValue("")) }
-    var juniorComputerFee by remember { mutableStateOf(TextFieldValue("")) }
-    var seniorComputerFee by remember { mutableStateOf(TextFieldValue("")) }
-    var examFee by remember { mutableStateOf(TextFieldValue("")) }
+    val fee = FeeStructure.FEE_STRUCT
 
-    var beltPrice by remember { mutableStateOf(TextFieldValue("")) }
-    var diaryPrice by remember { mutableStateOf(TextFieldValue("")) }
-    var feeAndIdCardPrice by remember { mutableStateOf(TextFieldValue("")) }
-    var juniorTiePrice by remember { mutableStateOf(TextFieldValue("")) }
-    var seniorTiePrice by remember { mutableStateOf(TextFieldValue("")) }
+    var playGroup by remember { mutableStateOf(TextFieldValue("${fee.pgTuition}")) }
+    var ln by remember { mutableStateOf(TextFieldValue("${fee.lnTuition}")) }
+    var un by remember { mutableStateOf(TextFieldValue("${fee.unTuition}")) }
+    var classOne by remember { mutableStateOf(TextFieldValue("${fee.classOneTuition}")) }
+    var classTwo by remember { mutableStateOf(TextFieldValue("${fee.classTwoTuition}")) }
+    var classThree by remember { mutableStateOf(TextFieldValue("${fee.classThreeTuition}")) }
+    var classFour by remember { mutableStateOf(TextFieldValue("${fee.classFourTuition}")) }
+    var classFive by remember { mutableStateOf(TextFieldValue("${fee.classFiveTuition}")) }
+    var classSix by remember { mutableStateOf(TextFieldValue("${fee.classSixTuition}")) }
+    var classSeven by remember { mutableStateOf(TextFieldValue("${fee.classSevenTuition}")) }
+    var classEight by remember { mutableStateOf(TextFieldValue("${fee.classEightTuition}")) }
+    var admissionCharge by remember { mutableStateOf(TextFieldValue("${fee.admissionCharge}")) }
+    var annualCharge by remember { mutableStateOf(TextFieldValue("${fee.annualCharge}")) }
+    var juniorComputerFee by remember { mutableStateOf(TextFieldValue("${fee.computerFeeJunior}")) }
+    var seniorComputerFee by remember { mutableStateOf(TextFieldValue("${fee.computerFeeSenior}")) }
+    var examFee by remember { mutableStateOf(TextFieldValue("${fee.examFee}")) }
 
-    var isAdmin = false
+    var beltPrice by remember { mutableStateOf(TextFieldValue("${fee.beltPrice}")) }
+    var diaryPrice by remember { mutableStateOf(TextFieldValue("${fee.diaryFee}")) }
+    var feeAndIdCardPrice by remember { mutableStateOf(TextFieldValue("${fee.idAndFeeCardPrice}")) }
+    var juniorTiePrice by remember { mutableStateOf(TextFieldValue("${fee.tieFeeJunior}")) }
+    var seniorTiePrice by remember { mutableStateOf(TextFieldValue("${fee.tieFeeSenior}")) }
+
+    val isAdmin = FirebaseAuth.getInstance().currentUser?.email.equals("admin@dps.com")
 
     Scaffold(
         scaffoldState = rememberScaffoldState(), topBar = {
             DPSBar(onBackPressed = {
                 navController.popBackStack()
             }, className = "Manage Fees")
+        },
+        floatingActionButton = {
+            if (isAdmin) {
+                ExtendedFloatingActionButton(onClick = {
+                    viewModel.updatePrice(FeeStructure(
+                        pgTuition = playGroup.text.toInt(),
+                        lnTuition = ln.text.toInt(),
+                        unTuition = un.text.toInt(),
+                        classOneTuition = classOne.text.toInt(),
+                        classTwoTuition = classTwo.text.toInt(),
+                        classThreeTuition = classThree.text.toInt(),
+                        classFourTuition = classFour.text.toInt(),
+                        classFiveTuition = classFive.text.toInt(),
+                        classSixTuition = classSix.text.toInt(),
+                        classSevenTuition = classSeven.text.toInt(),
+                        classEightTuition = classEight.text.toInt(),
+                        admissionCharge = admissionCharge.text.toInt(),
+                        annualCharge = annualCharge.text.toInt(),
+                        computerFeeJunior = juniorComputerFee.text.toInt(),
+                        computerFeeSenior = seniorComputerFee.text.toInt(),
+                        examFee = examFee.text.toInt(),
+                        beltPrice = beltPrice.text.toInt(),
+                        diaryFee = diaryPrice.text.toInt(),
+                        idAndFeeCardPrice = feeAndIdCardPrice.text.toInt(),
+                        tieFeeJunior = juniorTiePrice.text.toInt(),
+                        tieFeeSenior = seniorTiePrice.text.toInt()
+                    ))
+                },
+                    modifier = Modifier.padding(bottom = 70.dp, end = 10.dp),
+                    elevation = FloatingActionButtonDefaults.elevation(4.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    icon = {
+                        Icon(
+                            Icons.Filled.Save,
+                            null,
+                            tint = Color.White,
+                            modifier = Modifier.requiredSize(30.dp)
+                        )
+                    },
+                    text = {
+                        androidx.compose.material3.Text(
+                            text = "Save Changes", style = TextStyle(
+                                fontFamily = boldFont,
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.SemiBold
+                            ), color = Color.White
+                        )
+                    })
+            }
         }, modifier = Modifier.fillMaxSize()
     ) { padding ->
         Column(
