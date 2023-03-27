@@ -1,6 +1,9 @@
 package hg.divineschool.admin.ui.utils
 
+import hg.divineschool.admin.data.models.Book
+import hg.divineschool.admin.data.models.FeeStructure
 import hg.divineschool.admin.data.models.MonthFee
+import hg.divineschool.admin.data.utils.convertToBookList
 
 const val INR = "₹"
 
@@ -73,6 +76,34 @@ fun String.convertClassNameToPath(): String {
         "classEight"
     } else {
         ""
+    }
+}
+
+fun String.getClassBook(): List<Book> {
+    return if (this == classNames[0]) {
+        FeeStructure.FEE_STRUCT.pgBooks.convertToBookList()
+    } else if (this == classNames[1]) {
+        FeeStructure.FEE_STRUCT.lnBooks.convertToBookList()
+    } else if (this == classNames[2]) {
+        FeeStructure.FEE_STRUCT.unBooks.convertToBookList()
+    } else if (this == classNames[3]) {
+        FeeStructure.FEE_STRUCT.classOneBooks.convertToBookList()
+    } else if (this == classNames[4]) {
+        FeeStructure.FEE_STRUCT.classTwoBooks.convertToBookList()
+    } else if (this == classNames[5]) {
+        FeeStructure.FEE_STRUCT.classThreeBooks.convertToBookList()
+    } else if (this == classNames[6]) {
+        FeeStructure.FEE_STRUCT.classFourBooks.convertToBookList()
+    } else if (this == classNames[7]) {
+        FeeStructure.FEE_STRUCT.classFiveBooks.convertToBookList()
+    } else if (this == classNames[8]) {
+        FeeStructure.FEE_STRUCT.classSixBooks.convertToBookList()
+    } else if (this == classNames[9]) {
+        FeeStructure.FEE_STRUCT.classSevenBooks.convertToBookList()
+    } else if (this == classNames[10]) {
+        FeeStructure.FEE_STRUCT.classEightBooks.convertToBookList()
+    } else {
+        emptyList()
     }
 }
 

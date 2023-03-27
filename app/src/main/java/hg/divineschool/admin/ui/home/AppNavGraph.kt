@@ -61,7 +61,7 @@ fun NavGraphBuilder.settingsNav(navController: NavHostController) {
             Transactions(navController)
         }
         composable(AppScreen.SettingScreen.ManageBooks.route) {
-            ManageBook(navController)
+            ManageBook(navController, hiltViewModel())
         }
         composable(AppScreen.SettingScreen.ManageLocation.route) {
             ManageTransportLocation(navController)

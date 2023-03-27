@@ -198,3 +198,11 @@ fun <T : Serializable?> Intent.getSerializable(key: String, m_class: Class<T>): 
     else
         this.getSerializableExtra(key) as T
 }
+
+fun Map<*, *>.convertToBookList(): List<Book> {
+    val bookList = ArrayList<Book>()
+    this.entries.forEach {
+        bookList.add(Book(it.key.toString(), it.value.toString().toInt()))
+    }
+    return bookList;
+}
