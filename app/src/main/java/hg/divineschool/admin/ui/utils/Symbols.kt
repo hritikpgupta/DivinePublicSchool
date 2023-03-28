@@ -4,7 +4,9 @@ import androidx.compose.ui.graphics.Color
 import hg.divineschool.admin.data.models.Book
 import hg.divineschool.admin.data.models.FeeStructure
 import hg.divineschool.admin.data.models.MonthFee
+import hg.divineschool.admin.data.models.Place
 import hg.divineschool.admin.data.utils.convertToBookList
+import hg.divineschool.admin.data.utils.convertToPlaceList
 import hg.divineschool.admin.ui.theme.cardColors
 
 const val INR = "₹"
@@ -138,6 +140,33 @@ fun String.getClassBook(): List<Book> {
     }
 }
 
+fun String.convertClassNameToBookField(): String {
+    return if (this == classNames[0]) {
+        "pgBooks"
+    } else if (this == classNames[1]) {
+        "lnBooks"
+    } else if (this == classNames[2]) {
+        "unBooks"
+    } else if (this == classNames[3]) {
+        "classOneBooks"
+    } else if (this == classNames[4]) {
+        "classTwoBooks"
+    } else if (this == classNames[5]) {
+        "classThreeBooks"
+    } else if (this == classNames[6]) {
+        "classFourBooks"
+    } else if (this == classNames[7]) {
+        "classFiveBooks"
+    } else if (this == classNames[8]) {
+        "classSixBooks"
+    } else if (this == classNames[9]) {
+        "classSevenBooks"
+    } else if (this == classNames[10]) {
+        "classEightBooks"
+    } else {
+        ""
+    }
+}
 fun String.updateBookPrice(book: Book): List<Book> {
     if (this == classNames[0]) {
         val map = FeeStructure.FEE_STRUCT.pgBooks.toMutableMap()
@@ -197,6 +226,13 @@ fun String.updateBookPrice(book: Book): List<Book> {
         return FeeStructure.FEE_STRUCT.classEightBooks.convertToBookList()
     }
     return emptyList()
+}
+
+fun String.updatePlace(place: Place) : List<Place>{
+    val map = FeeStructure.FEE_STRUCT.transportPlaces.toMutableMap()
+    map[this] = place.placePrice
+    FeeStructure.FEE_STRUCT.transportPlaces = map
+    return FeeStructure.FEE_STRUCT.transportPlaces.convertToPlaceList()
 }
 
 fun String.deleteBook(book: Book): List<Book> {
@@ -260,31 +296,10 @@ fun String.deleteBook(book: Book): List<Book> {
     return emptyList()
 }
 
-fun String.convertClassNameToBookField(): String {
-    return if (this == classNames[0]) {
-        "pgBooks"
-    } else if (this == classNames[1]) {
-        "lnBooks"
-    } else if (this == classNames[2]) {
-        "unBooks"
-    } else if (this == classNames[3]) {
-        "classOneBooks"
-    } else if (this == classNames[4]) {
-        "classTwoBooks"
-    } else if (this == classNames[5]) {
-        "classThreeBooks"
-    } else if (this == classNames[6]) {
-        "classFourBooks"
-    } else if (this == classNames[7]) {
-        "classFiveBooks"
-    } else if (this == classNames[8]) {
-        "classSixBooks"
-    } else if (this == classNames[9]) {
-        "classSevenBooks"
-    } else if (this == classNames[10]) {
-        "classEightBooks"
-    } else {
-        ""
-    }
+fun String.deletePlace() : List<Place>{
+    val map = FeeStructure.FEE_STRUCT.transportPlaces.toMutableMap()
+    map.remove(this)
+    FeeStructure.FEE_STRUCT.transportPlaces = map
+    return FeeStructure.FEE_STRUCT.transportPlaces.convertToPlaceList()
 }
 

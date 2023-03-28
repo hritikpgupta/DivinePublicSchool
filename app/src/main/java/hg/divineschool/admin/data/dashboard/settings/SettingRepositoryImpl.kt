@@ -5,12 +5,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Book
 import hg.divineschool.admin.data.models.FeeStructure
+import hg.divineschool.admin.data.models.Place
 import hg.divineschool.admin.data.models.StudentDue
 import hg.divineschool.admin.data.utils.awaitDocument
-import hg.divineschool.admin.ui.utils.convertClassNameToBookField
-import hg.divineschool.admin.ui.utils.deleteBook
-import hg.divineschool.admin.ui.utils.getClassBook
-import hg.divineschool.admin.ui.utils.updateBookPrice
+import hg.divineschool.admin.ui.utils.*
 import javax.inject.Inject
 
 
@@ -149,10 +147,10 @@ class SettingRepositoryImpl @Inject constructor(
         return try {
             db.collection("fees").document("feeStructure")
                 .update(
-                mapOf(
-                    "${className.convertClassNameToBookField()}.${book.bookName}" to FieldValue.delete()
-                )
-            ).awaitDocument()
+                    mapOf(
+                        "${className.convertClassNameToBookField()}.${book.bookName}" to FieldValue.delete()
+                    )
+                ).awaitDocument()
 
             Resource.Success(className.deleteBook(book))
         } catch (e: Exception) {
@@ -174,5 +172,57 @@ class SettingRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getAllPlace(): Resource<List<Place>> {
+        return try {
+            val places = ArrayList<Place>()
+            FeeStructure.FEE_STRUCT.transportPlaces.forEach {
+                places.add(Place(it.key.toString(), it.value.toString().toInt()))
+            }
+            Resource.Success(places)
+        } catch (e: Exception) {
+            Resource.Failure(e)
+        }
+    }
 
+    override suspend fun updatePlace(place: Place): Resource<List<Place>> {
+        return try {
+            db.collection("fees").document("feeStructure").update(
+                mapOf(
+                    "transportPlaces.${place.placeName}" to place.placePrice
+                )
+            ).awaitDocument()
+            Resource.Success(place.placeName.updatePlace(place))
+        } catch (e: Exception) {
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun deletePlace(place: Place): Resource<List<Place>> {
+        return try {
+            db.collection("fees").document("feeStructure")
+                .update(
+                    mapOf(
+                        "transportPlaces.${place.placeName}" to FieldValue.delete()
+                    )
+                ).awaitDocument()
+
+            Resource.Success(place.placeName.deletePlace())
+        } catch (e: Exception) {
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun addPlace(place: Place): Resource<List<Place>> {
+        return try {
+            db.collection("fees").document("feeStructure")
+                .update(
+                    mapOf(
+                        "transportPlaces.${place.placeName}" to place.placePrice
+                    )
+                ).awaitDocument()
+            Resource.Success(place.placeName.updatePlace(place))
+        } catch (e: Exception) {
+            Resource.Failure(e)
+        }
+    }
 }

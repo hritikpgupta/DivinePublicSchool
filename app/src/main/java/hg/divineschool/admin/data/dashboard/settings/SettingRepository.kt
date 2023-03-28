@@ -3,6 +3,7 @@ package hg.divineschool.admin.data.dashboard.settings
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Book
 import hg.divineschool.admin.data.models.FeeStructure
+import hg.divineschool.admin.data.models.Place
 import hg.divineschool.admin.data.models.StudentDue
 import hg.divineschool.admin.ui.utils.classNames
 
@@ -18,4 +19,9 @@ interface SettingRepository {
     suspend fun deleteBook(className: String, book: Book) : Resource<List<Book>>
 
     suspend fun addBook(className: String, book: Book) : Resource<List<Book>>
+
+    suspend fun getAllPlace() : Resource<List<Place>>
+    suspend fun updatePlace(place: Place) : Resource<List<Place>>
+    suspend fun deletePlace(place: Place) : Resource<List<Place>>
+    suspend fun addPlace(place: Place) : Resource<List<Place>>
 }

@@ -266,7 +266,7 @@ fun ManageBook(navController: NavController, viewModel: ManageBookViewModel) {
                     Button(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(0.45f), onClick = {
+                            .weight(1f).padding(horizontal = 2.dp), onClick = {
                             showDialog.value = false
                             viewModel.deleteBook(className, Book(bookName, bookValue.toInt()))
                         }, colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
@@ -279,11 +279,10 @@ fun ManageBook(navController: NavController, viewModel: ManageBookViewModel) {
                             ), color = Color.White
                         )
                     }
-                    Spacer(modifier = Modifier.weight(0.1f))
                     Button(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(0.45f), onClick = {
+                            .weight(1f).padding(horizontal = 2.dp), onClick = {
                             showDialog.value = false
                             if (bookName.isNotEmpty() && bookValue.isNotEmpty()) {
                                 viewModel.updateBook(className, Book(bookName, bookValue.toInt()))

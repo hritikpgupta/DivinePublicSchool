@@ -206,3 +206,11 @@ fun Map<*, *>.convertToBookList(): List<Book> {
     }
     return bookList;
 }
+
+fun Map<*, *>.convertToPlaceList(): List<Place> {
+    val placeList = ArrayList<Place>()
+    this.entries.forEach {
+        placeList.add(Place(it.key.toString(), it.value.toString().toInt()))
+    }
+    return placeList;
+}
