@@ -7,10 +7,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,28 +34,54 @@ import hg.divineschool.admin.data.models.Book
 import hg.divineschool.admin.ui.home.DPSBar
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.DropDown
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.dropDownModifier
-import hg.divineschool.admin.ui.theme.Purple500
-import hg.divineschool.admin.ui.theme.lightFont
-import hg.divineschool.admin.ui.theme.mediumFont
-import hg.divineschool.admin.ui.theme.regularFont
-import hg.divineschool.admin.ui.utils.*
+import hg.divineschool.admin.ui.theme.*
+import hg.divineschool.admin.ui.utils.CircularProgress
+import hg.divineschool.admin.ui.utils.classNames
+import hg.divineschool.admin.ui.utils.getClassColorFromName
+import hg.divineschool.admin.ui.utils.toast
 
 @Composable
 fun ManageBook(navController: NavController, viewModel: ManageBookViewModel) {
-    val scrollState = rememberScrollState()
     var classExpanded by remember { mutableStateOf(false) }
     var className by remember { mutableStateOf(classNames[0]) }
     val showDialog = remember { mutableStateOf(false) }
+    val showAddDialog = remember { mutableStateOf(false) }
     val bookState = viewModel.bookListFlow.collectAsState()
     var bookName by remember { mutableStateOf("") }
+    var addBookName by remember { mutableStateOf("") }
     var bookValue by remember { mutableStateOf("") }
-
+    var addBookValue by remember { mutableStateOf("") }
     val context = LocalContext.current
 
     Scaffold(scaffoldState = rememberScaffoldState(), topBar = {
         DPSBar(onBackPressed = {
             navController.popBackStack()
         }, className = "Manage Books")
+    }, floatingActionButton = {
+        ExtendedFloatingActionButton(onClick = {
+            showAddDialog.value = true
+        },
+            modifier = Modifier.padding(bottom = 70.dp, end = 10.dp),
+            backgroundColor = Purple500,
+            elevation = FloatingActionButtonDefaults.elevation(4.dp),
+            shape = RoundedCornerShape(8.dp),
+            icon = {
+                Icon(
+                    Icons.Filled.Add,
+                    null,
+                    tint = Color.White,
+                    modifier = Modifier.requiredSize(30.dp)
+                )
+            },
+            text = {
+                androidx.compose.material3.Text(
+                    text = "Add Book", style = TextStyle(
+                        fontFamily = boldFont,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.SemiBold
+                    ), color = Color.White
+                )
+            })
     }) { paddingValues ->
         Column(
             modifier = Modifier
@@ -80,6 +107,7 @@ fun ManageBook(navController: NavController, viewModel: ManageBookViewModel) {
                             fontWeight = FontWeight.Bold
                         ), modifier = Modifier.padding(start = 8.dp, top = 4.dp)
                     )
+                    Spacer(modifier = Modifier.requiredHeight(5.dp))
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(2.dp),
@@ -94,6 +122,7 @@ fun ManageBook(navController: NavController, viewModel: ManageBookViewModel) {
                             onItemClick = {
                                 className = it
                                 classExpanded = false
+                                viewModel.getBookList(className)
                             },
                             onDismiss = { classExpanded = false },
                             values = classNames,
@@ -101,23 +130,7 @@ fun ManageBook(navController: NavController, viewModel: ManageBookViewModel) {
                             selectedValue = className,
                             modifier = dropDownModifier.weight(0.5f)
                         )
-                        Spacer(modifier = Modifier.weight(0.2f))
-                        Button(
-                            onClick = {
-                                viewModel.getBookList(className)
-                            }, modifier = Modifier
-                                .padding(8.dp)
-                                .weight(0.3f)
-                        ) {
-                            Text(
-                                text = "Go", textAlign = TextAlign.Center, style = TextStyle(
-                                    fontFamily = regularFont,
-                                    fontSize = 30.sp,
-                                    color = Color.White,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                            )
-                        }
+                        Spacer(modifier = Modifier.weight(0.5f))
                     }
 
                     bookState.value.let {
@@ -132,7 +145,7 @@ fun ManageBook(navController: NavController, viewModel: ManageBookViewModel) {
                                 if (it.result.isNotEmpty()) {
                                     LazyVerticalGrid(
                                         verticalArrangement = Arrangement.spacedBy(18.dp),
-                                        horizontalArrangement = Arrangement.spacedBy(5.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(2.dp),
                                         userScrollEnabled = true,
                                         contentPadding = PaddingValues(
                                             top = 15.dp, start = 10.dp, end = 10.dp, bottom = 80.dp
@@ -144,10 +157,11 @@ fun ManageBook(navController: NavController, viewModel: ManageBookViewModel) {
                                                     0.6f
                                                 )
                                             ),
-                                        columns = GridCells.Adaptive(280.dp)
+                                        columns = GridCells.Adaptive(300.dp)
                                     ) {
                                         items(it.result) { book ->
                                             BookCard(
+                                                color = className.getClassColorFromName(),
                                                 name = book.bookName,
                                                 price = "${book.bookPrice}"
                                             ) { name, price ->
@@ -206,11 +220,15 @@ fun ManageBook(navController: NavController, viewModel: ManageBookViewModel) {
                     )
                     Spacer(modifier = Modifier.requiredHeight(10.dp))
                     androidx.compose.material3.Text(
-                        text = bookName, style = TextStyle(
+                        text = bookName,
+                        style = TextStyle(
                             fontFamily = mediumFont,
                             fontSize = 28.sp,
                             fontWeight = FontWeight.SemiBold
-                        ), textAlign = TextAlign.Center, color = Color.Black.copy(0.7f) ,modifier = Modifier.fillMaxWidth()
+                        ),
+                        textAlign = TextAlign.Center,
+                        color = Color.Black.copy(0.7f),
+                        modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.requiredHeight(10.dp))
                     OutlinedTextField(
@@ -274,6 +292,97 @@ fun ManageBook(navController: NavController, viewModel: ManageBookViewModel) {
                     ) {
                         androidx.compose.material3.Text(
                             "Update", style = TextStyle(
+                                fontFamily = mediumFont,
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.SemiBold
+                            ), color = Color.White
+                        )
+                    }
+                }
+            })
+        }
+        if (showAddDialog.value) {
+            AlertDialog(onDismissRequest = {
+                showAddDialog.value = false
+            }, text = {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    androidx.compose.material3.Text(
+                        text = "Add New Book", style = TextStyle(
+                            fontFamily = mediumFont,
+                            fontSize = 32.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    )
+                    Spacer(modifier = Modifier.requiredHeight(10.dp))
+                    OutlinedTextField(
+                        value = addBookName,
+                        onValueChange = { addBookName = it },
+                        label = {
+                            androidx.compose.material3.Text(
+                                text = "Book Name", style = TextStyle(
+                                    fontFamily = mediumFont,
+                                    fontSize = 24.sp,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            )
+                        },
+                        maxLines = 1,
+                        textStyle = TextStyle(
+                            fontFamily = regularFont,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Thin
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done,
+                            keyboardType = KeyboardType.Text,
+                            autoCorrect = false,
+                            capitalization = KeyboardCapitalization.None,
+                        ),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    Spacer(modifier = Modifier.requiredHeight(10.dp))
+                    OutlinedTextField(
+                        value = addBookValue,
+                        onValueChange = { addBookValue = it },
+                        label = {
+                            androidx.compose.material3.Text(
+                                text = "Price", style = TextStyle(
+                                    fontFamily = mediumFont,
+                                    fontSize = 24.sp,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            )
+                        },
+                        maxLines = 1,
+                        textStyle = TextStyle(
+                            fontFamily = regularFont,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Thin
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done,
+                            keyboardType = KeyboardType.Number,
+                            autoCorrect = false,
+                            capitalization = KeyboardCapitalization.None,
+                        ),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+
+                }
+            }, buttons = {
+                Row(
+                    modifier = Modifier.padding(all = 8.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth(), onClick = {
+                            showAddDialog.value = false
+                            viewModel.addBook(className, Book(addBookName, addBookValue.toInt()))
+                        }, colors = ButtonDefaults.buttonColors(backgroundColor = Purple500)
+                    ) {
+                        androidx.compose.material3.Text(
+                            "Add Book", style = TextStyle(
                                 fontFamily = mediumFont,
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.SemiBold

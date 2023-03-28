@@ -161,7 +161,17 @@ class SettingRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addBook(className: String, book: Book): Resource<List<Book>> {
-        TODO("Not yet implemented")
+        return try {
+            db.collection("fees").document("feeStructure")
+                .update(
+                    mapOf(
+                        "${className.convertClassNameToBookField()}.${book.bookName}" to book.bookPrice
+                    )
+                ).awaitDocument()
+            Resource.Success(className.updateBookPrice(book))
+        } catch (e: Exception) {
+            Resource.Failure(e)
+        }
     }
 
 

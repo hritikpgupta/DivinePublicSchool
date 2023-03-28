@@ -1,9 +1,11 @@
 package hg.divineschool.admin.ui.utils
 
+import androidx.compose.ui.graphics.Color
 import hg.divineschool.admin.data.models.Book
 import hg.divineschool.admin.data.models.FeeStructure
 import hg.divineschool.admin.data.models.MonthFee
 import hg.divineschool.admin.data.utils.convertToBookList
+import hg.divineschool.admin.ui.theme.cardColors
 
 const val INR = "₹"
 
@@ -51,6 +53,34 @@ val classNames = listOf(
     "Class Seven",
     "Class Eight"
 )
+
+fun String.getClassColorFromName(): Color {
+    return if (this == classNames[0]) {
+        cardColors[0]
+    } else if (this == classNames[1]) {
+        cardColors[1]
+    } else if (this == classNames[2]) {
+        cardColors[2]
+    } else if (this == classNames[3]) {
+        cardColors[3]
+    } else if (this == classNames[4]) {
+        cardColors[4]
+    } else if (this == classNames[5]) {
+        cardColors[5]
+    } else if (this == classNames[6]) {
+        cardColors[6]
+    } else if (this == classNames[7]) {
+        cardColors[7]
+    } else if (this == classNames[8]) {
+        cardColors[8]
+    } else if (this == classNames[9]) {
+        cardColors[9]
+    } else if (this == classNames[10]) {
+        cardColors[10]
+    } else {
+        Color.Black
+    }
+}
 
 fun String.convertClassNameToPath(): String {
     return if (this == classNames[0]) {
@@ -168,6 +198,7 @@ fun String.updateBookPrice(book: Book): List<Book> {
     }
     return emptyList()
 }
+
 fun String.deleteBook(book: Book): List<Book> {
     if (this == classNames[0]) {
         val map = FeeStructure.FEE_STRUCT.pgBooks.toMutableMap()

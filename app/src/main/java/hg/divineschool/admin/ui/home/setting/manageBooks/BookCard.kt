@@ -19,15 +19,15 @@ import hg.divineschool.admin.ui.theme.regularFont
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun BookCard(name: String, price: String, onCardClick : (bookName : String, bookPrice : String) -> Unit) {
+fun BookCard(color: Color,name: String, price: String, onCardClick : (bookName : String, bookPrice : String) -> Unit) {
     Card(
-        backgroundColor = Color.LightGray.copy(0.4f),
+        backgroundColor = color.copy(0.2f),
         shape = RoundedCornerShape(4.dp),
         elevation = 2.dp,
         onClick = {onCardClick(name,price)} ,
-        border = BorderStroke(4.dp, Color.Black.copy(0.4f)),
+        border = BorderStroke(4.dp, color.copy(0.6f)),
         modifier = Modifier
-            .requiredWidth(280.dp)
+            .requiredWidth(300.dp)
             .requiredHeight(80.dp)
     ) {
         Column(
