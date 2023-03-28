@@ -46,4 +46,13 @@ class ManageBookViewModel @Inject constructor(
         _bookListFlow.value = Resource.Loading
         _bookListFlow.value = repository.getBookList(className)
     }
+    fun updateBook(className: String, book: Book) = viewModelScope.launch {
+        _bookListFlow.value = Resource.Loading
+        _bookListFlow.value = repository.updateBookList(className,book)
+
+    }
+    fun deleteBook(className: String, book: Book) = viewModelScope.launch {
+        _bookListFlow.value = Resource.Loading
+
+    }
 }

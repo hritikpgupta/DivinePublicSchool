@@ -29,10 +29,14 @@ import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
 import hg.divineschool.admin.R
 import hg.divineschool.admin.data.Resource
+import hg.divineschool.admin.data.models.Book
 import hg.divineschool.admin.ui.home.DPSBar
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.DropDown
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.dropDownModifier
-import hg.divineschool.admin.ui.theme.*
+import hg.divineschool.admin.ui.theme.Purple500
+import hg.divineschool.admin.ui.theme.lightFont
+import hg.divineschool.admin.ui.theme.mediumFont
+import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.*
 
 @Composable
@@ -41,7 +45,6 @@ fun ManageBook(navController: NavController, viewModel: ManageBookViewModel) {
     var classExpanded by remember { mutableStateOf(false) }
     var className by remember { mutableStateOf(classNames[0]) }
     val showDialog = remember { mutableStateOf(false) }
-    var bookList by remember { mutableStateOf(classNames[0].getClassBook()) }
     val bookState = viewModel.bookListFlow.collectAsState()
     var bookName by remember { mutableStateOf("") }
     var bookValue by remember { mutableStateOf("") }
@@ -146,7 +149,7 @@ fun ManageBook(navController: NavController, viewModel: ManageBookViewModel) {
                                         items(it.result) { book ->
                                             BookCard(
                                                 name = book.bookName,
-                                                price = "$INR ${book.bookPrice}"
+                                                price = "${book.bookPrice}"
                                             ) { name, price ->
                                                 showDialog.value = true
                                                 bookName = name
@@ -197,37 +200,19 @@ fun ManageBook(navController: NavController, viewModel: ManageBookViewModel) {
                     androidx.compose.material3.Text(
                         text = "Edit/Remove Book", style = TextStyle(
                             fontFamily = mediumFont,
-                            fontSize = 36.sp,
+                            fontSize = 32.sp,
                             fontWeight = FontWeight.SemiBold
                         )
                     )
                     Spacer(modifier = Modifier.requiredHeight(10.dp))
-                    OutlinedTextField(
-                        value = bookName,
-                        onValueChange = { bookName = it },
-                        label = {
-                            androidx.compose.material3.Text(
-                                text = "Name", style = TextStyle(
-                                    fontFamily = mediumFont,
-                                    fontSize = 24.sp,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                            )
-                        },
-                        maxLines = 1,
-                        textStyle = TextStyle(
-                            fontFamily = regularFont,
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Thin
-                        ),
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Done,
-                            keyboardType = KeyboardType.Text,
-                            autoCorrect = false,
-                            capitalization = KeyboardCapitalization.None,
-                        ),
-                        modifier = Modifier.fillMaxWidth(),
+                    androidx.compose.material3.Text(
+                        text = bookName, style = TextStyle(
+                            fontFamily = mediumFont,
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.SemiBold
+                        ), textAlign = TextAlign.Center, color = Color.Black.copy(0.7f) ,modifier = Modifier.fillMaxWidth()
                     )
+                    Spacer(modifier = Modifier.requiredHeight(10.dp))
                     OutlinedTextField(
                         value = bookValue,
                         onValueChange = { bookValue = it },
@@ -261,9 +246,12 @@ fun ManageBook(navController: NavController, viewModel: ManageBookViewModel) {
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Button(
-                        modifier = Modifier.fillMaxWidth(), onClick = {
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(0.45f), onClick = {
                             showDialog.value = false
                             context.toast("Please Wait")
+                            viewModel.deleteBook(className, Book(bookName, bookValue.toInt()))
 
                         }, colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
                     ) {
@@ -275,12 +263,15 @@ fun ManageBook(navController: NavController, viewModel: ManageBookViewModel) {
                             ), color = Color.White
                         )
                     }
+                    Spacer(modifier = Modifier.weight(0.1f))
                     Button(
-                        modifier = Modifier.fillMaxWidth(), onClick = {
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(0.45f), onClick = {
                             showDialog.value = false
                             context.toast("Please Wait")
                             if (bookName.isNotEmpty() && bookValue.isNotEmpty()) {
-
+                                viewModel.updateBook(className, Book(bookName, bookValue.toInt()))
                             }
                         }, colors = ButtonDefaults.buttonColors(backgroundColor = Purple500)
                     ) {

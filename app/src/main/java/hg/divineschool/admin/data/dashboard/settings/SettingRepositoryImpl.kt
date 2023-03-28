@@ -6,7 +6,9 @@ import hg.divineschool.admin.data.models.Book
 import hg.divineschool.admin.data.models.FeeStructure
 import hg.divineschool.admin.data.models.StudentDue
 import hg.divineschool.admin.data.utils.awaitDocument
+import hg.divineschool.admin.ui.utils.convertClassNameToBookField
 import hg.divineschool.admin.ui.utils.getClassBook
+import hg.divineschool.admin.ui.utils.updateBookPrice
 import javax.inject.Inject
 
 
@@ -61,29 +63,31 @@ class SettingRepositoryImpl @Inject constructor(
         return try {
 
             db.collection("fees").document("feeStructure")
-                .update(mapOf(
-                    "admissionCharge" to feeStructure.admissionCharge,
-                    "annualCharge" to feeStructure.annualCharge,
-                    "beltPrice" to feeStructure.beltPrice,
-                    "classEightTuition" to feeStructure.classEightTuition,
-                    "classFiveTuition" to feeStructure.classFiveTuition,
-                    "classFourTuition" to feeStructure.classFourTuition,
-                    "classOneTuition" to feeStructure.classOneTuition,
-                    "classSevenTuition" to feeStructure.classSevenTuition,
-                    "classSixTuition" to feeStructure.classSixTuition,
-                    "classThreeTuition" to feeStructure.classThreeTuition,
-                    "classTwoTuition" to feeStructure.classTwoTuition,
-                    "computerFeeJunior" to feeStructure.computerFeeJunior,
-                    "computerFeeSenior" to feeStructure.computerFeeSenior,
-                    "diaryFee" to feeStructure.diaryFee,
-                    "examFee" to feeStructure.examFee,
-                    "idAndFeeCardPrice" to feeStructure.idAndFeeCardPrice,
-                    "lnTuition" to feeStructure.lnTuition,
-                    "pgTuition" to feeStructure.pgTuition,
-                    "tieFeeJunior" to feeStructure.tieFeeJunior,
-                    "tieFeeSenior" to feeStructure.tieFeeSenior,
-                    "unTuition" to feeStructure.unTuition,
-                )).awaitDocument()
+                .update(
+                    mapOf(
+                        "admissionCharge" to feeStructure.admissionCharge,
+                        "annualCharge" to feeStructure.annualCharge,
+                        "beltPrice" to feeStructure.beltPrice,
+                        "classEightTuition" to feeStructure.classEightTuition,
+                        "classFiveTuition" to feeStructure.classFiveTuition,
+                        "classFourTuition" to feeStructure.classFourTuition,
+                        "classOneTuition" to feeStructure.classOneTuition,
+                        "classSevenTuition" to feeStructure.classSevenTuition,
+                        "classSixTuition" to feeStructure.classSixTuition,
+                        "classThreeTuition" to feeStructure.classThreeTuition,
+                        "classTwoTuition" to feeStructure.classTwoTuition,
+                        "computerFeeJunior" to feeStructure.computerFeeJunior,
+                        "computerFeeSenior" to feeStructure.computerFeeSenior,
+                        "diaryFee" to feeStructure.diaryFee,
+                        "examFee" to feeStructure.examFee,
+                        "idAndFeeCardPrice" to feeStructure.idAndFeeCardPrice,
+                        "lnTuition" to feeStructure.lnTuition,
+                        "pgTuition" to feeStructure.pgTuition,
+                        "tieFeeJunior" to feeStructure.tieFeeJunior,
+                        "tieFeeSenior" to feeStructure.tieFeeSenior,
+                        "unTuition" to feeStructure.unTuition,
+                    )
+                ).awaitDocument()
             FeeStructure.FEE_STRUCT.apply {
                 pgTuition = feeStructure.pgTuition
                 lnTuition = feeStructure.lnTuition
@@ -120,9 +124,31 @@ class SettingRepositoryImpl @Inject constructor(
     override suspend fun getBookList(className: String): Resource<List<Book>> {
         return try {
             Resource.Success(className.getClassBook())
-        }catch (e : Exception){
+        } catch (e: Exception) {
             Resource.Failure(e)
         }
+    }
+
+    override suspend fun updateBookList(className: String, book: Book): Resource<List<Book>> {
+        return try {
+            db.collection("fees").document("feeStructure").update(
+                mapOf(
+                    "${className.convertClassNameToBookField()}.${book.bookName}" to book.bookPrice
+                )
+            ).awaitDocument()
+            Resource.Success(className.updateBookPrice(book))
+        } catch (e: Exception) {
+            Resource.Failure(e)
+        }
+
+    }
+
+    override suspend fun deleteBook(className: String, book: Book): Resource<List<Book>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun addBook(className: String, book: Book): Resource<List<Book>> {
+        TODO("Not yet implemented")
     }
 
 

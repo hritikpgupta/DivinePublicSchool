@@ -12,4 +12,10 @@ interface SettingRepository {
     suspend fun updatePrice( feeStructure: FeeStructure): Resource<Boolean>
 
     suspend fun getBookList(className: String) : Resource<List<Book>>
+
+    suspend fun updateBookList(className: String, book: Book) : Resource<List<Book>>
+
+    suspend fun deleteBook(className: String, book: Book) : Resource<List<Book>>
+
+    suspend fun addBook(className: String, book: Book) : Resource<List<Book>>
 }
