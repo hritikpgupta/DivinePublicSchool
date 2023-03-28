@@ -1,5 +1,6 @@
 package hg.divineschool.admin.data.dashboard.settings
 
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Book
@@ -7,6 +8,7 @@ import hg.divineschool.admin.data.models.FeeStructure
 import hg.divineschool.admin.data.models.StudentDue
 import hg.divineschool.admin.data.utils.awaitDocument
 import hg.divineschool.admin.ui.utils.convertClassNameToBookField
+import hg.divineschool.admin.ui.utils.deleteBook
 import hg.divineschool.admin.ui.utils.getClassBook
 import hg.divineschool.admin.ui.utils.updateBookPrice
 import javax.inject.Inject
@@ -144,7 +146,18 @@ class SettingRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteBook(className: String, book: Book): Resource<List<Book>> {
-        TODO("Not yet implemented")
+        return try {
+            db.collection("fees").document("feeStructure")
+                .update(
+                mapOf(
+                    "${className.convertClassNameToBookField()}.${book.bookName}" to FieldValue.delete()
+                )
+            ).awaitDocument()
+
+            Resource.Success(className.deleteBook(book))
+        } catch (e: Exception) {
+            Resource.Failure(e)
+        }
     }
 
     override suspend fun addBook(className: String, book: Book): Resource<List<Book>> {

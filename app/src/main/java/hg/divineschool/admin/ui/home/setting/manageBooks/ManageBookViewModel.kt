@@ -53,6 +53,6 @@ class ManageBookViewModel @Inject constructor(
     }
     fun deleteBook(className: String, book: Book) = viewModelScope.launch {
         _bookListFlow.value = Resource.Loading
-
+        _bookListFlow.value = repository.deleteBook(className,book)
     }
 }

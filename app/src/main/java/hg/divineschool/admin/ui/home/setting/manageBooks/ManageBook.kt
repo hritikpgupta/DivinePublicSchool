@@ -250,9 +250,7 @@ fun ManageBook(navController: NavController, viewModel: ManageBookViewModel) {
                             .fillMaxWidth()
                             .weight(0.45f), onClick = {
                             showDialog.value = false
-                            context.toast("Please Wait")
                             viewModel.deleteBook(className, Book(bookName, bookValue.toInt()))
-
                         }, colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
                     ) {
                         androidx.compose.material3.Text(
@@ -269,7 +267,6 @@ fun ManageBook(navController: NavController, viewModel: ManageBookViewModel) {
                             .fillMaxWidth()
                             .weight(0.45f), onClick = {
                             showDialog.value = false
-                            context.toast("Please Wait")
                             if (bookName.isNotEmpty() && bookValue.isNotEmpty()) {
                                 viewModel.updateBook(className, Book(bookName, bookValue.toInt()))
                             }
