@@ -2,9 +2,11 @@ package hg.divineschool.admin.data.dashboard.settings
 
 import com.google.firebase.firestore.FirebaseFirestore
 import hg.divineschool.admin.data.Resource
+import hg.divineschool.admin.data.models.Book
 import hg.divineschool.admin.data.models.FeeStructure
 import hg.divineschool.admin.data.models.StudentDue
 import hg.divineschool.admin.data.utils.awaitDocument
+import hg.divineschool.admin.ui.utils.getClassBook
 import javax.inject.Inject
 
 
@@ -114,4 +116,14 @@ class SettingRepositoryImpl @Inject constructor(
             Resource.Failure(e)
         }
     }
+
+    override suspend fun getBookList(className: String): Resource<List<Book>> {
+        return try {
+            Resource.Success(className.getClassBook())
+        }catch (e : Exception){
+            Resource.Failure(e)
+        }
+    }
+
+
 }
