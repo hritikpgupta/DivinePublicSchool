@@ -15,7 +15,6 @@ import hg.divineschool.admin.data.utils.getSerializable
 import hg.divineschool.admin.ui.utils.isBookListLong
 import hg.divineschool.admin.ui.utils.isFeeZero
 import hg.divineschool.admin.ui.utils.splitBookList
-import hg.divineschool.admin.ui.utils.splitDateTime
 
 class InvoiceScreen : ComponentActivity() {
     private var mWebView: WebView? = null
@@ -62,13 +61,13 @@ class InvoiceScreen : ComponentActivity() {
 
 
         val htmlDocument = HtmlString.getString(
-            invoice.invoiceNumber.toString(),
+            invoice.invoiceNumber,
             invoice.studentName,
             invoice.guardianName,
             invoice.rollNumber.toString(),
             invoice.className,
             invoice.address,
-            invoice.date.splitDateTime().trim(),
+            invoice.date.trim(),
             invoice.computerFee.toString().isFeeZero(),
             invoice.annualCharge.toString().isFeeZero(),
             invoice.lateFee.toString().isFeeZero(),

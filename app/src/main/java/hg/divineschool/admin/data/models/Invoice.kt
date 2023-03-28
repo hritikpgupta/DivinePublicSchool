@@ -5,9 +5,8 @@ import java.time.format.DateTimeFormatter
 
 data class Invoice(
     var invoiceNumber: String = "",
-    var date: String = LocalDateTime.now()
-        .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) + " at " + LocalDateTime.now()
-        .format(DateTimeFormatter.ofPattern("HH:mm")),
+    var date: String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+    var time: String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm")),
     var tuitionFeeMonthList: String = "",
     var bookList: String = "",
     var supplementsList: String = "",

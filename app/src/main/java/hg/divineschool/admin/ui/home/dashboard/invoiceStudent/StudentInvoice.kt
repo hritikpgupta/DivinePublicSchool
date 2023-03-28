@@ -185,7 +185,7 @@ fun StudentInvoice(
                                                 horizontalAlignment = Alignment.CenterHorizontally
                                             ) {
                                                 Text(
-                                                    text = "$INR ${item.total}  ${item.date.splitDateTime()}",
+                                                    text = "$INR ${item.total}  ${item.date} at ${item.time}",
                                                     style = TextStyle(
                                                         fontSize = 26.sp, fontFamily = regularFont
                                                     ),
