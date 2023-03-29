@@ -23,22 +23,15 @@ import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import hg.divineschool.admin.AppScreen
 import hg.divineschool.admin.BottomNavItem
-import hg.divineschool.admin.R
-import hg.divineschool.admin.data.models.SettingItem
 import hg.divineschool.admin.ui.home.DPSAppBar
 import hg.divineschool.admin.ui.theme.regularFont
+import hg.divineschool.admin.ui.utils.decideSettingMenu
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SettingScreen(navController: NavController) {
-    val settings = listOf(
-        SettingItem(1, "Check Dues", R.drawable.due_date, true),
-        SettingItem(3, "Transactions", R.drawable.transaction, true),
-        SettingItem(2, "Manage Fees", R.drawable.manage_fees, true),
-        SettingItem(4, "Manage Books", R.drawable.manage_books, true),
-        SettingItem(6, "Manage Location", R.drawable.manage_navigation, true),
-        SettingItem(5, "Log Out", R.drawable.logout, true)
-    )
+
+    val isAdmin = FirebaseAuth.getInstance().currentUser?.email.equals("admin@dps.com")
 
     Scaffold(topBar = { DPSAppBar() }) { padding ->
         Column(
@@ -59,7 +52,7 @@ fun SettingScreen(navController: NavController) {
                     .background(color = MaterialTheme.colors.background.copy(0.6f)),
                 columns = GridCells.Adaptive(280.dp)
             ) {
-                items(settings) { str ->
+                items(isAdmin.decideSettingMenu()) { str ->
                     val cardModifier = if (str.enabled) {
                         Modifier
                             .requiredWidth(280.dp)
@@ -85,22 +78,22 @@ fun SettingScreen(navController: NavController) {
                                     navController.navigate(AppScreen.SettingScreen.CheckDues.route)
                                 }
                                 2 -> {
-                                    navController.navigate(AppScreen.SettingScreen.ManageFees.route)
+                                    navController.navigate(AppScreen.SettingScreen.Transaction.route)
                                 }
                                 3 -> {
-                                    navController.navigate(AppScreen.SettingScreen.Transaction.route)
+                                    navController.navigate(AppScreen.SettingScreen.ManageFees.route)
                                 }
                                 4 -> {
                                     navController.navigate(AppScreen.SettingScreen.ManageBooks.route)
                                 }
                                 5 -> {
+                                    navController.navigate(AppScreen.SettingScreen.ManageLocation.route)
+                                }
+                                6 -> {
                                     FirebaseAuth.getInstance().signOut()
                                     navController.navigate(AppScreen.SettingScreen.LogOut.route) {
                                         popUpTo(BottomNavItem.Home.route) { inclusive = true }
                                     }
-                                }
-                                6 -> {
-                                    navController.navigate(AppScreen.SettingScreen.ManageLocation.route)
                                 }
                             }
                         }) {

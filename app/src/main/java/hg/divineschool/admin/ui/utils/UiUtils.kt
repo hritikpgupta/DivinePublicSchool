@@ -21,14 +21,62 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import hg.divineschool.admin.data.models.Book
-import hg.divineschool.admin.data.models.FeeStructure
-import hg.divineschool.admin.data.models.MonthFee
-import hg.divineschool.admin.data.models.Supplement
+import hg.divineschool.admin.R
+import hg.divineschool.admin.data.models.*
 import hg.divineschool.admin.ui.theme.Purple700
 import java.io.Serializable
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+
+
+@Suppress("DEPRECATION")
+inline fun <reified T : Serializable> Bundle.customGetSerializable(key: String): T? {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) getSerializable(
+        key, T::class.java
+    )
+    else getSerializable(key) as? T
+}
+@Composable
+fun LockScreenOrientation(orientation: Int) {
+    val context = LocalContext.current
+    DisposableEffect(Unit) {
+        val activity = context.findActivity() ?: return@DisposableEffect onDispose {}
+        activity.requestedOrientation = orientation
+        onDispose {
+
+        }
+    }
+}
+@Composable
+fun CircularProgress(color: Color = Purple700) {
+    Box(
+        contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
+    ) {
+        CircularProgressIndicator(color = color, strokeWidth = 4.dp)
+    }
+}
+
+val settingsItem = listOf(
+    SettingItem(1, "Check Dues", R.drawable.due_date, true),
+    SettingItem(2, "Transactions", R.drawable.transaction, true),
+    SettingItem(3, "Manage Fees", R.drawable.manage_fees, true),
+    SettingItem(4, "Manage Books", R.drawable.manage_books, true),
+    SettingItem(5, "Manage Location", R.drawable.manage_navigation, true),
+    SettingItem(6, "Log Out", R.drawable.logout, true)
+)
+
+fun Boolean.decideSettingMenu():List<SettingItem>{
+    if (!this){
+        val copySettingItem = settingsItem
+        copySettingItem[2].enabled = false
+        copySettingItem[3].enabled = false
+        copySettingItem[4].enabled = false
+        return copySettingItem
+    }
+    return settingsItem
+}
+
+
 
 fun <A : Activity> Context.startNewActivity(activity: Class<A>) {
     Intent(this, activity).also {
@@ -85,26 +133,6 @@ suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutin
     }
 }
 
-@Suppress("DEPRECATION")
-inline fun <reified T : Serializable> Bundle.customGetSerializable(key: String): T? {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) getSerializable(
-        key, T::class.java
-    )
-    else getSerializable(key) as? T
-}
-
-@Composable
-fun LockScreenOrientation(orientation: Int) {
-    val context = LocalContext.current
-    DisposableEffect(Unit) {
-        val activity = context.findActivity() ?: return@DisposableEffect onDispose {}
-        activity.requestedOrientation = orientation
-        onDispose {
-
-        }
-    }
-}
-
 fun Long.convertIdToPath(): String {
     return if (this.toInt() == 0) {
         "classPlayGroup"
@@ -132,7 +160,6 @@ fun Long.convertIdToPath(): String {
         ""
     }
 }
-
 
 fun String.convertIdToPath(): String {
     return if (this.toInt() == 0) {
@@ -189,8 +216,6 @@ fun String.convertIdToName(): String {
         ""
     }
 }
-
-
 
 fun List<MonthFee>.getExamFee(): Int {
     var isJan = false
@@ -354,14 +379,7 @@ fun String.getMonthName(): ArrayList<String> {
     return list
 }
 
-@Composable
-fun CircularProgress(color: Color = Purple700) {
-    Box(
-        contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
-    ) {
-        CircularProgressIndicator(color = color, strokeWidth = 4.dp)
-    }
-}
+
 
 
 
