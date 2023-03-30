@@ -83,7 +83,7 @@ fun StatisticCard(
                 modifier = Modifier
                     .fillMaxHeight()
                     .weight(0.8f)
-                    .background(color = Color.Red.copy(0.3f))
+
             ) {
 
             }
