@@ -225,4 +225,28 @@ class SettingRepositoryImpl @Inject constructor(
             Resource.Failure(e)
         }
     }
+
+    override suspend fun updateSchoolOpenState(b: Boolean) {
+        try {
+            db.collection("school").document("basicInfo").update("isOpen", b).awaitDocument()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override suspend fun updateSchoolOpenTime(time: String) {
+        try {
+            db.collection("school").document("basicInfo").update("startsAt", time).awaitDocument()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override suspend fun updateSchoolCloseTime(time: String) {
+        try {
+            db.collection("school").document("basicInfo").update("endsAt", time).awaitDocument()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 }

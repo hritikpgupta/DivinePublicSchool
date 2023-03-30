@@ -14,4 +14,8 @@ data class SchoolInformation(
     var ssid: String = "",
     var startsAt: String = "",
     var website: String = ""
-)
+){
+    companion object{
+        var SCHOOL_INFO = SchoolInformation()
+    }
+}

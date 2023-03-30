@@ -1,6 +1,5 @@
 package hg.divineschool.admin.data.dashboard
 
-import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import hg.divineschool.admin.data.Resource
@@ -8,7 +7,6 @@ import hg.divineschool.admin.data.models.ClassInformation
 import hg.divineschool.admin.data.models.FeeStructure
 import hg.divineschool.admin.data.models.SchoolInformation
 import hg.divineschool.admin.data.utils.awaitDocument
-import hg.divineschool.admin.ui.utils.Log_Tag
 import javax.inject.Inject
 
 class DashboardRepositoryImpl @Inject constructor(
@@ -16,8 +14,8 @@ class DashboardRepositoryImpl @Inject constructor(
 ) : DashboardRepository {
 
 
-    override suspend fun getSchoolInformation(): Resource<SchoolInformation> {
-        return try {
+    override suspend fun getSchoolInformation() {
+        try {
             val result = db.collection("school").document("basicInfo").get().awaitDocument()
             val schoolInformation = SchoolInformation()
             result.let {
@@ -36,10 +34,10 @@ class DashboardRepositoryImpl @Inject constructor(
                     }
                 }
             }
-            Resource.Success(schoolInformation)
+            SchoolInformation.SCHOOL_INFO = schoolInformation
+
         } catch (e: Exception) {
             e.printStackTrace()
-            Resource.Failure(e)
         }
     }
 
@@ -116,7 +114,8 @@ class DashboardRepositoryImpl @Inject constructor(
 
     override suspend fun updateClassTeacher(classID: String, name: String): Resource<Boolean> {
         return try {
-            db.collection("classes").document(classID).update("classTeacherName",name).awaitDocument()
+            db.collection("classes").document(classID).update("classTeacherName", name)
+                .awaitDocument()
             Resource.Success(true)
         } catch (e: java.lang.Exception) {
             e.printStackTrace()

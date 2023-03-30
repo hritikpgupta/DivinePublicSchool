@@ -35,7 +35,7 @@ fun AppNavigationGraph(navController: NavHostController, modifier: Modifier) {
             AttendanceScreen()
         }
         composable(BottomNavItem.Settings.route) {
-            SettingScreen(navController)
+            SettingScreen(navController, hiltViewModel())
         }
         composable(BottomNavItem.AdminSettings.route) {
             AdminScreen(hiltViewModel(), navController)

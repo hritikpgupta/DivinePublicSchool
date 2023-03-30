@@ -38,6 +38,7 @@ class DashboardViewModel @Inject constructor(
     }
     private fun getFeeStructure() = viewModelScope.launch {
         repository.getFeeStructure()
+        repository.getSchoolInformation()
     }
     fun updateClassTeacherName(classID : Long, name : String) = viewModelScope.launch {
         _nameUpdateFlow.value = Resource.Loading

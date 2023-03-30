@@ -29,7 +29,7 @@ import hg.divineschool.admin.ui.utils.decideSettingMenu
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SettingScreen(navController: NavController) {
+fun SettingScreen(navController: NavController, viewModel: SettingViewModel) {
 
     val isAdmin = FirebaseAuth.getInstance().currentUser?.email.equals("admin@dps.com")
 
@@ -40,7 +40,13 @@ fun SettingScreen(navController: NavController) {
                 .padding(padding)
                 .background(color = MaterialTheme.colors.background.copy(0.8f))
         ) {
-            StatisticCard()
+            StatisticCard({
+                viewModel.updateSchoolOpenState(it)
+            }, {
+                viewModel.updateStartTime(it)
+            }, {
+                viewModel.updateEndTime(it)
+            })
             LazyVerticalGrid(
                 verticalArrangement = Arrangement.spacedBy(18.dp),
                 userScrollEnabled = true,

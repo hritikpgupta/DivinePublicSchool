@@ -9,7 +9,7 @@ import hg.divineschool.admin.data.models.SchoolInformation
 interface DashboardRepository {
 
 
-    suspend fun getSchoolInformation() : Resource<SchoolInformation>
+    suspend fun getSchoolInformation()
 
     suspend fun getAllClasses() : Resource<List<ClassInformation>>
 
