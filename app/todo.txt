@@ -4,9 +4,9 @@ Things to do
 -- Need functionality to change class teacher name -Done
 -- Extract Progress Bar as a composable function -Done
 -- Implement (Show admin setting for a specific user logon) - Done
--- Need functionality to view students who have not paid for a particular month
+-- Need functionality to view students who have not paid for a particular month - Done
 -- Do the above check before migration -Done
--- Need functionality to view tuition fee collected
--- Need functionality to set tuition fee
--- Need functionality to manage books
--- Need functionality to set school information (isOpen, start and end time )
+-- Need functionality to view tuition fee collected by day
+-- Need functionality to set tuition fee - Done
+-- Need functionality to manage books - Done
+-- Need functionality to set school information (isOpen, start and end time, total students, transport , new, rte, )
