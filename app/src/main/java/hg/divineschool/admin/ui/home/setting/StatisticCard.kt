@@ -57,14 +57,11 @@ fun StatisticCard() {
                         modifier = Modifier.requiredSize(65.dp)
                     )
                     Spacer(modifier = Modifier.requiredWidth(20.dp))
-                    ClickableText(text = AnnotatedString("7:00 am"),
-                        style = TextStyle(
-                            fontFamily = boldFont,
-                            fontSize = 30.sp,
-                            textDecoration = TextDecoration.Underline
-                        ),
-                        modifier = Modifier.padding(top = 6.dp),
-                        onClick = {})
+                    ClickableText(text = AnnotatedString("7:00 am"), style = TextStyle(
+                        fontFamily = boldFont,
+                        fontSize = 30.sp,
+                        textDecoration = TextDecoration.Underline
+                    ), modifier = Modifier.padding(top = 6.dp), onClick = {})
                 }
                 Spacer(modifier = Modifier.requiredHeight(20.dp))
                 Row(
@@ -77,14 +74,28 @@ fun StatisticCard() {
                         modifier = Modifier.requiredSize(65.dp)
                     )
                     Spacer(modifier = Modifier.requiredWidth(20.dp))
-                    ClickableText(text = AnnotatedString("3:00 pm"),
-                        style = TextStyle(
-                            fontFamily = boldFont,
-                            fontSize = 30.sp,
-                            textDecoration = TextDecoration.Underline
-                        ),
-                        modifier = Modifier.padding(top = 6.dp),
-                        onClick = {})
+                    ClickableText(text = AnnotatedString("3:00 pm"), style = TextStyle(
+                        fontFamily = boldFont,
+                        fontSize = 30.sp,
+                        textDecoration = TextDecoration.Underline
+                    ), modifier = Modifier.padding(top = 6.dp), onClick = {})
+                }
+                Spacer(modifier = Modifier.requiredHeight(20.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = hg.divineschool.admin.R.drawable.school_open),
+                        contentDescription = "School Open",
+                        modifier = Modifier.requiredSize(65.dp).weight(1f)
+                    )
+                    Spacer(modifier = Modifier.requiredWidth(20.dp).weight(1f))
+                    ClickableText(text = AnnotatedString("Open"), style = TextStyle(
+                        fontFamily = boldFont,
+                        fontSize = 30.sp,
+                        textDecoration = TextDecoration.Underline
+                    ), modifier = Modifier.padding(top = 6.dp).weight(1f), onClick = {})
                 }
 
             }
