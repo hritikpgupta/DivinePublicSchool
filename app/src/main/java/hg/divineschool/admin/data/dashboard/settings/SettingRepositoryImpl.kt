@@ -3,10 +3,7 @@ package hg.divineschool.admin.data.dashboard.settings
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import hg.divineschool.admin.data.Resource
-import hg.divineschool.admin.data.models.Book
-import hg.divineschool.admin.data.models.FeeStructure
-import hg.divineschool.admin.data.models.Place
-import hg.divineschool.admin.data.models.StudentDue
+import hg.divineschool.admin.data.models.*
 import hg.divineschool.admin.data.utils.awaitDocument
 import hg.divineschool.admin.ui.utils.*
 import javax.inject.Inject
@@ -62,32 +59,31 @@ class SettingRepositoryImpl @Inject constructor(
     override suspend fun updatePrice(feeStructure: FeeStructure): Resource<Boolean> {
         return try {
 
-            db.collection("fees").document("feeStructure")
-                .update(
-                    mapOf(
-                        "admissionCharge" to feeStructure.admissionCharge,
-                        "annualCharge" to feeStructure.annualCharge,
-                        "beltPrice" to feeStructure.beltPrice,
-                        "classEightTuition" to feeStructure.classEightTuition,
-                        "classFiveTuition" to feeStructure.classFiveTuition,
-                        "classFourTuition" to feeStructure.classFourTuition,
-                        "classOneTuition" to feeStructure.classOneTuition,
-                        "classSevenTuition" to feeStructure.classSevenTuition,
-                        "classSixTuition" to feeStructure.classSixTuition,
-                        "classThreeTuition" to feeStructure.classThreeTuition,
-                        "classTwoTuition" to feeStructure.classTwoTuition,
-                        "computerFeeJunior" to feeStructure.computerFeeJunior,
-                        "computerFeeSenior" to feeStructure.computerFeeSenior,
-                        "diaryFee" to feeStructure.diaryFee,
-                        "examFee" to feeStructure.examFee,
-                        "idAndFeeCardPrice" to feeStructure.idAndFeeCardPrice,
-                        "lnTuition" to feeStructure.lnTuition,
-                        "pgTuition" to feeStructure.pgTuition,
-                        "tieFeeJunior" to feeStructure.tieFeeJunior,
-                        "tieFeeSenior" to feeStructure.tieFeeSenior,
-                        "unTuition" to feeStructure.unTuition,
-                    )
-                ).awaitDocument()
+            db.collection("fees").document("feeStructure").update(
+                mapOf(
+                    "admissionCharge" to feeStructure.admissionCharge,
+                    "annualCharge" to feeStructure.annualCharge,
+                    "beltPrice" to feeStructure.beltPrice,
+                    "classEightTuition" to feeStructure.classEightTuition,
+                    "classFiveTuition" to feeStructure.classFiveTuition,
+                    "classFourTuition" to feeStructure.classFourTuition,
+                    "classOneTuition" to feeStructure.classOneTuition,
+                    "classSevenTuition" to feeStructure.classSevenTuition,
+                    "classSixTuition" to feeStructure.classSixTuition,
+                    "classThreeTuition" to feeStructure.classThreeTuition,
+                    "classTwoTuition" to feeStructure.classTwoTuition,
+                    "computerFeeJunior" to feeStructure.computerFeeJunior,
+                    "computerFeeSenior" to feeStructure.computerFeeSenior,
+                    "diaryFee" to feeStructure.diaryFee,
+                    "examFee" to feeStructure.examFee,
+                    "idAndFeeCardPrice" to feeStructure.idAndFeeCardPrice,
+                    "lnTuition" to feeStructure.lnTuition,
+                    "pgTuition" to feeStructure.pgTuition,
+                    "tieFeeJunior" to feeStructure.tieFeeJunior,
+                    "tieFeeSenior" to feeStructure.tieFeeSenior,
+                    "unTuition" to feeStructure.unTuition,
+                )
+            ).awaitDocument()
             FeeStructure.FEE_STRUCT.apply {
                 pgTuition = feeStructure.pgTuition
                 lnTuition = feeStructure.lnTuition
@@ -145,12 +141,11 @@ class SettingRepositoryImpl @Inject constructor(
 
     override suspend fun deleteBook(className: String, book: Book): Resource<List<Book>> {
         return try {
-            db.collection("fees").document("feeStructure")
-                .update(
-                    mapOf(
-                        "${className.convertClassNameToBookField()}.${book.bookName}" to FieldValue.delete()
-                    )
-                ).awaitDocument()
+            db.collection("fees").document("feeStructure").update(
+                mapOf(
+                    "${className.convertClassNameToBookField()}.${book.bookName}" to FieldValue.delete()
+                )
+            ).awaitDocument()
 
             Resource.Success(className.deleteBook(book))
         } catch (e: Exception) {
@@ -160,12 +155,11 @@ class SettingRepositoryImpl @Inject constructor(
 
     override suspend fun addBook(className: String, book: Book): Resource<List<Book>> {
         return try {
-            db.collection("fees").document("feeStructure")
-                .update(
-                    mapOf(
-                        "${className.convertClassNameToBookField()}.${book.bookName}" to book.bookPrice
-                    )
-                ).awaitDocument()
+            db.collection("fees").document("feeStructure").update(
+                mapOf(
+                    "${className.convertClassNameToBookField()}.${book.bookName}" to book.bookPrice
+                )
+            ).awaitDocument()
             Resource.Success(className.updateBookPrice(book))
         } catch (e: Exception) {
             Resource.Failure(e)
@@ -199,12 +193,11 @@ class SettingRepositoryImpl @Inject constructor(
 
     override suspend fun deletePlace(place: Place): Resource<List<Place>> {
         return try {
-            db.collection("fees").document("feeStructure")
-                .update(
-                    mapOf(
-                        "transportPlaces.${place.placeName}" to FieldValue.delete()
-                    )
-                ).awaitDocument()
+            db.collection("fees").document("feeStructure").update(
+                mapOf(
+                    "transportPlaces.${place.placeName}" to FieldValue.delete()
+                )
+            ).awaitDocument()
 
             Resource.Success(place.placeName.deletePlace())
         } catch (e: Exception) {
@@ -214,12 +207,11 @@ class SettingRepositoryImpl @Inject constructor(
 
     override suspend fun addPlace(place: Place): Resource<List<Place>> {
         return try {
-            db.collection("fees").document("feeStructure")
-                .update(
-                    mapOf(
-                        "transportPlaces.${place.placeName}" to place.placePrice
-                    )
-                ).awaitDocument()
+            db.collection("fees").document("feeStructure").update(
+                mapOf(
+                    "transportPlaces.${place.placeName}" to place.placePrice
+                )
+            ).awaitDocument()
             Resource.Success(place.placeName.updatePlace(place))
         } catch (e: Exception) {
             Resource.Failure(e)
@@ -250,11 +242,81 @@ class SettingRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getStudentsCount(): Triple<Int, Int, Int> {
-        val totalStudentCount = 0
-        val transportCount = 0
-        val rteCount = 0
+    override suspend fun getStudentsCount(): Resource<Triple<Int, Int, Int>> {
+        var totalStudentCount = 0
+        var transportCount = 0
+        var rteCount = 0
+        return try {
+            val eightCount = calculate("classEight")
+            totalStudentCount += eightCount.first
+            transportCount += eightCount.second
+            rteCount += eightCount.third
+            val sevenCount = calculate("classSeven")
+            totalStudentCount += sevenCount.first
+            transportCount += sevenCount.second
+            rteCount += sevenCount.third
+            val sixCount = calculate("classSix")
+            totalStudentCount += sixCount.first
+            transportCount += sixCount.second
+            rteCount += sixCount.third
+            val fiveCount = calculate("classFive")
+            totalStudentCount += fiveCount.first
+            transportCount += fiveCount.second
+            rteCount += fiveCount.third
+            val fourCount = calculate("classFour")
+            totalStudentCount += fourCount.first
+            transportCount += fourCount.second
+            rteCount += fourCount.third
+            val threeCount = calculate("classThree")
+            totalStudentCount += threeCount.first
+            transportCount += threeCount.second
+            rteCount += threeCount.third
+            val twoCount = calculate("classTwo")
+            totalStudentCount += twoCount.first
+            transportCount += twoCount.second
+            rteCount += twoCount.third
+            val oneCount = calculate("classOne")
+            totalStudentCount += oneCount.first
+            transportCount += oneCount.second
+            rteCount += oneCount.third
+            val unCount = calculate("classUpperNursery")
+            totalStudentCount += unCount.first
+            transportCount += unCount.second
+            rteCount += unCount.third
+            val lnCount = calculate("classLowerNursery")
+            totalStudentCount += lnCount.first
+            transportCount += lnCount.second
+            rteCount += lnCount.third
+            val pgCount = calculate("classPlayGroup")
+            totalStudentCount += pgCount.first
+            transportCount += pgCount.second
+            rteCount += pgCount.third
+            Resource.Success(Triple(totalStudentCount, transportCount, rteCount))
+        } catch (e: java.lang.Exception) {
+            Resource.Failure(e)
+        }
+    }
 
-        return Triple(totalStudentCount, transportCount, rteCount)
+    private suspend fun calculate(fromClass: String): Triple<Int, Int, Int> {
+        var total = 0
+        var transport = 0
+        var rte = 0
+        val students = db.collection("classes").document(fromClass).collection("students").get()
+            .awaitDocument()
+        val studentList = ArrayList<Student>()
+        students.documents.let {
+            if (it.isNotEmpty()) {
+                it.forEach { doc ->
+                    total += 1
+                    if (doc.getBoolean("transportStudent") as Boolean) {
+                        transport += 1
+                    }
+                    if (doc.getBoolean("rte") as Boolean) {
+                        rte += 1
+                    }
+                }
+            }
+        }
+        return Triple(total, transport, rte)
     }
 }

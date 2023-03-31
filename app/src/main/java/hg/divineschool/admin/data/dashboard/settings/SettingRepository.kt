@@ -26,5 +26,5 @@ interface SettingRepository {
     suspend fun updateSchoolOpenState(b: Boolean)
     suspend fun updateSchoolOpenTime(time: String)
     suspend fun updateSchoolCloseTime(time: String)
-    suspend fun getStudentsCount() : Triple<Int,Int,Int>
+    suspend fun getStudentsCount() : Resource<Triple<Int,Int,Int>>
 }

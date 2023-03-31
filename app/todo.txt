@@ -9,4 +9,4 @@ Things to do
 -- Need functionality to view tuition fee collected by day
 -- Need functionality to set tuition fee - Done
 -- Need functionality to manage books - Done
--- Need functionality to set school information (isOpen, start and end time, total students, transport , new, rte, )
+-- Need functionality to set school information (isOpen, start and end time, total students, transport , new, rte, ) - Done

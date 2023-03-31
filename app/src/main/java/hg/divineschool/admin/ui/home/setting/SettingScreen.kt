@@ -9,11 +9,12 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -23,15 +24,26 @@ import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import hg.divineschool.admin.AppScreen
 import hg.divineschool.admin.BottomNavItem
+import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.ui.home.DPSAppBar
 import hg.divineschool.admin.ui.theme.regularFont
+import hg.divineschool.admin.ui.utils.CircularProgress
 import hg.divineschool.admin.ui.utils.decideSettingMenu
+import hg.divineschool.admin.ui.utils.toast
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SettingScreen(navController: NavController, viewModel: SettingViewModel) {
 
     val isAdmin = FirebaseAuth.getInstance().currentUser?.email.equals("admin@dps.com")
+    val state = viewModel.studentCountFlow.collectAsState()
+    var totalStudent by remember { mutableStateOf(0) }
+    var transportStudent by remember { mutableStateOf(0) }
+    var rteStudent by remember { mutableStateOf(0) }
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        viewModel.getStudentsCount()
+    }
 
     Scaffold(topBar = { DPSAppBar() }) { padding ->
         Column(
@@ -40,7 +52,7 @@ fun SettingScreen(navController: NavController, viewModel: SettingViewModel) {
                 .padding(padding)
                 .background(color = MaterialTheme.colors.background.copy(0.8f))
         ) {
-            StatisticCard({
+            StatisticCard(totalStudent, transportStudent, rteStudent, {
                 viewModel.updateSchoolOpenState(it)
             }, {
                 viewModel.updateStartTime(it)
@@ -123,7 +135,24 @@ fun SettingScreen(navController: NavController, viewModel: SettingViewModel) {
                     }
                 }
             }
-
+        }
+        state.value.let {
+            when (it) {
+                is Resource.Loading -> {
+                    CircularProgress()
+                }
+                is Resource.Failure -> {
+                    it.exception.message?.let { it1 -> context.toast(it1) }
+                }
+                is Resource.Success -> {
+                    it.result.apply {
+                        totalStudent = first
+                        transportStudent = second
+                        rteStudent = third
+                    }
+                }
+                else -> {}
+            }
         }
     }
 }

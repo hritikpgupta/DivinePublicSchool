@@ -2,10 +2,10 @@ package hg.divineschool.admin.ui.home.setting
 
 import android.app.TimePickerDialog
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Card
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +24,9 @@ import java.util.*
 
 @Composable
 fun StatisticCard(
+    total: Int,
+    transport: Int,
+    rte: Int,
     onClassOpenChanged: (isOpen: Boolean) -> Unit,
     onStartTimeChanged: (time: String) -> Unit,
     onEndTimeChanged: (time: String) -> Unit
@@ -82,10 +85,13 @@ fun StatisticCard(
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
+                    .padding(start = 10.dp)
                     .weight(0.8f)
 
             ) {
-
+                Text(text = "$total", style = TextStyle(fontSize = 20.sp))
+                Text(text = "$transport", style = TextStyle(fontSize = 20.sp))
+                Text(text = "$rte", style = TextStyle(fontSize = 20.sp))
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
