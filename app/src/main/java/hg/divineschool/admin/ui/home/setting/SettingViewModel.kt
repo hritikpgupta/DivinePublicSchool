@@ -24,4 +24,8 @@ class SettingViewModel @Inject constructor(
         repository.updateSchoolCloseTime(time)
     }
 
+    fun getStudentsCount() = viewModelScope.launch {
+
+    }
+
 }

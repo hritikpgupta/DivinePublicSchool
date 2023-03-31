@@ -108,7 +108,7 @@ fun StatisticCard(
                             .requiredSize(65.dp)
                             .weight(0.4f)
                     )
-                    ClickableText(text = AnnotatedString("$openTime"), style = TextStyle(
+                    ClickableText(text = AnnotatedString(openTime), style = TextStyle(
                         fontFamily = boldFont,
                         fontSize = 28.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -131,7 +131,7 @@ fun StatisticCard(
                             .requiredSize(65.dp)
                             .weight(0.4f)
                     )
-                    ClickableText(text = AnnotatedString("$closeTime"), style = TextStyle(
+                    ClickableText(text = AnnotatedString(closeTime), style = TextStyle(
                         fontFamily = boldFont,
                         fontSize = 28.sp,
                         fontWeight = FontWeight.SemiBold,
