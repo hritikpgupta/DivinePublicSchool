@@ -251,6 +251,10 @@ class SettingRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getStudentsCount(): Triple<Int, Int, Int> {
-        TODO("Not yet implemented")
+        val totalStudentCount = 0
+        val transportCount = 0
+        val rteCount = 0
+
+        return Triple(totalStudentCount, transportCount, rteCount)
     }
 }
