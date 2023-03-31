@@ -24,9 +24,9 @@ import java.util.*
 
 @Composable
 fun StatisticCard(
-    total: Int,
-    transport: Int,
-    rte: Int,
+    total: String,
+    transport: String,
+    rte: String,
     onClassOpenChanged: (isOpen: Boolean) -> Unit,
     onStartTimeChanged: (time: String) -> Unit,
     onEndTimeChanged: (time: String) -> Unit
@@ -73,7 +73,6 @@ fun StatisticCard(
         }, mHour, mMinute, false
     )
 
-
     Card(
         backgroundColor = Color.LightGray.copy(0.2f),
         modifier = Modifier
@@ -89,9 +88,9 @@ fun StatisticCard(
                     .weight(0.8f)
 
             ) {
-                Text(text = "$total", style = TextStyle(fontSize = 20.sp))
-                Text(text = "$transport", style = TextStyle(fontSize = 20.sp))
-                Text(text = "$rte", style = TextStyle(fontSize = 20.sp))
+                Text(text = total, style = TextStyle(fontSize = 20.sp))
+                Text(text = transport, style = TextStyle(fontSize = 20.sp))
+                Text(text = rte, style = TextStyle(fontSize = 20.sp))
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,

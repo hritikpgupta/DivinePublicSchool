@@ -37,9 +37,9 @@ fun SettingScreen(navController: NavController, viewModel: SettingViewModel) {
 
     val isAdmin = FirebaseAuth.getInstance().currentUser?.email.equals("admin@dps.com")
     val state = viewModel.studentCountFlow.collectAsState()
-    var totalStudent by remember { mutableStateOf(0) }
-    var transportStudent by remember { mutableStateOf(0) }
-    var rteStudent by remember { mutableStateOf(0) }
+    var totalStudent by remember { mutableStateOf("Loading...") }
+    var transportStudent by remember { mutableStateOf("Loading...") }
+    var rteStudent by remember { mutableStateOf("Loading...") }
     val context = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.getStudentsCount()
@@ -138,17 +138,14 @@ fun SettingScreen(navController: NavController, viewModel: SettingViewModel) {
         }
         state.value.let {
             when (it) {
-                is Resource.Loading -> {
-                    CircularProgress()
-                }
                 is Resource.Failure -> {
                     it.exception.message?.let { it1 -> context.toast(it1) }
                 }
                 is Resource.Success -> {
                     it.result.apply {
-                        totalStudent = first
-                        transportStudent = second
-                        rteStudent = third
+                        totalStudent = "$first"
+                        transportStudent = "$second"
+                        rteStudent = "$third"
                     }
                 }
                 else -> {}
