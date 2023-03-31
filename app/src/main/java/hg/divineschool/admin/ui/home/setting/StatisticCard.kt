@@ -2,24 +2,36 @@ package hg.divineschool.admin.ui.home.setting
 
 import android.app.TimePickerDialog
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AlternateEmail
+import androidx.compose.material.icons.filled.Link
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hg.divineschool.admin.R
 import hg.divineschool.admin.data.models.SchoolInformation
 import hg.divineschool.admin.ui.theme.boldFont
+import hg.divineschool.admin.ui.theme.mediumFont
+import hg.divineschool.admin.ui.theme.regularFont
 import java.util.*
 
 @Composable
@@ -27,6 +39,7 @@ fun StatisticCard(
     total: String,
     transport: String,
     rte: String,
+    isFetched: Boolean,
     onClassOpenChanged: (isOpen: Boolean) -> Unit,
     onStartTimeChanged: (time: String) -> Unit,
     onEndTimeChanged: (time: String) -> Unit
@@ -74,7 +87,7 @@ fun StatisticCard(
     )
 
     Card(
-        backgroundColor = Color.LightGray.copy(0.2f),
+        backgroundColor = Color.White.copy(0.0f),
         modifier = Modifier
             .fillMaxWidth()
             .requiredHeight(280.dp)
@@ -85,12 +98,205 @@ fun StatisticCard(
                 modifier = Modifier
                     .fillMaxHeight()
                     .padding(start = 10.dp)
-                    .weight(0.8f)
+                    .weight(0.6f)
 
             ) {
-                Text(text = total, style = TextStyle(fontSize = 20.sp))
-                Text(text = transport, style = TextStyle(fontSize = 20.sp))
-                Text(text = rte, style = TextStyle(fontSize = 20.sp))
+                Text(
+                    text = SchoolInformation.SCHOOL_INFO.name,
+                    style = TextStyle(fontSize = 46.sp, fontFamily = mediumFont)
+                )
+
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .padding(top = 16.dp)
+
+                ) {
+                    Card(
+                        elevation = 0.dp,
+                        backgroundColor = Color.LightGray.copy(0.5f),
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .requiredSize(40.dp)
+                            .padding(2.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Phone,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .requiredSize(30.dp)
+                                .background(color = Color.LightGray.copy(0.5f))
+                        )
+                    }
+                    Spacer(modifier = Modifier.requiredWidth(15.dp))
+                    Text(
+                        text = SchoolInformation.SCHOOL_INFO.contact.toString(), style = TextStyle(
+                            fontSize = 30.sp, fontFamily = regularFont, fontWeight = FontWeight.Thin
+                        )
+                    )
+                }
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .padding(top = 8.dp)
+
+                ) {
+                    Card(
+                        elevation = 0.dp,
+                        backgroundColor = Color.LightGray.copy(0.5f),
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .requiredSize(40.dp)
+                            .padding(2.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.AlternateEmail,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .requiredSize(30.dp)
+                                .background(color = Color.LightGray.copy(0.5f))
+                        )
+                    }
+                    Spacer(modifier = Modifier.requiredWidth(15.dp))
+                    Text(
+                        text = SchoolInformation.SCHOOL_INFO.email, style = TextStyle(
+                            fontSize = 30.sp, fontFamily = regularFont, fontWeight = FontWeight.Thin
+                        )
+                    )
+                }
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .padding(top = 8.dp)
+
+                ) {
+                    Card(
+                        elevation = 0.dp,
+                        backgroundColor = Color.LightGray.copy(0.5f),
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .requiredSize(40.dp)
+                            .padding(2.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Link,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .requiredSize(30.dp)
+                                .background(color = Color.LightGray.copy(0.5f))
+                        )
+                    }
+                    Spacer(modifier = Modifier.requiredWidth(15.dp))
+                    Text(
+                        text = SchoolInformation.SCHOOL_INFO.website, style = TextStyle(
+                            fontSize = 30.sp,
+                            fontFamily = regularFont,
+                            fontWeight = FontWeight.Thin,
+                            textDecoration = TextDecoration.Underline
+                        )
+                    )
+                }
+
+            }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top,
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth()
+                    .padding(end = 4.dp, top = 4.dp)
+                    .weight(0.2f)
+            ) {
+                Spacer(modifier = Modifier.requiredHeight(10.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.presentation),
+                        contentDescription = "Open",
+                        modifier = Modifier
+                            .requiredSize(65.dp)
+                            .weight(0.4f)
+                    )
+                    if (isFetched) {
+                        ClickableText(text = AnnotatedString(total), style = TextStyle(
+                            fontFamily = boldFont,
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.Black.copy(0.6f)
+                        ), modifier = Modifier
+                            .padding(top = 6.dp)
+                            .weight(0.6f), onClick = {})
+                    } else {
+                        CircularProgressIndicator(
+                            strokeWidth = 4.dp, modifier = Modifier.requiredSize(24.dp)
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.requiredHeight(20.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.bus),
+                        contentDescription = "Close",
+                        modifier = Modifier
+                            .requiredSize(65.dp)
+                            .weight(0.4f)
+                    )
+                    if (isFetched) {
+                        ClickableText(text = AnnotatedString(transport), style = TextStyle(
+                            fontFamily = boldFont,
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.Black.copy(0.6f)
+                        ), modifier = Modifier
+                            .padding(top = 6.dp)
+                            .weight(0.6f), onClick = {})
+                    } else {
+                        CircularProgressIndicator(
+                            strokeWidth = 4.dp, modifier = Modifier.requiredSize(24.dp)
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.requiredHeight(20.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.right_to_education),
+                        contentDescription = "School Open",
+                        modifier = Modifier
+                            .requiredSize(65.dp)
+                            .weight(0.4f)
+                    )
+                    if (isFetched) {
+                        ClickableText(text = AnnotatedString(rte), style = TextStyle(
+                            fontFamily = boldFont,
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.Black.copy(0.6f)
+                        ), modifier = Modifier
+                            .padding(top = 6.dp)
+                            .weight(0.6f), onClick = {})
+                    } else {
+                        CircularProgressIndicator(
+                            strokeWidth = 4.dp, modifier = Modifier.requiredSize(24.dp)
+                        )
+                    }
+                }
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -116,6 +322,7 @@ fun StatisticCard(
                     ClickableText(text = AnnotatedString(openTime), style = TextStyle(
                         fontFamily = boldFont,
                         fontSize = 28.sp,
+                        textDecoration = TextDecoration.Underline,
                         fontWeight = FontWeight.SemiBold,
                         color = Color.Black.copy(0.6f)
                     ), modifier = Modifier
@@ -139,6 +346,7 @@ fun StatisticCard(
                     ClickableText(text = AnnotatedString(closeTime), style = TextStyle(
                         fontFamily = boldFont,
                         fontSize = 28.sp,
+                        textDecoration = TextDecoration.Underline,
                         fontWeight = FontWeight.SemiBold,
                         color = Color.Black.copy(0.6f)
                     ), modifier = Modifier
@@ -162,6 +370,7 @@ fun StatisticCard(
                     ClickableText(text = AnnotatedString(openText.value), style = TextStyle(
                         fontFamily = boldFont,
                         fontSize = 28.sp,
+                        textDecoration = TextDecoration.Underline,
                         fontWeight = FontWeight.SemiBold,
                         color = Color.Black.copy(0.6f)
                     ), modifier = Modifier
@@ -178,7 +387,6 @@ fun StatisticCard(
                         onClassOpenChanged(SchoolInformation.SCHOOL_INFO.isOpen)
                     })
                 }
-
             }
         }
 

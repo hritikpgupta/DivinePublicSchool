@@ -27,7 +27,6 @@ import hg.divineschool.admin.BottomNavItem
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.ui.home.DPSAppBar
 import hg.divineschool.admin.ui.theme.regularFont
-import hg.divineschool.admin.ui.utils.CircularProgress
 import hg.divineschool.admin.ui.utils.decideSettingMenu
 import hg.divineschool.admin.ui.utils.toast
 
@@ -37,9 +36,10 @@ fun SettingScreen(navController: NavController, viewModel: SettingViewModel) {
 
     val isAdmin = FirebaseAuth.getInstance().currentUser?.email.equals("admin@dps.com")
     val state = viewModel.studentCountFlow.collectAsState()
-    var totalStudent by remember { mutableStateOf("Loading...") }
-    var transportStudent by remember { mutableStateOf("Loading...") }
-    var rteStudent by remember { mutableStateOf("Loading...") }
+    var totalStudent by remember { mutableStateOf("") }
+    var transportStudent by remember { mutableStateOf("") }
+    var rteStudent by remember { mutableStateOf("") }
+    var isFetched by remember { mutableStateOf(false) }
     val context = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.getStudentsCount()
@@ -52,7 +52,7 @@ fun SettingScreen(navController: NavController, viewModel: SettingViewModel) {
                 .padding(padding)
                 .background(color = MaterialTheme.colors.background.copy(0.8f))
         ) {
-            StatisticCard(totalStudent, transportStudent, rteStudent, {
+            StatisticCard(totalStudent, transportStudent, rteStudent, isFetched, {
                 viewModel.updateSchoolOpenState(it)
             }, {
                 viewModel.updateStartTime(it)
@@ -147,6 +147,7 @@ fun SettingScreen(navController: NavController, viewModel: SettingViewModel) {
                         transportStudent = "$second"
                         rteStudent = "$third"
                     }
+                    isFetched = true
                 }
                 else -> {}
             }
