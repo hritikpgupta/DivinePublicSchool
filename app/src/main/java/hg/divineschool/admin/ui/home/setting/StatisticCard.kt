@@ -6,10 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AlternateEmail
 import androidx.compose.material.icons.filled.Link
@@ -98,7 +95,7 @@ fun StatisticCard(
                 modifier = Modifier
                     .fillMaxHeight()
                     .padding(start = 10.dp)
-                    .weight(0.6f)
+                    .weight(0.7f)
 
             ) {
                 Text(
@@ -207,6 +204,7 @@ fun StatisticCard(
                 }
 
             }
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top,
@@ -235,12 +233,18 @@ fun StatisticCard(
                             fontWeight = FontWeight.SemiBold,
                             color = Color.Black.copy(0.6f)
                         ), modifier = Modifier
-                            .padding(top = 6.dp)
+                            .padding(top = 6.dp, start = 6.dp)
                             .weight(0.6f), onClick = {})
                     } else {
-                        CircularProgressIndicator(
-                            strokeWidth = 4.dp, modifier = Modifier.requiredSize(24.dp)
-                        )
+                        Box(
+                            contentAlignment = Alignment.TopStart,
+                            modifier = Modifier.weight(0.6f).padding(start = 6.dp)
+                        ) {
+                            CircularProgressIndicator(
+                                strokeWidth = 4.dp, modifier = Modifier
+                                    .requiredSize(24.dp)
+                            )
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.requiredHeight(20.dp))
@@ -262,12 +266,18 @@ fun StatisticCard(
                             fontWeight = FontWeight.SemiBold,
                             color = Color.Black.copy(0.6f)
                         ), modifier = Modifier
-                            .padding(top = 6.dp)
+                            .padding(top = 6.dp, start = 6.dp)
                             .weight(0.6f), onClick = {})
                     } else {
-                        CircularProgressIndicator(
-                            strokeWidth = 4.dp, modifier = Modifier.requiredSize(24.dp)
-                        )
+                        Box(
+                            contentAlignment = Alignment.TopStart,
+                            modifier = Modifier.weight(0.6f).padding(start = 6.dp)
+                        ) {
+                            CircularProgressIndicator(
+                                strokeWidth = 4.dp, modifier = Modifier
+                                    .requiredSize(24.dp)
+                            )
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.requiredHeight(20.dp))
@@ -277,7 +287,7 @@ fun StatisticCard(
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.right_to_education),
-                        contentDescription = "School Open",
+                        contentDescription = "RTE",
                         modifier = Modifier
                             .requiredSize(65.dp)
                             .weight(0.4f)
@@ -289,12 +299,18 @@ fun StatisticCard(
                             fontWeight = FontWeight.SemiBold,
                             color = Color.Black.copy(0.6f)
                         ), modifier = Modifier
-                            .padding(top = 6.dp)
+                            .padding(top = 6.dp, start = 6.dp)
                             .weight(0.6f), onClick = {})
                     } else {
-                        CircularProgressIndicator(
-                            strokeWidth = 4.dp, modifier = Modifier.requiredSize(24.dp)
-                        )
+                        Box(
+                            contentAlignment = Alignment.TopStart,
+                            modifier = Modifier.weight(0.6f).padding(start = 6.dp)
+                        ) {
+                            CircularProgressIndicator(
+                                strokeWidth = 4.dp, modifier = Modifier
+                                    .requiredSize(24.dp)
+                            )
+                        }
                     }
                 }
             }
