@@ -185,7 +185,7 @@ fun StatisticCard(
                     ) {
                         Icon(
                             Icons.Default.Link,
-                            contentDescription = "",
+                            contentDescription = "URL",
                             modifier = Modifier
                                 .clip(CircleShape)
                                 .requiredSize(30.dp)
