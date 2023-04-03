@@ -1,5 +1,6 @@
 package hg.divineschool.admin.ui.home.dashboard.studentsScreen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -17,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -27,6 +29,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import hg.divineschool.admin.R
 import hg.divineschool.admin.data.models.Student
+import hg.divineschool.admin.ui.theme.NoImageBackground
 import hg.divineschool.admin.ui.theme.lightFont
 import hg.divineschool.admin.ui.theme.regularFont
 
@@ -55,19 +58,33 @@ fun StudentCard(
             verticalArrangement = Arrangement.Top,
             modifier = Modifier.padding(10.dp)
         ) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current).data(student.image)
-                    .crossfade(true).build(),
-                contentScale = ContentScale.FillWidth,
-                contentDescription = "Logo",
-                modifier = Modifier
-                    .requiredSize(120.dp)
-                    .shadow(10.dp, CircleShape, true, color, color)
-                    .clip(
-                        CircleShape
-                    )
-                    .background(color = color)
-            )
+            if (student.image.startsWith("https")){
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current).data(student.image)
+                        .crossfade(true).build(),
+                    contentScale = ContentScale.FillWidth,
+                    contentDescription = "Logo",
+                    modifier = Modifier
+                        .requiredSize(120.dp)
+                        .shadow(10.dp, CircleShape, true, color, color)
+                        .clip(
+                            CircleShape
+                        )
+                        .background(color = color)
+                )
+            }else{
+                Image(
+                    painter = painterResource(id = R.drawable.image_missing),
+                    contentDescription = "",
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier
+                        .requiredSize(120.dp)
+                        .clip(
+                            CircleShape
+                        )
+                        .background(color = Color.White)
+                )
+            }
 
             Spacer(modifier = Modifier.height(5.dp))
             Text(
