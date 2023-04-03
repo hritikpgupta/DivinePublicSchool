@@ -1,6 +1,5 @@
 package hg.divineschool.admin.ui.auth
 
-import android.content.pm.ActivityInfo
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -36,7 +35,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import hg.divineschool.admin.R
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.ui.home.HomeActivity
-import hg.divineschool.admin.ui.utils.LockScreenOrientation
+import hg.divineschool.admin.ui.theme.boldFont
+import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.startNewActivity
 import hg.divineschool.admin.ui.utils.toast
 import kotlinx.coroutines.launch
@@ -87,7 +87,7 @@ fun LoginScreen(viewModel: AuthViewModel) {
                 OutlinedTextField(value = email, onValueChange = { email = it }, label = {
                     Text(
                         text = stringResource(id = R.string.email),
-                        style = TextStyle(fontSize = 16.sp)
+                        style = TextStyle(fontSize = 20.sp, fontFamily = regularFont)
                     )
                 }, modifier = Modifier
                     .padding(top = 8.dp)
@@ -105,7 +105,7 @@ fun LoginScreen(viewModel: AuthViewModel) {
                 OutlinedTextField(value = password, onValueChange = { password = it }, label = {
                     Text(
                         text = stringResource(id = R.string.password),
-                        style = TextStyle(fontSize = 16.sp)
+                        style = TextStyle(fontSize = 20.sp, fontFamily = regularFont)
                     )
                 }, modifier = Modifier
                     .padding(top = 8.dp)
@@ -129,7 +129,11 @@ fun LoginScreen(viewModel: AuthViewModel) {
                 ) {
                     Text(
                         text = stringResource(id = R.string.login_btn_text),
-                        style = TextStyle(color = Color.White)
+                        style = TextStyle(
+                            color = Color.White,
+                            fontFamily = boldFont,
+                            fontSize = 24.sp
+                        )
                     )
                 }
             }
