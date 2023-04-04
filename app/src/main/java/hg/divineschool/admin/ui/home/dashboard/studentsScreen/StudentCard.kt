@@ -75,7 +75,7 @@ fun StudentCard(
             }else{
                 Image(
                     painter = painterResource(id = R.drawable.image_missing),
-                    contentDescription = "",
+                    contentDescription = "Missing Image",
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier
                         .requiredSize(120.dp)
