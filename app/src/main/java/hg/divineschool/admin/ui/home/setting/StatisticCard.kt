@@ -57,9 +57,9 @@ fun StatisticCard(
     }
     val icon = remember {
         if (SchoolInformation.SCHOOL_INFO.isOpen) {
-            mutableStateOf(hg.divineschool.admin.R.drawable.school_open)
+            mutableStateOf(R.drawable.school_open)
         } else {
-            mutableStateOf(hg.divineschool.admin.R.drawable.school_close)
+            mutableStateOf(R.drawable.school_close)
         }
     }
     val mContext = LocalContext.current
