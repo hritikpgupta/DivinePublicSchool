@@ -6,11 +6,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AlternateEmail
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,6 +26,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hg.divineschool.admin.R
@@ -202,6 +207,42 @@ fun StatisticCard(
                         )
                     )
                 }
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .padding(top = 8.dp)
+
+                ) {
+                    Card(
+                        elevation = 0.dp,
+                        backgroundColor = Color.LightGray.copy(0.5f),
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .requiredSize(40.dp)
+                            .padding(2.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Place,
+                            contentDescription = "Address",
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .requiredSize(30.dp)
+                                .background(color = Color.LightGray.copy(0.5f))
+                        )
+                    }
+                    Spacer(modifier = Modifier.requiredWidth(15.dp))
+                    Text(
+                        text = "Satyanganj, Ahraura, Mirzapur, Uttar Pradesh - 231301",
+                        style = TextStyle(
+                            fontSize = 30.sp,
+                            fontFamily = regularFont,
+                            fontWeight = FontWeight.Thin
+                        ),
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
 
             }
 
@@ -238,7 +279,9 @@ fun StatisticCard(
                     } else {
                         Box(
                             contentAlignment = Alignment.TopStart,
-                            modifier = Modifier.weight(0.6f).padding(start = 6.dp)
+                            modifier = Modifier
+                                .weight(0.6f)
+                                .padding(start = 6.dp)
                         ) {
                             CircularProgressIndicator(
                                 strokeWidth = 4.dp, modifier = Modifier
@@ -271,7 +314,9 @@ fun StatisticCard(
                     } else {
                         Box(
                             contentAlignment = Alignment.TopStart,
-                            modifier = Modifier.weight(0.6f).padding(start = 6.dp)
+                            modifier = Modifier
+                                .weight(0.6f)
+                                .padding(start = 6.dp)
                         ) {
                             CircularProgressIndicator(
                                 strokeWidth = 4.dp, modifier = Modifier
@@ -304,7 +349,9 @@ fun StatisticCard(
                     } else {
                         Box(
                             contentAlignment = Alignment.TopStart,
-                            modifier = Modifier.weight(0.6f).padding(start = 6.dp)
+                            modifier = Modifier
+                                .weight(0.6f)
+                                .padding(start = 6.dp)
                         ) {
                             CircularProgressIndicator(
                                 strokeWidth = 4.dp, modifier = Modifier

@@ -284,7 +284,7 @@ fun UpdateStudent(
                             Image(
                                 painter = painterResource(id = R.drawable.image_missing),
                                 contentDescription = "",
-                                contentScale = ContentScale.FillWidth,
+                                contentScale = ContentScale.FillBounds,
                                 modifier = Modifier
                                     .requiredSize(145.dp)
                                     .background(color = NoImageBackground)

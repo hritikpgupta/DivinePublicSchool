@@ -2,18 +2,11 @@ package hg.divineschool.admin.ui.home.dashboard.registerStudent
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.media.ThumbnailUtils
 import android.net.Uri
-import android.os.Build
 import android.os.FileUtils
-import android.util.Log
-import android.util.Size
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.relocation.BringIntoViewRequester
@@ -56,7 +49,6 @@ import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.cardColors
 import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.CircularProgress
-import hg.divineschool.admin.ui.utils.Log_Tag
 import hg.divineschool.admin.ui.utils.toast
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.quality
@@ -64,9 +56,6 @@ import id.zelory.compressor.constraint.resolution
 import id.zelory.compressor.constraint.size
 import kotlinx.coroutines.launch
 import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.IOException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -271,7 +260,7 @@ fun RegisterStudent(
                             Image(
                                 painter = painterResource(id = hg.divineschool.admin.R.drawable.image_missing),
                                 contentDescription = "",
-                                contentScale = ContentScale.FillWidth,
+                                contentScale = ContentScale.FillBounds,
                                 modifier = Modifier
                                     .requiredSize(160.dp)
                                     .background(color = NoImageBackground)
