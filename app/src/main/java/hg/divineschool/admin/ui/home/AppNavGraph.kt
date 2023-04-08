@@ -58,7 +58,7 @@ fun NavGraphBuilder.settingsNav(navController: NavHostController) {
             ManageFee(navController, hiltViewModel())
         }
         composable(AppScreen.SettingScreen.Transaction.route) {
-            Transactions(navController)
+            Transactions(navController, hiltViewModel())
         }
         composable(AppScreen.SettingScreen.ManageBooks.route) {
             ManageBook(navController, hiltViewModel())
