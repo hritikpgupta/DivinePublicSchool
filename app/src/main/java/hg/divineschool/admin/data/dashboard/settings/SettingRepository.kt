@@ -1,10 +1,7 @@
 package hg.divineschool.admin.data.dashboard.settings
 
 import hg.divineschool.admin.data.Resource
-import hg.divineschool.admin.data.models.Book
-import hg.divineschool.admin.data.models.FeeStructure
-import hg.divineschool.admin.data.models.Place
-import hg.divineschool.admin.data.models.StudentDue
+import hg.divineschool.admin.data.models.*
 
 interface SettingRepository {
     suspend fun getAllStudentsDue(className: String, monthName: String): Resource<List<StudentDue>>
@@ -26,5 +23,8 @@ interface SettingRepository {
     suspend fun updateSchoolOpenState(b: Boolean)
     suspend fun updateSchoolOpenTime(time: String)
     suspend fun updateSchoolCloseTime(time: String)
-    suspend fun getStudentsCount() : Resource<Triple<Int,Int,Int>>
+    suspend fun getStudentsCount(): Resource<Triple<Int, Int, Int>>
+
+    suspend fun getTransactions(): Resource<List<Transaction>>
+
 }

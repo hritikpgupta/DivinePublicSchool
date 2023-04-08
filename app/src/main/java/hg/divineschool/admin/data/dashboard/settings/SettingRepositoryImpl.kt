@@ -1,5 +1,6 @@
 package hg.divineschool.admin.data.dashboard.settings
 
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import hg.divineschool.admin.data.Resource
@@ -292,6 +293,32 @@ class SettingRepositoryImpl @Inject constructor(
             transportCount += pgCount.second
             rteCount += pgCount.third
             Resource.Success(Triple(totalStudentCount, transportCount, rteCount))
+        } catch (e: java.lang.Exception) {
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun getTransactions(): Resource<List<Transaction>> {
+        return try {
+            val data = db.collection("transactions").get().awaitDocument()
+            val list = ArrayList<Transaction>()
+            data.documents.let {
+                if (it.isNotEmpty()) {
+                    it.forEach { doc ->
+                        list.add(
+                            Transaction(
+                                amount = doc.getLong("amount") as Long,
+                                className = doc.getString("className") as String,
+                                scholarNumber = doc.getString("scholarNumber") as String,
+                                invoiceNumber = doc.getString("invoiceNumber") as String,
+                                studentName = doc.getString("studentName") as String,
+                                timestamp = doc.getTimestamp("timestamp") as Timestamp
+                            )
+                        )
+                    }
+                }
+            }
+            Resource.Success(list)
         } catch (e: java.lang.Exception) {
             Resource.Failure(e)
         }
