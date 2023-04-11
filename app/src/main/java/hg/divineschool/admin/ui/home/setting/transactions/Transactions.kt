@@ -7,14 +7,14 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberDateRangePickerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
 import hg.divineschool.admin.data.Resource
+import hg.divineschool.admin.data.models.Transaction
 import hg.divineschool.admin.ui.home.DPSBar
 import hg.divineschool.admin.ui.utils.CircularProgress
 import hg.divineschool.admin.ui.utils.toast
@@ -25,6 +25,10 @@ fun Transactions(navController: NavController, viewModel: TransactionsViewModel)
     val dateRangeState = rememberDateRangePickerState()
     val transactionState = viewModel.transactionListFlow.collectAsState()
     val context = LocalContext.current
+
+    var transactions by remember {
+        mutableStateOf(emptyList<Transaction>())
+    }
 
 
     Scaffold(scaffoldState = rememberScaffoldState(), topBar = {
@@ -39,6 +43,8 @@ fun Transactions(navController: NavController, viewModel: TransactionsViewModel)
                 .requiredWidth(500.dp)
                 .padding(top = 60.dp, start = 0.dp, bottom = 0.dp)
         )
+
+
         transactionState.value.let {
             when (it) {
                 is Resource.Loading -> {
@@ -48,9 +54,9 @@ fun Transactions(navController: NavController, viewModel: TransactionsViewModel)
                     it.exception.message?.let { it1 -> context.toast(it1) }
                 }
                 is Resource.Success -> {
-
-
-                    
+                    if (it.result.isNotEmpty()){
+                        transactions = it.result
+                    }
                 }
                 else -> {}
             }
