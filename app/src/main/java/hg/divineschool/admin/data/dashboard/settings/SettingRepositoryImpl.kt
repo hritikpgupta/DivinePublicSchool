@@ -1,12 +1,16 @@
 package hg.divineschool.admin.data.dashboard.settings
 
+import androidx.compose.material3.DateRangePickerState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.*
 import hg.divineschool.admin.data.utils.awaitDocument
 import hg.divineschool.admin.ui.utils.*
+import java.util.*
 import javax.inject.Inject
 
 
@@ -298,27 +302,57 @@ class SettingRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getTransactions(): Resource<List<Transaction>> {
+    @OptIn(ExperimentalMaterial3Api::class)
+    override suspend fun getTransactions(dateRangeState: DateRangePickerState): Resource<List<Transaction>> {
         return try {
-            val data = db.collection("transactions").get().awaitDocument()
             val list = ArrayList<Transaction>()
-            data.documents.let {
-                if (it.isNotEmpty()) {
-                    it.forEach { doc ->
-                        list.add(
-                            Transaction(
-                                amount = doc.getLong("amount") as Long,
-                                className = doc.getString("className") as String,
-                                scholarNumber = doc.getString("scholarNumber") as String,
-                                invoiceNumber = doc.getString("invoiceNumber") as String,
-                                studentName = doc.getString("studentName") as String,
-                                timestamp = doc.getTimestamp("timestamp") as Timestamp
+
+            if (dateRangeState.selectedEndDateMillis == null || dateRangeState.selectedStartDateMillis == null) {
+                val data =
+                    db.collection("transactions").orderBy("timestamp", Query.Direction.ASCENDING)
+                        .limit(25).get().awaitDocument()
+                data.documents.let {
+                    if (it.isNotEmpty()) {
+                        it.forEach { doc ->
+                            list.add(
+                                Transaction(
+                                    amount = doc.getLong("amount") as Long,
+                                    className = doc.getString("className") as String,
+                                    scholarNumber = doc.getString("scholarNumber") as String,
+                                    invoiceNumber = doc.getString("invoiceNumber") as String,
+                                    studentName = doc.getString("studentName") as String,
+                                    timestamp = doc.getTimestamp("timestamp") as Timestamp
+                                )
                             )
-                        )
+                        }
                     }
                 }
+                Resource.Success(list)
+            } else {
+                val startDate = Date(dateRangeState.selectedStartDateMillis!!)
+                val endDate = Date(dateRangeState.selectedEndDateMillis!!)
+                val data = db.collection("transactions").whereGreaterThanOrEqualTo(
+                    "timestamp", Timestamp(startDate)
+                ).whereLessThanOrEqualTo("timestamp", Timestamp(endDate))
+                    .orderBy("timestamp", Query.Direction.ASCENDING).get().awaitDocument()
+                data.documents.let {
+                    if (it.isNotEmpty()) {
+                        it.forEach { doc ->
+                            list.add(
+                                Transaction(
+                                    amount = doc.getLong("amount") as Long,
+                                    className = doc.getString("className") as String,
+                                    scholarNumber = doc.getString("scholarNumber") as String,
+                                    invoiceNumber = doc.getString("invoiceNumber") as String,
+                                    studentName = doc.getString("studentName") as String,
+                                    timestamp = doc.getTimestamp("timestamp") as Timestamp
+                                )
+                            )
+                        }
+                    }
+                }
+                Resource.Success(list)
             }
-            Resource.Success(list)
         } catch (e: java.lang.Exception) {
             Resource.Failure(e)
         }
@@ -330,7 +364,6 @@ class SettingRepositoryImpl @Inject constructor(
         var rte = 0
         val students = db.collection("classes").document(fromClass).collection("students").get()
             .awaitDocument()
-        val studentList = ArrayList<Student>()
         students.documents.let {
             if (it.isNotEmpty()) {
                 it.forEach { doc ->

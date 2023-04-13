@@ -1,5 +1,7 @@
 package hg.divineschool.admin.ui.home.setting.transactions
 
+import androidx.compose.material3.DateRangePickerState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,12 +21,9 @@ class TransactionsViewModel @Inject constructor(
     private var _transactionListFlow = MutableStateFlow<Resource<List<Transaction>>?>(null)
     val transactionListFlow: StateFlow<Resource<List<Transaction>>?> = _transactionListFlow
 
-    init {
-        getAllTransaction()
-    }
-
-    fun getAllTransaction() = viewModelScope.launch {
+    @OptIn(ExperimentalMaterial3Api::class)
+    fun getAllTransaction(dateRangeState : DateRangePickerState) = viewModelScope.launch {
         _transactionListFlow.value = Resource.Loading
-        _transactionListFlow.value = respository.getTransactions()
+        _transactionListFlow.value = respository.getTransactions(dateRangeState)
     }
 }

@@ -1,5 +1,7 @@
 package hg.divineschool.admin.data.dashboard.settings
 
+import androidx.compose.material3.DateRangePickerState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.*
 
@@ -25,6 +27,7 @@ interface SettingRepository {
     suspend fun updateSchoolCloseTime(time: String)
     suspend fun getStudentsCount(): Resource<Triple<Int, Int, Int>>
 
-    suspend fun getTransactions(): Resource<List<Transaction>>
+    @OptIn(ExperimentalMaterial3Api::class)
+    suspend fun getTransactions(dateRangeState : DateRangePickerState): Resource<List<Transaction>>
 
 }
