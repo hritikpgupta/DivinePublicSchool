@@ -25,6 +25,8 @@ import hg.divineschool.admin.R
 import hg.divineschool.admin.data.models.*
 import hg.divineschool.admin.ui.theme.Purple700
 import java.io.Serializable
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -36,6 +38,7 @@ inline fun <reified T : Serializable> Bundle.customGetSerializable(key: String):
     )
     else getSerializable(key) as? T
 }
+
 @Composable
 fun LockScreenOrientation(orientation: Int) {
     val context = LocalContext.current
@@ -47,6 +50,7 @@ fun LockScreenOrientation(orientation: Int) {
         }
     }
 }
+
 @Composable
 fun CircularProgress(color: Color = Purple700) {
     Box(
@@ -65,8 +69,8 @@ val settingsItem = listOf(
     SettingItem(6, "Log Out", R.drawable.logout, true)
 )
 
-fun Boolean.decideSettingMenu():List<SettingItem>{
-    if (!this){
+fun Boolean.decideSettingMenu(): List<SettingItem> {
+    if (!this) {
         val copySettingItem = settingsItem
         copySettingItem[2].enabled = false
         copySettingItem[3].enabled = false
@@ -75,7 +79,6 @@ fun Boolean.decideSettingMenu():List<SettingItem>{
     }
     return settingsItem
 }
-
 
 
 fun <A : Activity> Context.startNewActivity(activity: Class<A>) {
@@ -95,6 +98,13 @@ fun Context.toast(@StringRes message: Int) {
 
 fun String?.toStringOrEmpty(): String {
     return this ?: ""
+}
+
+fun Date.getFormattedValue(): String {
+    val format1 = SimpleDateFormat("EEE, dd MMM yyyy HH:mm")
+    val cal = Calendar.getInstance()
+    cal.time = this
+    return format1.format(cal.time)
 }
 
 fun Context.findActivity(): Activity? = when (this) {

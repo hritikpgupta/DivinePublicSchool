@@ -1,5 +1,6 @@
 package hg.divineschool.admin.ui.home.setting.transactions
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -15,12 +16,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
+import hg.divineschool.admin.R
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Transaction
 import hg.divineschool.admin.ui.home.DPSBar
@@ -34,7 +38,9 @@ fun Transactions(navController: NavController, viewModel: TransactionsViewModel)
     val dateRangeState = rememberDateRangePickerState()
     val transactionState = viewModel.transactionListFlow.collectAsState()
     val context = LocalContext.current
-
+    var showEmptyImage by remember {
+        mutableStateOf(false)
+    }
     var transactions by remember {
         mutableStateOf(emptyList<Transaction>())
     }
@@ -107,23 +113,55 @@ fun Transactions(navController: NavController, viewModel: TransactionsViewModel)
                     .fillMaxSize()
                     .weight(0.5f)
             ) {
-                LazyVerticalGrid(
-                    verticalArrangement = Arrangement.spacedBy(18.dp),
-                    userScrollEnabled = true,
-                    contentPadding = PaddingValues(
-                        top = 15.dp, start = 8.dp, end = 8.dp, bottom = 80.dp
-                    ),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = MaterialTheme.colors.background.copy(0.6f)),
-                    columns = GridCells.Adaptive(280.dp)
-                ) {
-                    items(transactions) {
-                        TransactionCard(transaction = it){
-
+                if (showEmptyImage) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .wrapContentHeight()
+                                .wrapContentWidth()
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.no_transaction),
+                                contentDescription = "Student_Record",
+                                modifier = Modifier.requiredSize(100.dp)
+                            )
+                            Spacer(modifier = Modifier.requiredHeight(5.dp))
+                            Text(
+                                text = "No Transaction",
+                                style = TextStyle(
+                                    fontFamily = regularFont,
+                                    fontSize = 34.sp, fontWeight = FontWeight.Medium
+                                ),
+                                color = Color.DarkGray
+                            )
                         }
                     }
                 }
+                else {
+                    LazyVerticalGrid(
+                        verticalArrangement = Arrangement.spacedBy(18.dp),
+                        userScrollEnabled = true,
+                        contentPadding = PaddingValues(
+                            top = 15.dp, start = 8.dp, end = 8.dp, bottom = 80.dp
+                        ),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(top = 60.dp)
+                            .background(color = MaterialTheme.colors.background.copy(0.6f)),
+                        columns = GridCells.Adaptive(280.dp)
+                    ) {
+                        items(transactions) {
+                            TransactionCard(transaction = it) {
+
+                            }
+                        }
+                    }
+                }
+
                 transactionState.value.let {
                     when (it) {
                         is Resource.Loading -> {
@@ -135,12 +173,17 @@ fun Transactions(navController: NavController, viewModel: TransactionsViewModel)
                         is Resource.Success -> {
                             if (it.result.isNotEmpty()) {
                                 transactions = it.result
+                                showEmptyImage = false
+                            } else {
+                                showEmptyImage = true
                             }
                         }
                         else -> {}
                     }
                 }
             }
+
+
         }
 
     }

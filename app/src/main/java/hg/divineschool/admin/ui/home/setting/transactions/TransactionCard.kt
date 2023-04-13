@@ -19,6 +19,7 @@ import hg.divineschool.admin.data.models.Transaction
 import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.INR
+import hg.divineschool.admin.ui.utils.getFormattedValue
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -51,42 +52,42 @@ fun TransactionCard(transaction: Transaction, onCardClick: (obj: Transaction) ->
             Text(
                 text = transaction.studentName, style = TextStyle(
                     fontWeight = FontWeight.Medium,
-                    fontSize = 18.sp,
-                    textAlign = TextAlign.Center,
+                    fontSize = 22.sp,
+                    textAlign = TextAlign.Start,
                     fontFamily = mediumFont
                 ), modifier = Modifier.padding(start = 4.dp)
             )
             Text(
                 text = transaction.className, style = TextStyle(
                     fontWeight = FontWeight.Medium,
-                    fontSize = 18.sp,
-                    textAlign = TextAlign.Center,
+                    fontSize = 22.sp,
+                    textAlign = TextAlign.Start,
                     fontFamily = mediumFont
                 ), modifier = Modifier.padding(start = 4.dp)
             )
-            Row(
+            Text(
+                text = "$INR ${transaction.amount}", style = TextStyle(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp,
+                    textAlign = TextAlign.Start,
+                    fontFamily = mediumFont
+                ), modifier = Modifier.padding(start = 4.dp)
+            )
+            Text(
+                text = transaction.timestamp.toDate().getFormattedValue(),
+                style = TextStyle(
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center,
+                    fontFamily = mediumFont
+                ),
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 4.dp, end = 4.dp)
-            ) {
-                Text(
-                    text = "$INR ${transaction.amount}", style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Start,
-                        fontFamily = mediumFont
-                    ), modifier = Modifier.weight(0.3f)
-                )
-                Text(
-                    text = transaction.timestamp.toDate().toString(), style = TextStyle(
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.End,
-                        fontFamily = mediumFont
-                    ), overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(0.7f)
-                )
-            }
+                    .padding(top = 8.dp)
+                    .background(color = Color.LightGray.copy(0.5f))
 
+            )
         }
     }
 
