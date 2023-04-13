@@ -2,6 +2,10 @@ package hg.divineschool.admin.ui.home.setting.transactions
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.rememberScaffoldState
@@ -80,13 +84,13 @@ fun Transactions(navController: NavController, viewModel: TransactionsViewModel)
                         contentAlignment = Alignment.BottomEnd,
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(bottom = 60.dp)
+                            .padding(bottom = 70.dp, end = 8.dp)
                     ) {
                         Button(
                             onClick = { viewModel.getAllTransaction(dateRangeState) },
                             modifier = Modifier
                                 .requiredSize(70.dp)
-                                .padding(end = 1.dp)
+                                .padding(end = 0.dp)
                         ) {
                             Icon(
                                 imageVector = Icons.Rounded.Search,
@@ -103,23 +107,39 @@ fun Transactions(navController: NavController, viewModel: TransactionsViewModel)
                     .fillMaxSize()
                     .weight(0.5f)
             ) {
+                LazyVerticalGrid(
+                    verticalArrangement = Arrangement.spacedBy(18.dp),
+                    userScrollEnabled = true,
+                    contentPadding = PaddingValues(
+                        top = 15.dp, start = 8.dp, end = 8.dp, bottom = 80.dp
+                    ),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = MaterialTheme.colors.background.copy(0.6f)),
+                    columns = GridCells.Adaptive(280.dp)
+                ) {
+                    items(transactions) {
+                        TransactionCard(transaction = it){
 
-            }
-        }
-        transactionState.value.let {
-            when (it) {
-                is Resource.Loading -> {
-                    CircularProgress()
-                }
-                is Resource.Failure -> {
-                    it.exception.message?.let { it1 -> context.toast(it1) }
-                }
-                is Resource.Success -> {
-                    if (it.result.isNotEmpty()) {
-                        transactions = it.result
+                        }
                     }
                 }
-                else -> {}
+                transactionState.value.let {
+                    when (it) {
+                        is Resource.Loading -> {
+                            CircularProgress()
+                        }
+                        is Resource.Failure -> {
+                            it.exception.message?.let { it1 -> context.toast(it1) }
+                        }
+                        is Resource.Success -> {
+                            if (it.result.isNotEmpty()) {
+                                transactions = it.result
+                            }
+                        }
+                        else -> {}
+                    }
+                }
             }
         }
 
