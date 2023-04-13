@@ -1,5 +1,8 @@
 package hg.divineschool.admin.ui.home.setting.transactions
 
+import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -28,6 +31,7 @@ import hg.divineschool.admin.R
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Transaction
 import hg.divineschool.admin.ui.home.DPSBar
+import hg.divineschool.admin.ui.home.dashboard.invoiceWebView.InvoiceScreen
 import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.CircularProgress
 import hg.divineschool.admin.ui.utils.toast
@@ -37,6 +41,7 @@ import hg.divineschool.admin.ui.utils.toast
 fun Transactions(navController: NavController, viewModel: TransactionsViewModel) {
     val dateRangeState = rememberDateRangePickerState()
     val transactionState = viewModel.transactionListFlow.collectAsState()
+    val invoiceState = viewModel.invoiceFlow.collectAsState()
     val context = LocalContext.current
     var showEmptyImage by remember {
         mutableStateOf(false)
@@ -47,6 +52,9 @@ fun Transactions(navController: NavController, viewModel: TransactionsViewModel)
     LaunchedEffect(Unit) {
         viewModel.getAllTransaction(dateRangeState)
     }
+
+    val startInvoiceScreen =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
 
 
     Scaffold(scaffoldState = rememberScaffoldState(), topBar = {
@@ -115,8 +123,7 @@ fun Transactions(navController: NavController, viewModel: TransactionsViewModel)
             ) {
                 if (showEmptyImage) {
                     Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier.fillMaxSize()
+                        contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
                     ) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -131,17 +138,15 @@ fun Transactions(navController: NavController, viewModel: TransactionsViewModel)
                             )
                             Spacer(modifier = Modifier.requiredHeight(5.dp))
                             Text(
-                                text = "No Transaction",
-                                style = TextStyle(
+                                text = "No Transaction", style = TextStyle(
                                     fontFamily = regularFont,
-                                    fontSize = 34.sp, fontWeight = FontWeight.Medium
-                                ),
-                                color = Color.DarkGray
+                                    fontSize = 34.sp,
+                                    fontWeight = FontWeight.Medium
+                                ), color = Color.DarkGray
                             )
                         }
                     }
-                }
-                else {
+                } else {
                     LazyVerticalGrid(
                         verticalArrangement = Arrangement.spacedBy(18.dp),
                         userScrollEnabled = true,
@@ -155,13 +160,12 @@ fun Transactions(navController: NavController, viewModel: TransactionsViewModel)
                         columns = GridCells.Adaptive(280.dp)
                     ) {
                         items(transactions) {
-                            TransactionCard(transaction = it) {
-
+                            TransactionCard(transaction = it) { tran ->
+                                viewModel.getInvoice(tran)
                             }
                         }
                     }
                 }
-
                 transactionState.value.let {
                     when (it) {
                         is Resource.Loading -> {
@@ -181,9 +185,27 @@ fun Transactions(navController: NavController, viewModel: TransactionsViewModel)
                         else -> {}
                     }
                 }
+                invoiceState.value.let {
+                    when (it) {
+                        is Resource.Loading -> {
+                            CircularProgress()
+                        }
+                        is Resource.Failure -> {
+                            it.exception.message?.let { it1 -> context.toast(it1) }
+                        }
+                        is Resource.Success -> {
+                            LaunchedEffect(Unit){
+                                val intent = Intent(
+                                    context, InvoiceScreen::class.java
+                                )
+                                intent.putExtra("invoiceObject", it.result)
+                                startInvoiceScreen.launch(intent)
+                            }
+                        }
+                        else -> {}
+                    }
+                }
             }
-
-
         }
 
     }

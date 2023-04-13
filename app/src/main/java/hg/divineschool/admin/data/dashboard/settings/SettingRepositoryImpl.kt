@@ -328,8 +328,7 @@ class SettingRepositoryImpl @Inject constructor(
                     }
                 }
                 Resource.Success(list)
-            }
-            else {
+            } else {
                 val startDate = Date(dateRangeState.selectedStartDateMillis!!)
                 val endDate = Date(dateRangeState.selectedEndDateMillis!!)
                 val data = db.collection("transactions").whereGreaterThanOrEqualTo(
@@ -354,6 +353,45 @@ class SettingRepositoryImpl @Inject constructor(
                 }
                 Resource.Success(list)
             }
+        } catch (e: java.lang.Exception) {
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun getInvoice(transaction: Transaction): Resource<Invoice> {
+        return try {
+            val invo =
+                db.collection("classes").document(transaction.className.convertClassNameToPath()).collection("students")
+                    .document(transaction.scholarNumber).collection("invoices")
+                    .document(transaction.invoiceNumber).get().awaitDocument()
+            val invoice = Invoice()
+            invo.data.let {
+                invoice.apply {
+                    invoiceNumber = invo.getString("invoiceNumber") as String
+                    date = invo.getString("date") as String
+                    tuitionFeeMonthList = invo.getString("tuitionFeeMonthList") as String
+                    bookList = invo.getString("bookList") as String
+                    supplementsList = invo.getString("supplementsList") as String
+                    admissionFee = invo.getLong("admissionFee") as Long
+                    annualCharge = invo.getLong("annualCharge") as Long
+                    computerFee = invo.getLong("computerFee") as Long
+                    examFee = invo.getLong("examFee") as Long
+                    lateFee = invo.getLong("lateFee") as Long
+                    tuitionFee = invo.getLong("tuitionFee") as Long
+                    transportFee = invo.getLong("transportFee") as Long
+                    supplementaryFee = invo.getLong("supplementaryFee") as Long
+                    bookFee = invo.getLong("bookFee") as Long
+                    total = invo.getLong("total") as Long
+                    className = invo.getString("className") as String
+                    studentName = invo.getString("studentName") as String
+                    scholarNumber = invo.getLong("scholarNumber") as Long
+                    guardianName = invo.getString("guardianName") as String
+                    address = invo.getString("address") as String
+                    rollNumber = invo.getLong("rollNumber") as Long
+                    placeName = invo.getString("placeName") as String
+                }
+            }
+            Resource.Success(invoice)
         } catch (e: java.lang.Exception) {
             Resource.Failure(e)
         }

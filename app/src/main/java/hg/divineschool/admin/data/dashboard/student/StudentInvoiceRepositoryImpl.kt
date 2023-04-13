@@ -139,6 +139,7 @@ class StudentInvoiceRepositoryImpl @Inject constructor(
                 .orderBy("invoiceNumber", Query.Direction.DESCENDING)
                 .get().awaitDocument()
             result.documents.let {
+
                 if (it.isNotEmpty()) {
                     it.forEach { invo ->
                         invoiceList.add(

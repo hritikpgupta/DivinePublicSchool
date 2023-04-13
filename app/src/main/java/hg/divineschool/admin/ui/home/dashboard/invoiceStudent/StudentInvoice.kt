@@ -115,7 +115,6 @@ fun StudentInvoice(
     }
     val startInvoiceScreen =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            Log.i(Log_Tag, "Activity Result")
             scope.launch {
                 scaffoldState.drawerState.close()
             }

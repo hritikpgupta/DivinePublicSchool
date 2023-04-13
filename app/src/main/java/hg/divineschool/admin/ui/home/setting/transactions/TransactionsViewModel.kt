@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.dashboard.settings.SettingRepository
+import hg.divineschool.admin.data.models.Invoice
 import hg.divineschool.admin.data.models.Transaction
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,9 +22,18 @@ class TransactionsViewModel @Inject constructor(
     private var _transactionListFlow = MutableStateFlow<Resource<List<Transaction>>?>(null)
     val transactionListFlow: StateFlow<Resource<List<Transaction>>?> = _transactionListFlow
 
+    private var _invoiceFlow = MutableStateFlow<Resource<Invoice>?>(null)
+    val invoiceFlow: StateFlow<Resource<Invoice>?> = _invoiceFlow
+
     @OptIn(ExperimentalMaterial3Api::class)
-    fun getAllTransaction(dateRangeState : DateRangePickerState) = viewModelScope.launch {
+    fun getAllTransaction(dateRangeState: DateRangePickerState) = viewModelScope.launch {
         _transactionListFlow.value = Resource.Loading
         _transactionListFlow.value = respository.getTransactions(dateRangeState)
+    }
+
+    fun getInvoice(transaction: Transaction) = viewModelScope.launch {
+        _invoiceFlow.value = Resource.Loading
+        _invoiceFlow.value = respository.getInvoice(transaction)
+
     }
 }

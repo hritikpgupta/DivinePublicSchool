@@ -26,8 +26,8 @@ interface SettingRepository {
     suspend fun updateSchoolOpenTime(time: String)
     suspend fun updateSchoolCloseTime(time: String)
     suspend fun getStudentsCount(): Resource<Triple<Int, Int, Int>>
-
     @OptIn(ExperimentalMaterial3Api::class)
-    suspend fun getTransactions(dateRangeState : DateRangePickerState): Resource<List<Transaction>>
+    suspend fun getTransactions(dateRangeState: DateRangePickerState): Resource<List<Transaction>>
+    suspend fun getInvoice(transaction: Transaction): Resource<Invoice>
 
 }
