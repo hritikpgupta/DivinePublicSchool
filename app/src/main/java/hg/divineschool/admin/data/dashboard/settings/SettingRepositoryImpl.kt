@@ -310,7 +310,7 @@ class SettingRepositoryImpl @Inject constructor(
             if (dateRangeState.selectedEndDateMillis == null || dateRangeState.selectedStartDateMillis == null) {
                 val data =
                     db.collection("transactions").orderBy("timestamp", Query.Direction.ASCENDING)
-                        .limit(25).get().awaitDocument()
+                        .limit(50).get().awaitDocument()
                 data.documents.let {
                     if (it.isNotEmpty()) {
                         it.forEach { doc ->
@@ -328,7 +328,8 @@ class SettingRepositoryImpl @Inject constructor(
                     }
                 }
                 Resource.Success(list)
-            } else {
+            }
+            else {
                 val startDate = Date(dateRangeState.selectedStartDateMillis!!)
                 val endDate = Date(dateRangeState.selectedEndDateMillis!!)
                 val data = db.collection("transactions").whereGreaterThanOrEqualTo(
