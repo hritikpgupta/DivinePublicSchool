@@ -24,6 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -177,7 +178,7 @@ fun StudentInvoice(
                                             },
                                             modifier = Modifier
                                                 .padding(12.dp)
-                                                .requiredHeight(50.dp)
+                                                .requiredHeight(70.dp)
                                                 .requiredWidth(300.dp)
                                         ) {
                                             Column(
@@ -189,6 +190,9 @@ fun StudentInvoice(
                                                     style = TextStyle(
                                                         fontSize = 26.sp, fontFamily = regularFont
                                                     ),
+                                                    maxLines = 2,
+                                                    softWrap = true,
+                                                    overflow = TextOverflow.Ellipsis,
                                                     textAlign = TextAlign.Center,
                                                     color = Color.Black
                                                 )
@@ -196,7 +200,8 @@ fun StudentInvoice(
                                         }
                                     }
                                 }
-                            } else {
+                            }
+                            else {
                                 Column(
                                     verticalArrangement = Arrangement.Center,
                                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -523,7 +528,7 @@ fun customShape() = object : Shape {
     override fun createOutline(
         size: Size, layoutDirection: LayoutDirection, density: Density
     ): Outline {
-        return Outline.Rectangle(Rect(0f, 0f, 700f /* width */, size.height /* height */))
+        return Outline.Rectangle(Rect(0f, 0f, 700f , size.height ))
     }
 }
 
