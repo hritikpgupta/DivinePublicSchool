@@ -207,6 +207,5 @@ fun Transactions(navController: NavController, viewModel: TransactionsViewModel)
                 }
             }
         }
-
     }
 }
