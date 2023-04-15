@@ -55,8 +55,7 @@ fun Transactions(navController: NavController, viewModel: TransactionsViewModel)
 
     val startInvoiceScreen =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
-
-
+    
     Scaffold(scaffoldState = rememberScaffoldState(), topBar = {
         DPSBar(onBackPressed = {
             navController.popBackStack()
