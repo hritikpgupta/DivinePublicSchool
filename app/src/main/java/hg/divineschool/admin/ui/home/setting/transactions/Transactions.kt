@@ -55,7 +55,7 @@ fun Transactions(navController: NavController, viewModel: TransactionsViewModel)
 
     val startInvoiceScreen =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
-    
+
     Scaffold(scaffoldState = rememberScaffoldState(), topBar = {
         DPSBar(onBackPressed = {
             navController.popBackStack()
@@ -109,7 +109,7 @@ fun Transactions(navController: NavController, viewModel: TransactionsViewModel)
                                 imageVector = Icons.Rounded.Search,
                                 contentDescription = "",
                                 tint = Color.White,
-                                modifier = Modifier.requiredSize(40.dp)
+                                modifier = Modifier.requiredSize(50.dp)
                             )
                         }
                     }

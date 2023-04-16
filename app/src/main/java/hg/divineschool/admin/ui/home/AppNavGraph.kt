@@ -32,7 +32,7 @@ fun AppNavigationGraph(navController: NavHostController, modifier: Modifier) {
             DashboardScreen(hiltViewModel(), navController)
         }
         composable(BottomNavItem.Attendance.route) {
-            AttendanceScreen()
+            AttendanceScreen(navController)
         }
         composable(BottomNavItem.Settings.route) {
             SettingScreen(navController, hiltViewModel())
