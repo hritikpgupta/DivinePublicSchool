@@ -8,7 +8,6 @@ import androidx.navigation.compose.composable
 import hg.divineschool.admin.AppScreen
 import hg.divineschool.admin.ui.auth.LoginScreen
 
-
 @Composable
 fun DpsNavHost(navController: NavHostController) {
     NavHost(navController = navController, startDestination = AppScreen.AuthScreen.route) {

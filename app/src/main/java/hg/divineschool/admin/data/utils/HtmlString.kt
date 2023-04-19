@@ -2,8 +2,6 @@ package hg.divineschool.admin.data.utils
 
 class HtmlString {
     companion object {
-
-
         fun getString(
             invoiceNumber: String,
             studentName: String,

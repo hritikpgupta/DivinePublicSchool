@@ -1,6 +1,5 @@
 package hg.divineschool.admin.ui.home.setting.transactions
 
-import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -13,6 +12,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.Scaffold
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,12 +26,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.google.accompanist.insets.ui.Scaffold
+import hg.divineschool.admin.AppScreen
 import hg.divineschool.admin.R
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Transaction
+import hg.divineschool.admin.data.utils.DataConstants
 import hg.divineschool.admin.ui.home.DPSBar
-import hg.divineschool.admin.ui.home.dashboard.invoiceWebView.InvoiceScreen
 import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.CircularProgress
 import hg.divineschool.admin.ui.utils.toast
@@ -61,7 +61,7 @@ fun Transactions(navController: NavController, viewModel: TransactionsViewModel)
             navController.popBackStack()
         }, className = "Transactions")
     }) {
-        Row(modifier = Modifier.fillMaxSize()) {
+        Row(modifier = Modifier.fillMaxSize().padding(it)) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -193,12 +193,14 @@ fun Transactions(navController: NavController, viewModel: TransactionsViewModel)
                             it.exception.message?.let { it1 -> context.toast(it1) }
                         }
                         is Resource.Success -> {
-                            LaunchedEffect(Unit){
-                                val intent = Intent(
+                            LaunchedEffect(Unit) {
+/*                                val intent = Intent(
                                     context, InvoiceScreen::class.java
                                 )
                                 intent.putExtra("invoiceObject", it.result)
-                                startInvoiceScreen.launch(intent)
+                                startInvoiceScreen.launch(intent)*/
+                                DataConstants.currentInvoice = it.result
+                                navController.navigate(AppScreen.StudentScreen.InvoiceOverview.route)
                             }
                         }
                         else -> {}

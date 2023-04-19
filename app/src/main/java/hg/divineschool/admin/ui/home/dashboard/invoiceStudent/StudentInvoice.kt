@@ -31,12 +31,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
+import hg.divineschool.admin.AppScreen
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.*
-import hg.divineschool.admin.data.utils.getBooks
-import hg.divineschool.admin.data.utils.getPlaces
-import hg.divineschool.admin.data.utils.getSupplement
-import hg.divineschool.admin.data.utils.getTuitionFee
+import hg.divineschool.admin.data.utils.*
 import hg.divineschool.admin.ui.home.DPSBarWithAction
 import hg.divineschool.admin.ui.home.dashboard.invoiceWebView.InvoiceScreen
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.FormRow
@@ -169,11 +167,15 @@ fun StudentInvoice(
                                         Card(
                                             elevation = 8.dp,
                                             onClick = {
-                                                val intent = Intent(
+                                                DataConstants.currentInvoice = item
+                                                navController.navigate(AppScreen.StudentScreen.InvoiceOverview.route)
+
+/*                                                val intent = Intent(
                                                     context, InvoiceScreen::class.java
                                                 )
                                                 intent.putExtra("invoiceObject", item)
-                                                startInvoiceScreen.launch(intent)
+                                                startInvoiceScreen.launch(intent)*/
+
                                             },
                                             modifier = Modifier
                                                 .padding(12.dp)
@@ -494,11 +496,14 @@ fun StudentInvoice(
                 is Resource.FailureMessage -> {}
                 is Resource.Success -> {
                     LaunchedEffect(Unit) {
-                        val intent = Intent(
+                        DataConstants.currentInvoice = it.result
+                        navController.navigate(AppScreen.StudentScreen.InvoiceOverview.route)
+
+/*                        val intent = Intent(
                             context, InvoiceScreen::class.java
                         )
                         intent.putExtra("invoiceObject", it.result)
-                        startInvoiceScreen.launch(intent)
+                        startInvoiceScreen.launch(intent)*/
                         tuitionFee.value = 0
                         admissionFee.value = 0
                         transportFee.value = 0
