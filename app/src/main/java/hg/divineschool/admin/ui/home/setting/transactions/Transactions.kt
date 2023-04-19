@@ -31,6 +31,7 @@ import hg.divineschool.admin.R
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Transaction
 import hg.divineschool.admin.ui.home.DPSBar
+import hg.divineschool.admin.ui.home.dashboard.invoiceWebView.InvoiceOverview
 import hg.divineschool.admin.ui.home.dashboard.invoiceWebView.InvoiceScreen
 import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.CircularProgress
@@ -197,7 +198,7 @@ fun Transactions(navController: NavController, viewModel: TransactionsViewModel)
                         is Resource.Success -> {
                             LaunchedEffect(Unit) {
                                 val intent = Intent(
-                                    context, InvoiceScreen::class.java
+                                    context, InvoiceOverview::class.java
                                 )
                                 intent.putExtra("invoiceObject", it.result)
                                 startInvoiceScreen.launch(intent)

@@ -36,6 +36,7 @@ import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.*
 import hg.divineschool.admin.data.utils.*
 import hg.divineschool.admin.ui.home.DPSBarWithAction
+import hg.divineschool.admin.ui.home.dashboard.invoiceWebView.InvoiceOverview
 import hg.divineschool.admin.ui.home.dashboard.invoiceWebView.InvoiceScreen
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.FormRow
 import hg.divineschool.admin.ui.theme.boldFont
@@ -168,7 +169,7 @@ fun StudentInvoice(
                                             elevation = 8.dp,
                                             onClick = {
                                                 val intent = Intent(
-                                                    context, InvoiceScreen::class.java
+                                                    context, InvoiceOverview::class.java
                                                 )
                                                 intent.putExtra("invoiceObject", item)
                                                 startInvoiceScreen.launch(intent)
@@ -493,7 +494,7 @@ fun StudentInvoice(
                 is Resource.Success -> {
                     LaunchedEffect(Unit) {
                         val intent = Intent(
-                            context, InvoiceScreen::class.java
+                            context, InvoiceOverview::class.java
                         )
                         intent.putExtra("invoiceObject", it.result)
                         startInvoiceScreen.launch(intent)
