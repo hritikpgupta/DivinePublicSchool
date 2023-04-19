@@ -54,7 +54,7 @@ fun Transactions(navController: NavController, viewModel: TransactionsViewModel)
         viewModel.getAllTransaction(dateRangeState)
     }
 
-    val startInvoiceScreen =
+    val startInvoiceOverviewScreen =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
 
     Scaffold(scaffoldState = rememberScaffoldState(), topBar = {
@@ -201,7 +201,7 @@ fun Transactions(navController: NavController, viewModel: TransactionsViewModel)
                                     context, InvoiceOverview::class.java
                                 )
                                 intent.putExtra("invoiceObject", it.result)
-                                startInvoiceScreen.launch(intent)
+                                startInvoiceOverviewScreen.launch(intent)
                             }
                         }
                         else -> {}
