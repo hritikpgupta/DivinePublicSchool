@@ -167,15 +167,11 @@ fun StudentInvoice(
                                         Card(
                                             elevation = 8.dp,
                                             onClick = {
-                                                DataConstants.currentInvoice = item
-                                                navController.navigate(AppScreen.StudentScreen.InvoiceOverview.route)
-
-/*                                                val intent = Intent(
+                                                val intent = Intent(
                                                     context, InvoiceScreen::class.java
                                                 )
                                                 intent.putExtra("invoiceObject", item)
-                                                startInvoiceScreen.launch(intent)*/
-
+                                                startInvoiceScreen.launch(intent)
                                             },
                                             modifier = Modifier
                                                 .padding(12.dp)
@@ -496,14 +492,11 @@ fun StudentInvoice(
                 is Resource.FailureMessage -> {}
                 is Resource.Success -> {
                     LaunchedEffect(Unit) {
-                        DataConstants.currentInvoice = it.result
-                        navController.navigate(AppScreen.StudentScreen.InvoiceOverview.route)
-
-/*                        val intent = Intent(
+                        val intent = Intent(
                             context, InvoiceScreen::class.java
                         )
                         intent.putExtra("invoiceObject", it.result)
-                        startInvoiceScreen.launch(intent)*/
+                        startInvoiceScreen.launch(intent)
                         tuitionFee.value = 0
                         admissionFee.value = 0
                         transportFee.value = 0

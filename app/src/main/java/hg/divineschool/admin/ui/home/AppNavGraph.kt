@@ -15,7 +15,6 @@ import hg.divineschool.admin.ui.home.admin.AdminScreen
 import hg.divineschool.admin.ui.home.attendance.AttendanceScreen
 import hg.divineschool.admin.ui.home.dashboard.DashboardScreen
 import hg.divineschool.admin.ui.home.dashboard.invoiceStudent.StudentInvoice
-import hg.divineschool.admin.ui.home.dashboard.invoiveOverview.InvoiceOverview
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.RegisterStudent
 import hg.divineschool.admin.ui.home.dashboard.studentsScreen.StudentsList
 import hg.divineschool.admin.ui.home.dashboard.updateStudent.UpdateStudent
@@ -43,6 +42,7 @@ fun AppNavigationGraph(navController: NavHostController, modifier: Modifier) {
         }
         settingsNav(navController)
         studentListNav(navController)
+
 
     }
 }
@@ -128,9 +128,6 @@ fun NavGraphBuilder.studentListNav(navController: NavHostController) {
                     )
                 }
             }
-        }
-        composable(AppScreen.StudentScreen.InvoiceOverview.route){
-            InvoiceOverview(navController)
         }
 
     }
