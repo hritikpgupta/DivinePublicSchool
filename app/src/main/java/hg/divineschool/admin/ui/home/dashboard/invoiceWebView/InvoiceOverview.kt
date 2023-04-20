@@ -27,6 +27,7 @@ import hg.divineschool.admin.data.models.Invoice
 import hg.divineschool.admin.data.utils.getSerializable
 import hg.divineschool.admin.ui.home.DPSBar
 import hg.divineschool.admin.ui.home.dashboard.invoiceWebView.invoiceUIUnit.*
+import hg.divineschool.admin.ui.theme.DivinePublicSchoolTheme
 import hg.divineschool.admin.ui.theme.boldFont
 
 class InvoiceOverview : ComponentActivity() {
@@ -36,111 +37,114 @@ class InvoiceOverview : ComponentActivity() {
         super.onCreate(savedInstanceState)
         invoice = intent.getSerializable("invoiceObject", Invoice::class.java)
         setContent {
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = androidx.compose.material.MaterialTheme.colors.background
-            ) {
-                val context = LocalContext.current
-                val startInvoiceScreen =
-                    rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
-                Scaffold(
-                    scaffoldState = rememberScaffoldState(), topBar = {
-                        DPSBar(
-                            onBackPressed = { finish() },
-                            className = "Invoice ${invoice.invoiceNumber}"
-                        )
-                    }, floatingActionButton = {
-                        ExtendedFloatingActionButton(onClick = {
-                            val intent = Intent(
-                                context, InvoiceScreen::class.java
+            DivinePublicSchoolTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = androidx.compose.material.MaterialTheme.colors.background
+                ) {
+                    val context = LocalContext.current
+                    val startInvoiceScreen =
+                        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
+                    Scaffold(
+                        scaffoldState = rememberScaffoldState(), topBar = {
+                            DPSBar(
+                                onBackPressed = { finish() },
+                                className = "Invoice ${invoice.invoiceNumber}"
                             )
-                            intent.putExtra("invoiceObject", invoice)
-                            startInvoiceScreen.launch(intent)
-                        },
-                            modifier = Modifier.padding(bottom = 40.dp, end = 10.dp),
-                            elevation = FloatingActionButtonDefaults.elevation(4.dp),
-                            shape = RoundedCornerShape(8.dp),
-                            icon = {
-                                Icon(
-                                    Icons.Filled.Print,
-                                    null,
-                                    tint = Color.White,
-                                    modifier = Modifier.requiredSize(40.dp)
+                        }, floatingActionButton = {
+                            ExtendedFloatingActionButton(onClick = {
+                                val intent = Intent(
+                                    context, InvoiceScreen::class.java
                                 )
+                                intent.putExtra("invoiceObject", invoice)
+                                startInvoiceScreen.launch(intent)
                             },
-                            text = {
-                                Text(
-                                    text = "Print", style = TextStyle(
-                                        fontFamily = boldFont,
-                                        fontSize = 28.sp,
-                                        fontWeight = FontWeight.SemiBold
-                                    ), color = Color.White
-                                )
-                            })
+                                modifier = Modifier.padding(bottom = 40.dp, end = 10.dp),
+                                elevation = FloatingActionButtonDefaults.elevation(4.dp),
+                                shape = RoundedCornerShape(8.dp),
+                                icon = {
+                                    Icon(
+                                        Icons.Filled.Print,
+                                        null,
+                                        tint = Color.White,
+                                        modifier = Modifier.requiredSize(40.dp)
+                                    )
+                                },
+                                text = {
+                                    Text(
+                                        text = "Print", style = TextStyle(
+                                            fontFamily = boldFont,
+                                            fontSize = 28.sp,
+                                            fontWeight = FontWeight.SemiBold
+                                        ), color = Color.White
+                                    )
+                                })
 
-                    }, modifier = Modifier.fillMaxSize()
-                ) { innerPadding ->
-                    Column(
-                        verticalArrangement = Arrangement.Top,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState())
-                            .padding(innerPadding)
-                            .background(
-                                color = Color.LightGray.copy(
-                                    0.5f
-                                )
-                            )
-                    ) {
-                        Spacer(modifier = Modifier.requiredHeight(20.dp))
+                        }, modifier = Modifier.fillMaxSize()
+                    ) { innerPadding ->
                         Column(
                             verticalArrangement = Arrangement.Top,
+                            horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier
-                                .requiredWidth(595.dp)
-                                .requiredHeight(842.dp)
-                                .background(color = Color.White)
-
+                                .fillMaxSize()
+                                .verticalScroll(rememberScrollState())
+                                .padding(innerPadding)
+                                .background(
+                                    color = Color.LightGray.copy(
+                                        0.5f
+                                    )
+                                )
                         ) {
-                            Title(invoiceNumber = invoice.invoiceNumber)
-                            PageHeader(
-                                name = invoice.studentName,
-                                fatherName = invoice.guardianName,
-                                rollNumber = invoice.rollNumber.toString(),
-                                className = invoice.className,
-                                address = invoice.address
-                            )
-                            Divider(
-                                thickness = 2.dp,
-                                color = Color.LightGray,
+                            Spacer(modifier = Modifier.requiredHeight(20.dp))
+                            Column(
+                                verticalArrangement = Arrangement.Top,
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 10.dp)
-                            )
-                            ColumnHeader(
-                                months = invoice.tuitionFeeMonthList,
-                                date = invoice.date.trim()
-                            )
-                            Detail(
-                                computerFee = invoice.computerFee,
-                                invoice.annualCharge,
-                                invoice.lateFee,
-                                invoice.admissionFee,
-                                invoice.transportFee,
-                                invoice.examFee,
-                                invoice.supplementaryFee,
-                                invoice.tuitionFee,
-                                invoice.bookFee,
-                                invoice.total
-                            )
-                            ColumnFooter(bookDetail = invoice.bookList, supplementDetail = invoice.supplementsList)
+                                    .requiredWidth(595.dp)
+                                    .requiredHeight(842.dp)
+                                    .background(color = Color.White)
+
+                            ) {
+                                Title(invoiceNumber = invoice.invoiceNumber)
+                                PageHeader(
+                                    name = invoice.studentName,
+                                    fatherName = invoice.guardianName,
+                                    rollNumber = invoice.rollNumber.toString(),
+                                    className = invoice.className,
+                                    address = invoice.address
+                                )
+                                Divider(
+                                    thickness = 2.dp,
+                                    color = Color.LightGray,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 10.dp)
+                                )
+                                ColumnHeader(
+                                    months = invoice.tuitionFeeMonthList,
+                                    date = invoice.date.trim()
+                                )
+                                Detail(
+                                    computerFee = invoice.computerFee,
+                                    invoice.annualCharge,
+                                    invoice.lateFee,
+                                    invoice.admissionFee,
+                                    invoice.transportFee,
+                                    invoice.examFee,
+                                    invoice.supplementaryFee,
+                                    invoice.tuitionFee,
+                                    invoice.bookFee,
+                                    invoice.total
+                                )
+                                ColumnFooter(
+                                    bookDetail = invoice.bookList,
+                                    supplementDetail = invoice.supplementsList
+                                )
+                            }
+                            Spacer(modifier = Modifier.requiredHeight(20.dp))
                         }
-                        Spacer(modifier = Modifier.requiredHeight(20.dp))
                     }
                 }
             }
-
         }
-
     }
 }
