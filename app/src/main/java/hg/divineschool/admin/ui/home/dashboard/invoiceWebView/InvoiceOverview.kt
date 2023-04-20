@@ -111,7 +111,7 @@ class InvoiceOverview : ComponentActivity() {
                                 address = invoice.address
                             )
                             Divider(
-                                thickness = 4.dp,
+                                thickness = 2.dp,
                                 color = Color.LightGray,
                                 modifier = Modifier
                                     .fillMaxWidth()
