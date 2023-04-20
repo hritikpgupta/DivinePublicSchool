@@ -14,7 +14,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Print
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +23,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import hg.divineschool.admin.BottomNavItem
 import hg.divineschool.admin.data.models.Invoice
 import hg.divineschool.admin.data.utils.getSerializable
 import hg.divineschool.admin.ui.home.DPSBar
@@ -105,7 +103,20 @@ class InvoiceOverview : ComponentActivity() {
 
                         ) {
                             Title(invoiceNumber = invoice.invoiceNumber)
-                            PageHeader()
+                            PageHeader(
+                                name = invoice.studentName,
+                                fatherName = invoice.guardianName,
+                                rollNumber = invoice.rollNumber.toString(),
+                                className = invoice.className,
+                                address = invoice.address
+                            )
+                            Divider(
+                                thickness = 4.dp,
+                                color = Color.LightGray,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 10.dp)
+                            )
                             ColumnHeader()
                             Detail()
                             ColumnFooter()

@@ -17,7 +17,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hg.divineschool.admin.R
-import hg.divineschool.admin.ui.theme.lightFont
 import hg.divineschool.admin.ui.theme.regularFont
 
 @Composable
@@ -28,10 +27,17 @@ fun Title(invoiceNumber: String) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
         ) {
-            Box(contentAlignment = Alignment.TopEnd, modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+            Box(
+                contentAlignment = Alignment.TopEnd,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+            ) {
                 Text(
                     text = invoiceNumber,
-                    modifier = Modifier.padding(end = 8.dp).wrapContentWidth(),
+                    modifier = Modifier
+                        .padding(end = 10.dp)
+                        .wrapContentWidth(),
                     color = Color.Black,
                     style = TextStyle(
                         fontSize = 18.sp,
