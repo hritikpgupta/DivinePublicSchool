@@ -22,28 +22,35 @@ fun ColumnFooter(bookDetail: String, supplementDetail: String) {
             .wrapContentHeight()
             .padding(horizontal = 10.dp)
     ) {
-
+        Spacer(modifier = Modifier.requiredHeight(40.dp))
         Column(
-            modifier = Modifier
+            verticalArrangement = Arrangement.Top, modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .border(0.5.dp, color = Color.Black.copy(0.8F))
+                .border(1.dp, color = Color.Black.copy(0.8F))
+                .padding(4.dp)
+
         ) {
-            Text(text = bookDetail, maxLines = 3, softWrap = true, overflow = TextOverflow.Clip)
+            Text(
+                text = "Book Details : $bookDetail",
+                maxLines = 3,
+                softWrap = true,
+                overflow = TextOverflow.Clip
+            )
             Spacer(modifier = Modifier.requiredHeight(4.dp))
             Text(
-                text = supplementDetail,
+                text = "Supplement Details : $supplementDetail",
                 maxLines = 1,
                 softWrap = true,
                 overflow = TextOverflow.Ellipsis
             )
         }
         Divider(
-            thickness = 3.dp,
+            thickness = 2.dp,
             color = Color.Black,
             modifier = Modifier
                 .requiredWidth(200.dp)
-                .padding(top = 140.dp)
+                .padding(top = 70.dp)
         )
         Text(
             text = "Principal Signature",

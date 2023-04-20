@@ -133,7 +133,7 @@ class InvoiceOverview : ComponentActivity() {
                                 invoice.bookFee,
                                 invoice.total
                             )
-                            ColumnFooter()
+                            ColumnFooter(bookDetail = invoice.bookList, supplementDetail = invoice.supplementsList)
                         }
                         Spacer(modifier = Modifier.requiredHeight(20.dp))
                     }
