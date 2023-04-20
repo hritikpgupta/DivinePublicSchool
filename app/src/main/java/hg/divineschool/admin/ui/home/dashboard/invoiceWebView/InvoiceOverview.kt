@@ -8,7 +8,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Print
@@ -26,6 +28,7 @@ import hg.divineschool.admin.BottomNavItem
 import hg.divineschool.admin.data.models.Invoice
 import hg.divineschool.admin.data.utils.getSerializable
 import hg.divineschool.admin.ui.home.DPSBar
+import hg.divineschool.admin.ui.home.dashboard.invoiceWebView.invoiceUIUnit.*
 import hg.divineschool.admin.ui.theme.boldFont
 
 class InvoiceOverview : ComponentActivity() {
@@ -84,6 +87,7 @@ class InvoiceOverview : ComponentActivity() {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
                             .padding(innerPadding)
                             .background(
                                 color = Color.LightGray.copy(
@@ -93,15 +97,20 @@ class InvoiceOverview : ComponentActivity() {
                     ) {
                         Spacer(modifier = Modifier.requiredHeight(20.dp))
                         Column(
+                            verticalArrangement = Arrangement.Top,
                             modifier = Modifier
-                                .requiredWidth(500.dp)
-                                .requiredHeight(700.dp)
+                                .requiredWidth(595.dp)
+                                .requiredHeight(842.dp)
                                 .background(color = Color.White)
 
                         ) {
-
+                            Title(invoiceNumber = invoice.invoiceNumber)
+                            PageHeader()
+                            ColumnHeader()
+                            Detail()
+                            ColumnFooter()
                         }
-
+                        Spacer(modifier = Modifier.requiredHeight(20.dp))
                     }
                 }
             }
