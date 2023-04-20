@@ -117,7 +117,7 @@ class InvoiceOverview : ComponentActivity() {
                                     .fillMaxWidth()
                                     .padding(horizontal = 10.dp)
                             )
-                            ColumnHeader()
+                            ColumnHeader(months = invoice.tuitionFeeMonthList, date = invoice.date.trim())
                             Detail()
                             ColumnFooter()
                         }
