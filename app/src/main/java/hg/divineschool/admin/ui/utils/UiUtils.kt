@@ -9,9 +9,14 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
@@ -49,6 +54,24 @@ fun LockScreenOrientation(orientation: Int) {
 
         }
     }
+}
+
+@Composable
+fun RowScope.TableCell(
+    text: String,
+    weight: Float,
+    color: Color = Color.White,
+    align: TextAlign = TextAlign.Start
+) {
+    Text(
+        text = text,
+        textAlign = align, color = Color.Black, modifier =
+        Modifier
+            .border(0.5.dp, Color.Black.copy(0.5f))
+            .weight(weight)
+            .padding(1.dp)
+            .background(color = color)
+    )
 }
 
 @Composable

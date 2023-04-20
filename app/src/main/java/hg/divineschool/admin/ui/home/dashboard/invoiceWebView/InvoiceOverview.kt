@@ -117,8 +117,22 @@ class InvoiceOverview : ComponentActivity() {
                                     .fillMaxWidth()
                                     .padding(horizontal = 10.dp)
                             )
-                            ColumnHeader(months = invoice.tuitionFeeMonthList, date = invoice.date.trim())
-                            Detail()
+                            ColumnHeader(
+                                months = invoice.tuitionFeeMonthList,
+                                date = invoice.date.trim()
+                            )
+                            Detail(
+                                computerFee = invoice.computerFee,
+                                invoice.annualCharge,
+                                invoice.lateFee,
+                                invoice.admissionFee,
+                                invoice.transportFee,
+                                invoice.examFee,
+                                invoice.supplementaryFee,
+                                invoice.tuitionFee,
+                                invoice.bookFee,
+                                invoice.total
+                            )
                             ColumnFooter()
                         }
                         Spacer(modifier = Modifier.requiredHeight(20.dp))
