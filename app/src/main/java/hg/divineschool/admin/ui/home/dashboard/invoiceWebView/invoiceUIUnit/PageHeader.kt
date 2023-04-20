@@ -122,7 +122,7 @@ fun PageHeader(
                 verticalArrangement = Arrangement.Top,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(start = 80.dp)
+                    .padding(start = 30.dp, end = 10.dp)
             ) {
                 Text(
                     text = "Bill To :",
@@ -144,6 +144,8 @@ fun PageHeader(
                         .wrapContentWidth(),
                     color = Color.Black,
                     overflow = TextOverflow.Ellipsis,
+                    maxLines = 1 ,
+                    softWrap = true,
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontFamily = mediumFont,
@@ -158,32 +160,8 @@ fun PageHeader(
                         .wrapContentWidth(),
                     color = Color.Black,
                     overflow = TextOverflow.Ellipsis,
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        fontFamily = mediumFont,
-                        fontWeight = FontWeight.SemiBold,
-                        fontStyle = FontStyle.Normal
-                    )
-                )
-                Text(
-                    text = rollNumber,
-                    modifier = Modifier
-                        .padding(start = 0.dp, bottom = 0.dp)
-                        .wrapContentWidth(),
-                    color = Color.Black,
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        fontFamily = mediumFont,
-                        fontWeight = FontWeight.SemiBold,
-                        fontStyle = FontStyle.Normal
-                    )
-                )
-                Text(
-                    text = className,
-                    modifier = Modifier
-                        .padding(start = 0.dp, bottom = 0.dp)
-                        .wrapContentWidth(),
-                    color = Color.Black,
+                    maxLines = 1 ,
+                    softWrap = true,
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontFamily = mediumFont,
@@ -198,6 +176,8 @@ fun PageHeader(
                         .wrapContentWidth(),
                     color = Color.Black,
                     overflow = TextOverflow.Ellipsis,
+                    maxLines = 1 ,
+                    softWrap = true,
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontFamily = mediumFont,
@@ -205,6 +185,33 @@ fun PageHeader(
                         fontStyle = FontStyle.Normal
                     )
                 )
+                Text(
+                    text = "Roll No : $rollNumber",
+                    modifier = Modifier
+                        .padding(start = 0.dp, bottom = 0.dp)
+                        .wrapContentWidth(),
+                    color = Color.Black,
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        fontFamily = mediumFont,
+                        fontWeight = FontWeight.SemiBold,
+                        fontStyle = FontStyle.Normal
+                    )
+                )
+                Text(
+                    text = "Class : $className",
+                    modifier = Modifier
+                        .padding(start = 0.dp, bottom = 0.dp)
+                        .wrapContentWidth(),
+                    color = Color.Black,
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        fontFamily = mediumFont,
+                        fontWeight = FontWeight.SemiBold,
+                        fontStyle = FontStyle.Normal
+                    )
+                )
+
             }
 
         }
