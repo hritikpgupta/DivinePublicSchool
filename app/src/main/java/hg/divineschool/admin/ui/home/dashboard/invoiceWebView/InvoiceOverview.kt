@@ -100,7 +100,7 @@ class InvoiceOverview : ComponentActivity() {
                                 verticalArrangement = Arrangement.Top,
                                 modifier = Modifier
                                     .requiredWidth(595.dp)
-                                    .requiredHeight(842.dp)
+                                    .requiredHeight(850.dp)
                                     .background(color = Color.White)
 
                             ) {

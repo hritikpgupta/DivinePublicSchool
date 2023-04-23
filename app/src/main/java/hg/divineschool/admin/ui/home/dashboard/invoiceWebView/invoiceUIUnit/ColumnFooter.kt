@@ -51,7 +51,7 @@ fun ColumnFooter(bookDetail: String, supplementDetail: String) {
             color = Color.Black,
             modifier = Modifier
                 .requiredWidth(200.dp)
-                .padding(top = 70.dp)
+                .padding(top = 60.dp)
         )
         Text(
             text = "Principal Signature",
