@@ -42,8 +42,6 @@ fun AppNavigationGraph(navController: NavHostController, modifier: Modifier) {
         }
         settingsNav(navController)
         studentListNav(navController)
-
-
     }
 }
 

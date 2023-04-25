@@ -24,18 +24,18 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import hg.divineschool.admin.R
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.ui.home.HomeActivity
 import hg.divineschool.admin.ui.theme.boldFont
+import hg.divineschool.admin.ui.theme.lightFont
 import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.startNewActivity
 import hg.divineschool.admin.ui.utils.toast
@@ -47,8 +47,10 @@ import kotlinx.coroutines.launch
 fun LoginScreen(viewModel: AuthViewModel) {
 //    var email by remember { mutableStateOf("test@test.com") }
 //    var password by remember { mutableStateOf("123456") }
-    var email by remember { mutableStateOf("admin@dps.com") }
-    var password by remember { mutableStateOf("Hritik@0724") }
+/*    var email by remember { mutableStateOf("admin@dps.com") }
+    var password by remember { mutableStateOf("Hritik@0724") }  */
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
     val bringIntoViewRequester = BringIntoViewRequester()
     val focusManager = LocalFocusManager.current
@@ -62,7 +64,7 @@ fun LoginScreen(viewModel: AuthViewModel) {
         Card(
             modifier = Modifier
                 .requiredWidth(400.dp)
-                .requiredHeight(400.dp)
+                .requiredHeight(450.dp)
                 .align(Alignment.Center)
                 .background(color = MaterialTheme.colors.background.copy(0.78f)),
             elevation = CardDefaults.elevatedCardElevation(8.dp),
@@ -84,48 +86,68 @@ fun LoginScreen(viewModel: AuthViewModel) {
                         .requiredSize(150.dp)
                         .clip(CircleShape)
                 )
-                OutlinedTextField(value = email, onValueChange = { email = it }, label = {
-                    Text(
-                        text = stringResource(id = R.string.email),
-                        style = TextStyle(fontSize = 20.sp, fontFamily = regularFont)
-                    )
-                }, modifier = Modifier
-                    .padding(top = 8.dp)
-                    .onFocusEvent {
-                        if (it.isFocused) {
-                            coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
-                        }
-                    }, keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.None,
-                    autoCorrect = false,
-                    keyboardType = KeyboardType.Email,
-                    imeAction = ImeAction.Next
+                Text(
+                    text = "Divine Public School",
+                    style = TextStyle(
+                        fontFamily = lightFont,
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.SemiBold
+                    ),
+                    modifier = Modifier.padding(top = 4.dp)
                 )
-                )
-                OutlinedTextField(value = password, onValueChange = { password = it }, label = {
-                    Text(
-                        text = stringResource(id = R.string.password),
-                        style = TextStyle(fontSize = 20.sp, fontFamily = regularFont)
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.email),
+                            style = TextStyle(fontSize = 20.sp, fontFamily = regularFont)
+                        )
+                    },
+                    modifier = Modifier
+                        .padding(top = 16.dp)
+                        .onFocusEvent {
+                            if (it.isFocused) {
+                                coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
+                            }
+                        },
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.None,
+                        autoCorrect = false,
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Next
                     )
-                }, modifier = Modifier
-                    .padding(top = 8.dp)
-                    .onFocusEvent {
-                        if (it.isFocused) {
-                            coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
-                        }
-                    }, keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.None,
-                    autoCorrect = false,
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done
-                ), keyboardActions = KeyboardActions(onDone = {
-                    focusManager.clearFocus()
-                }), visualTransformation = PasswordVisualTransformation()
+                )
+
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.password),
+                            style = TextStyle(fontSize = 20.sp, fontFamily = regularFont)
+                        )
+                    },
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .onFocusEvent {
+                            if (it.isFocused) {
+                                coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
+                            }
+                        },
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.None,
+                        autoCorrect = false,
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Done
+                    ), keyboardActions = KeyboardActions(onDone = {
+                        focusManager.clearFocus()
+                    }), visualTransformation = PasswordVisualTransformation()
                 )
                 Button(
                     onClick = { viewModel.login(email.trim(), password.trim()) },
                     shape = CutCornerShape(10),
-                    modifier = Modifier.padding(top = 14.dp)
+                    modifier = Modifier.padding(top = 25.dp)
                 ) {
                     Text(
                         text = stringResource(id = R.string.login_btn_text),
@@ -160,10 +182,4 @@ fun LoginScreen(viewModel: AuthViewModel) {
         }
     }
 
-}
-
-@Preview(device = "spec:width=1280dp,height=800dp,dpi=480")
-@Composable
-fun Show() {
-    LoginScreen(hiltViewModel())
 }

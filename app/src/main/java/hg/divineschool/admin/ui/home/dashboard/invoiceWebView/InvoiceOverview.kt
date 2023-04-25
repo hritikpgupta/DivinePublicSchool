@@ -46,12 +46,14 @@ class InvoiceOverview : ComponentActivity() {
                     val startInvoiceScreen =
                         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
                     Scaffold(
-                        scaffoldState = rememberScaffoldState(), topBar = {
+                        scaffoldState = rememberScaffoldState(),
+                        topBar = {
                             DPSBar(
                                 onBackPressed = { finish() },
                                 className = "Invoice ${invoice.invoiceNumber}"
                             )
-                        }, floatingActionButton = {
+                        },
+                        floatingActionButton = {
                             ExtendedFloatingActionButton(onClick = {
                                 val intent = Intent(
                                     context, InvoiceScreen::class.java
@@ -80,7 +82,8 @@ class InvoiceOverview : ComponentActivity() {
                                     )
                                 })
 
-                        }, modifier = Modifier.fillMaxSize()
+                        },
+                        modifier = Modifier.fillMaxSize()
                     ) { innerPadding ->
                         Column(
                             verticalArrangement = Arrangement.Top,

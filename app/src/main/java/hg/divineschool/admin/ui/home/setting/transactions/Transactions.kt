@@ -32,7 +32,6 @@ import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Transaction
 import hg.divineschool.admin.ui.home.DPSBar
 import hg.divineschool.admin.ui.home.dashboard.invoiceWebView.InvoiceOverview
-import hg.divineschool.admin.ui.home.dashboard.invoiceWebView.InvoiceScreen
 import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.CircularProgress
 import hg.divineschool.admin.ui.utils.toast
@@ -61,10 +60,11 @@ fun Transactions(navController: NavController, viewModel: TransactionsViewModel)
         DPSBar(onBackPressed = {
             navController.popBackStack()
         }, className = "Transactions")
-    }) {
-        Row(modifier = Modifier
-            .fillMaxSize()
-            .padding(it)) {
+    }) { padding ->
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()

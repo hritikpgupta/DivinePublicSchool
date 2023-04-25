@@ -28,6 +28,7 @@ import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.ui.home.DPSAppBar
 import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.decideSettingMenu
+import hg.divineschool.admin.ui.utils.findActivity
 import hg.divineschool.admin.ui.utils.toast
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -109,9 +110,10 @@ fun SettingScreen(navController: NavController, viewModel: SettingViewModel) {
                                 }
                                 6 -> {
                                     FirebaseAuth.getInstance().signOut()
-                                    navController.navigate(AppScreen.SettingScreen.LogOut.route) {
-                                        popUpTo(BottomNavItem.Home.route) { inclusive = true }
-                                    }
+                                    context.findActivity()?.finish()
+/*                                    navController.navigate(AppScreen.SettingScreen.LogOut.route) {
+                                        popUpTo(AppScreen.AuthScreen.route) { inclusive = true }
+                                    }*/
                                 }
                             }
                         }) {
