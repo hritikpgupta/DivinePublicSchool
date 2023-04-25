@@ -166,7 +166,8 @@ fun StudentInvoice(
                                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                                     items(it.result) { item ->
                                         Card(
-                                            elevation = 8.dp,
+                                            elevation = 1.dp,
+                                            backgroundColor = Color.LightGray.copy(0.2f),
                                             onClick = {
                                                 val intent = Intent(
                                                     context, InvoiceOverview::class.java
@@ -176,19 +177,30 @@ fun StudentInvoice(
                                             },
                                             modifier = Modifier
                                                 .padding(12.dp)
-                                                .requiredHeight(70.dp)
-                                                .requiredWidth(300.dp)
+                                                .requiredHeight(75.dp)
+                                                .requiredWidth(320.dp)
                                         ) {
                                             Column(
                                                 verticalArrangement = Arrangement.Center,
                                                 horizontalAlignment = Alignment.CenterHorizontally
                                             ) {
                                                 Text(
-                                                    text = "$INR ${item.total}  ${item.date} at ${item.time}",
+                                                    text = "$INR ${item.total}",
                                                     style = TextStyle(
                                                         fontSize = 26.sp, fontFamily = regularFont
                                                     ),
-                                                    maxLines = 2,
+                                                    maxLines = 1,
+                                                    softWrap = true,
+                                                    overflow = TextOverflow.Ellipsis,
+                                                    textAlign = TextAlign.Center,
+                                                    color = Color.Black
+                                                )
+                                                Text(
+                                                    text = "${item.date} at ${item.time}",
+                                                    style = TextStyle(
+                                                        fontSize = 26.sp, fontFamily = regularFont
+                                                    ),
+                                                    maxLines = 1,
                                                     softWrap = true,
                                                     overflow = TextOverflow.Ellipsis,
                                                     textAlign = TextAlign.Center,
@@ -205,7 +217,7 @@ fun StudentInvoice(
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                     modifier = Modifier
                                         .fillMaxHeight()
-                                        .requiredWidth(300.dp)
+                                        .requiredWidth(320.dp)
                                         .padding(
                                             start = 2.dp, end = 0.dp, top = 0.dp, bottom = 0.dp
                                         )
@@ -217,7 +229,7 @@ fun StudentInvoice(
                                             fontFamily = regularFont,
                                         ),
                                         textAlign = TextAlign.Center,
-                                        color = Color.Black.copy(0.75f)
+                                        color = Color.Black.copy(0.7f)
                                     )
                                 }
                             }
