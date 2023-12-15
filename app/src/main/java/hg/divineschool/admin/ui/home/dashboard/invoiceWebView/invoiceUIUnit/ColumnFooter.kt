@@ -60,8 +60,9 @@ fun ColumnFooter(bookDetail: String, supplementDetail: String) {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium
             ),
-            modifier = Modifier.padding(top = 5.dp)
+            modifier = Modifier.padding(top = 5.dp, bottom = 10.dp)
         )
+        Spacer(modifier = Modifier.requiredHeight(30.dp))
 
     }
 

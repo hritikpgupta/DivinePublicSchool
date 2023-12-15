@@ -103,7 +103,7 @@ class InvoiceOverview : ComponentActivity() {
                                 verticalArrangement = Arrangement.Top,
                                 modifier = Modifier
                                     .requiredWidth(595.dp)
-                                    .requiredHeight(850.dp)
+                                    .requiredHeight(900.dp)
                                     .background(color = Color.White)
 
                             ) {
@@ -143,7 +143,6 @@ class InvoiceOverview : ComponentActivity() {
                                     supplementDetail = invoice.supplementsList
                                 )
                             }
-                            Spacer(modifier = Modifier.requiredHeight(20.dp))
                         }
                     }
                 }

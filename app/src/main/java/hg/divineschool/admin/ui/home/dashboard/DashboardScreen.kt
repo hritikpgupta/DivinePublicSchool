@@ -48,7 +48,7 @@ fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController)
 
     Scaffold(topBar = { DPSAppBar() },
         floatingActionButton = {
-        if (FirebaseAuth.getInstance().currentUser?.email.equals("admin@dps.com")) {
+        if (FirebaseAuth.getInstance().currentUser?.email.equals("hgupta@dps.com")) {
             ExtendedFloatingActionButton(onClick = {
                 navController.navigate(BottomNavItem.AdminSettings.route)
             },

@@ -43,7 +43,6 @@ inline fun <reified T : Serializable> Bundle.customGetSerializable(key: String):
     )
     else getSerializable(key) as? T
 }
-
 @Composable
 fun LockScreenOrientation(orientation: Int) {
     val context = LocalContext.current
@@ -51,7 +50,6 @@ fun LockScreenOrientation(orientation: Int) {
         val activity = context.findActivity() ?: return@DisposableEffect onDispose {}
         activity.requestedOrientation = orientation
         onDispose {
-
         }
     }
 }
