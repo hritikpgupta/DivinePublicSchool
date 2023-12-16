@@ -27,11 +27,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import hg.divineschool.admin.R
-import hg.divineschool.admin.data.models.*
+import hg.divineschool.admin.data.models.Book
+import hg.divineschool.admin.data.models.FeeStructure
+import hg.divineschool.admin.data.models.MonthFee
+import hg.divineschool.admin.data.models.SettingItem
+import hg.divineschool.admin.data.models.Supplement
 import hg.divineschool.admin.ui.theme.Purple700
 import java.io.Serializable
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -43,6 +48,7 @@ inline fun <reified T : Serializable> Bundle.customGetSerializable(key: String):
     )
     else getSerializable(key) as? T
 }
+
 @Composable
 fun LockScreenOrientation(orientation: Int) {
     val context = LocalContext.current
@@ -403,11 +409,16 @@ fun String.isFeeZero(): String {
 
 fun String.getMonthName(): ArrayList<String> {
     val list = ArrayList<String>()
-    val result = this.substring(1, this.length - 1).split(",")
-    result.forEach {
-        list.add(it)
+    return try {
+        val result = this.substring(1, this.length - 1).split(",")
+        result.forEach {
+            list.add(it)
+        }
+        list
+    } catch (e: StringIndexOutOfBoundsException) {
+        list
     }
-    return list
+
 }
 
 

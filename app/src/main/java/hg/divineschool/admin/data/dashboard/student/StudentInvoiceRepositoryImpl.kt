@@ -1,5 +1,6 @@
 package hg.divineschool.admin.data.dashboard.student
 
+import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -124,6 +125,7 @@ class StudentInvoiceRepositoryImpl @Inject constructor(
             }
             Resource.Success(invoice)
         } catch (e: Exception) {
+            e.printStackTrace()
             Resource.Failure(e)
         }
     }
