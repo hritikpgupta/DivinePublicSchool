@@ -7,19 +7,51 @@ import android.os.FileUtils
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Card
+import androidx.compose.material.ExtendedFloatingActionButton
+import androidx.compose.material.FabPosition
+import androidx.compose.material.FloatingActionButtonDefaults
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Scaffold
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.Cake
 import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusEvent
@@ -29,6 +61,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -44,11 +77,15 @@ import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Student
 import hg.divineschool.admin.data.utils.validateStudentObjectBeforeUpload
 import hg.divineschool.admin.ui.home.DPSBar
+import hg.divineschool.admin.ui.home.dashboard.registerStudent.DateDefaults.DATE_LENGTH
+import hg.divineschool.admin.ui.home.dashboard.registerStudent.DateDefaults.DATE_MASK
 import hg.divineschool.admin.ui.theme.NoImageBackground
 import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.cardColors
+import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.CircularProgress
+import hg.divineschool.admin.ui.utils.DateMaskTransformation
 import hg.divineschool.admin.ui.utils.toast
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.quality
@@ -59,7 +96,10 @@ import java.io.File
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-
+object DateDefaults {
+    const val DATE_MASK = "##/##/####"
+    const val DATE_LENGTH = 8
+}
 @OptIn(
     ExperimentalGlideComposeApi::class,
     ExperimentalFoundationApi::class,
@@ -81,9 +121,7 @@ fun RegisterStudent(
                 coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
             }
         }
-    var pickedBirthDate by remember {
-        mutableStateOf(LocalDate.now())
-    }
+
     var pickedAdmissionDate by remember {
         mutableStateOf(LocalDate.now())
     }
@@ -92,11 +130,8 @@ fun RegisterStudent(
     var scholarNumber by remember { mutableStateOf(TextFieldValue("")) }
     var firstName by remember { mutableStateOf(TextFieldValue("")) }
     var lastName by remember { mutableStateOf(TextFieldValue("")) }
-    val dateOfBirth by remember {
-        derivedStateOf {
-            DateTimeFormatter.ofPattern("MMM dd yyyy").format(pickedBirthDate)
-        }
-    }
+    var dateOfBirth by remember { mutableStateOf(TextFieldValue("")) }
+
     var gender by remember { mutableStateOf(genderOptions[0]) }
     var fathersName by remember { mutableStateOf(TextFieldValue("")) }
     var mothersName by remember { mutableStateOf(TextFieldValue("")) }
@@ -116,7 +151,6 @@ fun RegisterStudent(
     var newStudent by remember { mutableStateOf(false) }
     var isOrphan by remember { mutableStateOf(false) }
     var isRte by remember { mutableStateOf(false) }
-    val birthDateDialogState = rememberMaterialDialogState()
     val admissionDateDialogState = rememberMaterialDialogState()
     var genderExpanded by remember { mutableStateOf(false) }
     var religionExpanded by remember { mutableStateOf(false) }
@@ -137,8 +171,8 @@ fun RegisterStudent(
                 showImage.value = true
                 coroutineScope.launch {
                     val compressedFileImage =
-                        Compressor.compress(context, File(Uri.parse(uriString.value).path!!)){
-                            resolution(400,400)
+                        Compressor.compress(context, File(Uri.parse(uriString.value).path!!)) {
+                            resolution(400, 400)
                             quality(80)
                             size(30_000)
                         }
@@ -151,73 +185,75 @@ fun RegisterStudent(
             }
         }
 
-    Scaffold(scaffoldState = rememberScaffoldState(), topBar = {
-        DPSBar(onBackPressed = {
-            navController.popBackStack()
-        }, className = "Registration Form For $className")
-    }, floatingActionButton = {
-        ExtendedFloatingActionButton(onClick = {
-            if (rollNumber.text.isNotEmpty() && scholarNumber.text.isNotEmpty()) {
-                try {
-                    val student = Student(
-                        rollNumber = rollNumber.text.toLong(),
-                        scholarNumber = scholarNumber.text.toLong(),
-                        firstName = firstName.text,
-                        lastName = lastName.text,
-                        dateOfBirth = dateOfBirth,
-                        gender = gender,
-                        fathersName = fathersName.text,
-                        mothersName = mothersName.text,
-                        guardianOccupation = guardianOccupation.text,
-                        religion = religion,
-                        address = address.text,
-                        contactNumber = contactNumber.text.toLong(),
-                        aadharNumber = aadharNumber.text.toLong(),
-                        dateOfAdmission = dateOfAdmission,
-                        entryClass = entryClass,
-                        schoolAttended = schoolAttended.text,
-                        transportStudent = transportStudent,
-                        newStudent = newStudent,
-                        orphan = isOrphan,
-                        rte = isRte,
-                        image = ""
-                    )
-                    val formValidation = validateStudentObjectBeforeUpload(student)
-                    if (formValidation == null) {
-                        viewModel.registerStudent(
-                            student, classID, className, uriString.value
-                        )
-                    } else {
-                        context.toast(formValidation)
-                    }
-
-                } catch (_: NumberFormatException) {
-                    context.toast("Roll or Enrollment can't be null")
-                }
-            }
+    Scaffold(
+        scaffoldState = rememberScaffoldState(), topBar = {
+            DPSBar(onBackPressed = {
+                navController.popBackStack()
+            }, className = "Registration Form For $className")
         },
-            modifier = Modifier.padding(bottom = 60.dp, end = 10.dp),
-            elevation = FloatingActionButtonDefaults.elevation(4.dp),
-            backgroundColor = classColor,
-            shape = RoundedCornerShape(8.dp),
-            icon = {
-                Icon(
-                    Icons.Filled.CloudUpload,
-                    null,
-                    tint = Color.White,
-                    modifier = Modifier.requiredSize(30.dp)
-                )
+        floatingActionButton = {
+            ExtendedFloatingActionButton(onClick = {
+                if (rollNumber.text.isNotEmpty() && scholarNumber.text.isNotEmpty()) {
+                    try {
+                        val student = Student(
+                            rollNumber = rollNumber.text.toLong(),
+                            scholarNumber = scholarNumber.text.toLong(),
+                            firstName = firstName.text,
+                            lastName = lastName.text,
+                            dateOfBirth = dateOfBirth.text,
+                            gender = gender,
+                            fathersName = fathersName.text,
+                            mothersName = mothersName.text,
+                            guardianOccupation = guardianOccupation.text,
+                            religion = religion,
+                            address = address.text,
+                            contactNumber = contactNumber.text.toLong(),
+                            aadharNumber = aadharNumber.text.toLong(),
+                            dateOfAdmission = dateOfAdmission,
+                            entryClass = entryClass,
+                            schoolAttended = schoolAttended.text,
+                            transportStudent = transportStudent,
+                            newStudent = newStudent,
+                            orphan = isOrphan,
+                            rte = isRte,
+                            image = ""
+                        )
+                        val formValidation = validateStudentObjectBeforeUpload(student)
+                        if (formValidation == null) {
+                            viewModel.registerStudent(
+                                student, classID, className, uriString.value
+                            )
+                        } else {
+                            context.toast(formValidation)
+                        }
+
+                    } catch (_: NumberFormatException) {
+                        context.toast("Roll or Enrollment can't be null")
+                    }
+                }
             },
-            text = {
-                Text(
-                    text = "Save", style = TextStyle(
-                        fontFamily = boldFont,
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.SemiBold
-                    ), color = Color.White
-                )
-            })
-    }, floatingActionButtonPosition = FabPosition.End
+                modifier = Modifier.padding(bottom = 60.dp, end = 10.dp),
+                elevation = FloatingActionButtonDefaults.elevation(4.dp),
+                backgroundColor = classColor,
+                shape = RoundedCornerShape(8.dp),
+                icon = {
+                    Icon(
+                        Icons.Filled.CloudUpload,
+                        null,
+                        tint = Color.White,
+                        modifier = Modifier.requiredSize(30.dp)
+                    )
+                },
+                text = {
+                    Text(
+                        text = "Save", style = TextStyle(
+                            fontFamily = boldFont,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.SemiBold
+                        ), color = Color.White
+                    )
+                })
+        }, floatingActionButtonPosition = FabPosition.End
     ) { paddingValues ->
         Column(
             horizontalAlignment = Alignment.Start,
@@ -319,6 +355,17 @@ fun RegisterStudent(
             }
             FormRow(padding = 24) {
                 OutlinedTextField(value = dateOfBirth,
+                    label = {
+                        Text(
+                            text = "Birthday", style = TextStyle(
+                                fontFamily = mediumFont,
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                textAlign = TextAlign.Center,
+                            )
+                        )
+                    },
+                    visualTransformation = DateMaskTransformation(DATE_MASK),
                     textStyle = TextStyle(
                         textAlign = TextAlign.Center,
                         fontFamily = regularFont,
@@ -326,8 +373,12 @@ fun RegisterStudent(
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colors.onBackground
                     ),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next
+                    ),
                     maxLines = 1,
-                    enabled = false,
+                    enabled = true,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = classColor,
                         focusedLabelColor = classColor,
@@ -343,13 +394,19 @@ fun RegisterStudent(
                             modifier = Modifier.requiredSize(34.dp)
                         )
                     },
-                    onValueChange = { },
+                    onValueChange = {
+                        dateOfBirth = it
+                        it.text.length.let { length ->
+                            if (length <= DATE_LENGTH) {
+                                dateOfBirth = it
+                            }
+                        }
+                    },
                     modifier = Modifier
                         .weight(1f)
                         .padding(horizontal = 10.dp)
-                        .clickable {
-                            birthDateDialogState.show()
-                        })
+
+                )
                 DropDown(
                     lableText = "Select Gender",
                     expanded = genderExpanded,
@@ -503,34 +560,26 @@ fun RegisterStudent(
                 is Resource.Failure -> {
                     value.exception.message?.let { it1 -> context.toast(it1) }
                 }
+
                 is Resource.Success -> {
                     LaunchedEffect(Unit) {
                         navController.popBackStack()
                     }
                 }
+
                 is Resource.Loading -> {
                     CircularProgress(color = classColor)
                 }
+
                 is Resource.FailureMessage -> {
                     Toast.makeText(context, value.message, Toast.LENGTH_LONG).show()
                 }
+
                 else -> {}
             }
         }
 
 
-        MaterialDialog(dialogState = birthDateDialogState, buttons = {
-            positiveButton(text = "Ok") {}
-            negativeButton(text = "Cancel")
-        }) {
-            datepicker(
-                initialDate = LocalDate.now(),
-                title = "Pick a date",
-                yearRange = IntRange(1950, 2099),
-            ) {
-                pickedBirthDate = it
-            }
-        }
         MaterialDialog(dialogState = admissionDateDialogState, buttons = {
             positiveButton(text = "Ok") {}
             negativeButton(text = "Cancel")

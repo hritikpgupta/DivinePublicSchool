@@ -63,9 +63,7 @@ fun validateStudentObjectBeforeUpload(student: Student): String? {
     if (student.firstName.trim().isEmpty()) {
         return "First name is required."
     }
-    if (student.lastName.trim().isEmpty()) {
-        return "LastName is required."
-    }
+
     if (student.rollNumber.toString().trim().isEmpty()) {
         return "Roll number is required."
     }
