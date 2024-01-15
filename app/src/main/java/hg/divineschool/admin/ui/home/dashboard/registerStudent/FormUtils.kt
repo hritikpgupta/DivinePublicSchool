@@ -1,9 +1,27 @@
 package hg.divineschool.admin.ui.home.dashboard.registerStudent
 
+import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.Checkbox
+import androidx.compose.material.CheckboxDefaults
+import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ExposedDropdownMenuBox
+import androidx.compose.material.ExposedDropdownMenuDefaults
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldColors
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,7 +39,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hg.divineschool.admin.R
-import hg.divineschool.admin.ui.theme.lightFont
 import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.getTextAlignment
@@ -44,6 +61,22 @@ val classEntryOptions = listOf(
     "Class Eight"
 )
 
+fun String.getDefaultClassEntryOption(): String {
+    val id = this.toInt()
+    if (id == 0) return classEntryOptions[0]
+    if (id == 1) return classEntryOptions[1]
+    if (id == 2) return classEntryOptions[2]
+    if (id == 3) return classEntryOptions[3]
+    if (id == 4) return classEntryOptions[4]
+    if (id == 5) return classEntryOptions[5]
+    if (id == 6) return classEntryOptions[6]
+    if (id == 7) return classEntryOptions[7]
+    if (id == 8) return classEntryOptions[8]
+    if (id == 9) return classEntryOptions[9]
+    if (id == 10) return classEntryOptions[10]
+    return classEntryOptions[0]
+}
+
 
 fun String.toLocalDate(): LocalDate {
     return if (this.isEmpty() || this.isBlank()) {
@@ -62,36 +95,47 @@ fun decideMonth(string: String): Month {
         "Jan" -> {
             Month.JANUARY
         }
+
         "Feb" -> {
             Month.FEBRUARY
         }
+
         "Mar" -> {
             Month.MARCH
         }
+
         "Apr" -> {
             Month.APRIL
         }
+
         "May" -> {
             Month.MAY
         }
+
         "Jun" -> {
             Month.JUNE
         }
+
         "Jul" -> {
             Month.JULY
         }
+
         "Aug" -> {
             Month.AUGUST
         }
+
         "Sep" -> {
             Month.SEPTEMBER
         }
+
         "Oct" -> {
             Month.OCTOBER
         }
+
         "Nov" -> {
             Month.NOVEMBER
         }
+
         else -> {
             Month.DECEMBER
         }
@@ -155,7 +199,12 @@ fun FormEditText(
                 )
             )
         },
-        textStyle = TextStyle(fontFamily = regularFont, fontSize = 22.sp, fontWeight = FontWeight.Thin, textAlign = isEnabled.getTextAlignment()),
+        textStyle = TextStyle(
+            fontFamily = regularFont,
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Thin,
+            textAlign = isEnabled.getTextAlignment()
+        ),
         maxLines = 1,
         enabled = isEnabled,
         onValueChange = { onValueChanged(it) },
@@ -371,7 +420,7 @@ fun UpdateFormCheckboxes(
     newStudent: Boolean,
     isOrphan: Boolean,
     isRte: Boolean,
-    active : Boolean,
+    active: Boolean,
     onTransportChange: (status: Boolean) -> Unit,
     onNewStudentChange: (status: Boolean) -> Unit,
     onIsOrphanChange: (status: Boolean) -> Unit,

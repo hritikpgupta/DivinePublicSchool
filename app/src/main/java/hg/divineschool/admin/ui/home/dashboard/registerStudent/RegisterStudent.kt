@@ -145,7 +145,7 @@ fun RegisterStudent(
             DateTimeFormatter.ofPattern("MMM dd yyyy").format(pickedAdmissionDate)
         }
     }
-    var entryClass by remember { mutableStateOf(classEntryOptions[0]) }
+    var entryClass by remember { mutableStateOf(classID.getDefaultClassEntryOption()) }
     var schoolAttended by remember { mutableStateOf(TextFieldValue("")) }
     var transportStudent by remember { mutableStateOf(false) }
     var newStudent by remember { mutableStateOf(false) }
