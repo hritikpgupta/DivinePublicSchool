@@ -57,7 +57,7 @@ fun ManageFee(navController: NavController, viewModel: ManageFeeViewModel) {
     var classSix by remember { mutableStateOf(TextFieldValue("${fee.classSixTuition}")) }
     var classSeven by remember { mutableStateOf(TextFieldValue("${fee.classSevenTuition}")) }
     var classEight by remember { mutableStateOf(TextFieldValue("${fee.classEightTuition}")) }
-    var admissionCharge by remember { mutableStateOf(TextFieldValue("${fee.admissionCharge}")) }
+    var developmentCharge by remember { mutableStateOf(TextFieldValue("${fee.developmentCharge}")) }
     var annualCharge by remember { mutableStateOf(TextFieldValue("${fee.annualCharge}")) }
     var juniorComputerFee by remember { mutableStateOf(TextFieldValue("${fee.computerFeeJunior}")) }
     var seniorComputerFee by remember { mutableStateOf(TextFieldValue("${fee.computerFeeSenior}")) }
@@ -94,7 +94,7 @@ fun ManageFee(navController: NavController, viewModel: ManageFeeViewModel) {
                             classSixTuition = classSix.text.toInt(),
                             classSevenTuition = classSeven.text.toInt(),
                             classEightTuition = classEight.text.toInt(),
-                            admissionCharge = admissionCharge.text.toInt(),
+                            developmentCharge = developmentCharge.text.toInt(),
                             annualCharge = annualCharge.text.toInt(),
                             computerFeeJunior = juniorComputerFee.text.toInt(),
                             computerFeeSenior = seniorComputerFee.text.toInt(),
@@ -355,11 +355,11 @@ fun ManageFee(navController: NavController, viewModel: ManageFeeViewModel) {
                                     top = 10.dp,
                                     bottom = 8.dp
                                 ),
-                                name = admissionCharge,
-                                textLable = "Admission",
+                                name = developmentCharge,
+                                textLable = "Development",
                                 enabled = isAdmin,
                                 keyboardType = KeyboardType.Number,
-                                onValueChanged = { admissionCharge = it }
+                                onValueChanged = { developmentCharge = it }
                             )
                             FeeUnit(
                                 modifier = Modifier.weight(1f),

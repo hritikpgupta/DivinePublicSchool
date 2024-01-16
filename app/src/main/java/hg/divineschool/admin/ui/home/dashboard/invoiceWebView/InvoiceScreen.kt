@@ -71,7 +71,7 @@ class InvoiceScreen : ComponentActivity() {
             invoice.computerFee.toString().isFeeZero(),
             invoice.annualCharge.toString().isFeeZero(),
             invoice.lateFee.toString().isFeeZero(),
-            invoice.admissionFee.toString().isFeeZero(),
+            invoice.developmentFee.toString().isFeeZero(),
             invoice.transportFee.toString().isFeeZero(),
             invoice.examFee.toString().isFeeZero(),
             invoice.supplementaryFee.toString().isFeeZero(),

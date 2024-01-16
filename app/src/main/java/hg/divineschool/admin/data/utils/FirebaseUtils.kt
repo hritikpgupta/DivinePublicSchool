@@ -51,9 +51,6 @@ suspend fun <T> Task<T>.uploadFile(reference: StorageReference): Uri {
 }
 
 fun validateStudentObjectBeforeUpload(student: Student): String? {
-    if (student.contactNumber.toString().trim().length != 10) {
-        return "Contact Number Must Be Of Length 10."
-    }
     if (student.entryClass.trim().isEmpty()) {
         return "Entry Class Must Not Be Empty."
     }
@@ -63,11 +60,9 @@ fun validateStudentObjectBeforeUpload(student: Student): String? {
     if (student.firstName.trim().isEmpty()) {
         return "First name is required."
     }
-
     if (student.rollNumber.toString().trim().isEmpty()) {
         return "Roll number is required."
     }
-
     return null
 }
 

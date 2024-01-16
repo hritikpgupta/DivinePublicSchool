@@ -10,7 +10,7 @@ data class Invoice(
     var tuitionFeeMonthList: String = "",
     var bookList: String = "",
     var supplementsList: String = "",
-    var admissionFee: Long = 0,
+    var developmentFee: Long = 0,
     var annualCharge: Long = 0,
     var computerFee: Long = 0,
     var examFee: Long = 0,

@@ -66,7 +66,7 @@ class SettingRepositoryImpl @Inject constructor(
 
             db.collection("fees").document("feeStructure").update(
                 mapOf(
-                    "admissionCharge" to feeStructure.admissionCharge,
+                    "developmentCharge" to feeStructure.developmentCharge,
                     "annualCharge" to feeStructure.annualCharge,
                     "beltPrice" to feeStructure.beltPrice,
                     "classEightTuition" to feeStructure.classEightTuition,
@@ -102,7 +102,7 @@ class SettingRepositoryImpl @Inject constructor(
                 classSevenTuition = feeStructure.classSevenTuition
                 classEightTuition = feeStructure.classEightTuition
 
-                admissionCharge = feeStructure.admissionCharge
+                developmentCharge = feeStructure.developmentCharge
                 annualCharge = feeStructure.annualCharge
                 examFee = feeStructure.examFee
                 computerFeeJunior = feeStructure.computerFeeJunior
@@ -372,7 +372,7 @@ class SettingRepositoryImpl @Inject constructor(
                     tuitionFeeMonthList = invo.getString("tuitionFeeMonthList") as String
                     bookList = invo.getString("bookList") as String
                     supplementsList = invo.getString("supplementsList") as String
-                    admissionFee = invo.getLong("admissionFee") as Long
+                    developmentFee = invo.getLong("developmentFee") as Long
                     annualCharge = invo.getLong("annualCharge") as Long
                     computerFee = invo.getLong("computerFee") as Long
                     examFee = invo.getLong("examFee") as Long

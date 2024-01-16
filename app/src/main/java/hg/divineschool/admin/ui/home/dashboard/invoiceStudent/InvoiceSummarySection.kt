@@ -29,7 +29,7 @@ fun InvoiceSummarySection(
     color: Color,
     modifier: Modifier,
     tuitionFee: Long,
-    admissionFee: Long,
+    developmentFee: Long,
     transportFee: Long,
     bookFee: Long,
     supplementFee: Long,
@@ -39,7 +39,7 @@ fun InvoiceSummarySection(
     onGenerateClicked: (invoice: Invoice) -> Unit
 ) {
     val sum =
-        tuitionFee + admissionFee + transportFee + bookFee + supplementFee + examinationFee + annualFee + computerFee
+        tuitionFee + developmentFee + transportFee + bookFee + supplementFee + examinationFee + annualFee + computerFee
     val scrollState = rememberScrollState()
 
     Column(
@@ -119,9 +119,9 @@ fun InvoiceSummarySection(
             )
         }
         Row {
-            TableHeading(heading = "Admission Fee", modifier = Modifier.weight(0.6f))
+            TableHeading(heading = "Development Fee", modifier = Modifier.weight(0.6f))
             TableValue(
-                value = "$INR $admissionFee ",
+                value = "$INR $developmentFee ",
                 modifier = Modifier.weight(0.4f),
                 align = TextAlign.End
             )
@@ -162,7 +162,7 @@ fun InvoiceSummarySection(
                     onGenerateClicked(
                         Invoice(
                             tuitionFee = tuitionFee,
-                            admissionFee = admissionFee,
+                            developmentFee = developmentFee,
                             transportFee = transportFee,
                             bookFee = bookFee,
                             supplementaryFee = supplementFee,

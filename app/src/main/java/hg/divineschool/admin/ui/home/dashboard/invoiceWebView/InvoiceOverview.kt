@@ -130,7 +130,7 @@ class InvoiceOverview : ComponentActivity() {
                                     computerFee = invoice.computerFee,
                                     invoice.annualCharge,
                                     invoice.lateFee,
-                                    invoice.admissionFee,
+                                    invoice.developmentFee,
                                     invoice.transportFee,
                                     invoice.examFee,
                                     invoice.supplementaryFee,

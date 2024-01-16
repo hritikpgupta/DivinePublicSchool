@@ -1,7 +1,6 @@
 package hg.divineschool.admin.ui.home.dashboard.invoiceStudent
 
 import android.content.Intent
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -31,13 +30,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
-import hg.divineschool.admin.AppScreen
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.*
 import hg.divineschool.admin.data.utils.*
 import hg.divineschool.admin.ui.home.DPSBarWithAction
 import hg.divineschool.admin.ui.home.dashboard.invoiceWebView.InvoiceOverview
-import hg.divineschool.admin.ui.home.dashboard.invoiceWebView.InvoiceScreen
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.FormRow
 import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.cardColors
@@ -45,7 +42,6 @@ import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.*
 import kotlinx.coroutines.launch
-import java.util.*
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -74,13 +70,13 @@ fun StudentInvoice(
         mutableStateOf(emptyList<MonthFee>())
     }
 
-    val chargeAdmissionFee = remember {
+    val chargeDevelopmentFee = remember {
         mutableStateOf(false)
     }
     val tuitionFee = remember {
         mutableStateOf(0)
     }
-    val admissionFee = remember {
+    val developmentFee = remember {
         mutableStateOf(0)
     }
     val transportFee = remember {
@@ -272,16 +268,16 @@ fun StudentInvoice(
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         if (it.result.student.newStudent) {
                                             InvoiceCheckBoxes(
-                                                text = "Admission Fee",
+                                                text = "Development Fee",
                                                 classColor,
-                                                chargeAdmissionFee.value,
+                                                chargeDevelopmentFee.value,
                                                 { bool ->
-                                                    chargeAdmissionFee.value = bool
-                                                    if (chargeAdmissionFee.value) {
-                                                        admissionFee.value =
-                                                            FeeStructure.FEE_STRUCT.admissionCharge
+                                                    chargeDevelopmentFee.value = bool
+                                                    if (chargeDevelopmentFee.value) {
+                                                        developmentFee.value =
+                                                            FeeStructure.FEE_STRUCT.developmentCharge
                                                     } else {
-                                                        admissionFee.value = 0
+                                                        developmentFee.value = 0
                                                     }
                                                 },
                                                 modifier = Modifier
@@ -346,10 +342,7 @@ fun StudentInvoice(
 
                                             if (monthList.isNotEmpty()) {
                                                 selectedMonthFee.value = monthList
-                                                tuitionFee.value =
-                                                    monthList.size * FeeStructure.FEE_STRUCT.getTuitionFee(
-                                                        classID
-                                                    )
+                                                tuitionFee.value =monthList.size * FeeStructure.FEE_STRUCT.getTuitionFee(classID)
                                                 examinationFee.value = monthList.getExamFee()
                                                 annualFee.value = monthList.getAnnualFee()
                                                 computerFee.value =
@@ -443,7 +436,7 @@ fun StudentInvoice(
                                                 FeeStructure.FEE_STRUCT.getPlaces(), classColor
                                             ) { place ->
                                                 if (place != null) {
-                                                    transportFee.value = place.placePrice
+                                                    transportFee.value = place.placePrice * selectedMonthFee.value.size
                                                     transportPlace.value = place.placeName
                                                 } else {
                                                     transportFee.value = 0
@@ -467,7 +460,7 @@ fun StudentInvoice(
                             modifier = Modifier.weight(0.25f),
                             color = classColor,
                             tuitionFee = tuitionFee.value.toLong(),
-                            admissionFee = admissionFee.value.toLong(),
+                            developmentFee = developmentFee.value.toLong(),
                             transportFee = transportFee.value.toLong(),
                             bookFee = bookFee.value.toLong(),
                             supplementFee = supplementFee.value.toLong(),
@@ -511,7 +504,7 @@ fun StudentInvoice(
                         intent.putExtra("invoiceObject", it.result)
                         startInvoiceScreen.launch(intent)
                         tuitionFee.value = 0
-                        admissionFee.value = 0
+                        developmentFee.value = 0
                         transportFee.value = 0
                         bookFee.value = 0
                         supplementFee.value = 0

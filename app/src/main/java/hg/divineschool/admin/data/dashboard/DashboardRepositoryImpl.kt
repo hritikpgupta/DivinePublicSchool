@@ -74,7 +74,7 @@ class DashboardRepositoryImpl @Inject constructor(
         val feeStructure = FeeStructure()
         result.data.let { it ->
             feeStructure.apply {
-                admissionCharge = (it?.get("admissionCharge") as Long).toInt()
+                developmentCharge = (it?.get("developmentCharge") as Long).toInt()
                 annualCharge = (it["annualCharge"] as Long).toInt()
                 beltPrice = (it["beltPrice"] as Long).toInt()
                 computerFeeJunior = (it["computerFeeJunior"] as Long).toInt()

@@ -9,7 +9,7 @@ import hg.divineschool.admin.ui.theme.cellColor
 import hg.divineschool.admin.ui.utils.TableCell
 
 @Composable
-fun Detail(computerFee : Long, annualFee : Long, lateFee : Long, admissionFee : Long, transportFee : Long, examFee : Long, supplementFee : Long, tuitionFee : Long, bookFee : Long, total : Long) {
+fun Detail(computerFee : Long, annualFee : Long, lateFee : Long, developmentFee : Long, transportFee : Long, examFee : Long, supplementFee : Long, tuitionFee : Long, bookFee : Long, total : Long) {
     Column(modifier = Modifier
         .fillMaxWidth()
         .wrapContentHeight()
@@ -33,8 +33,8 @@ fun Detail(computerFee : Long, annualFee : Long, lateFee : Long, admissionFee : 
             TableCell(text = lateFee.toString(), weight = 0.2f, align = TextAlign.Center)
         }
         Row(modifier = Modifier.fillMaxWidth().padding(top = 0.2.dp)) {
-            TableCell(text = "Admission Fee", weight = 0.8f)
-            TableCell(text = admissionFee.toString(), weight = 0.2f, align = TextAlign.Center)
+            TableCell(text = "Development Fee", weight = 0.8f)
+            TableCell(text = developmentFee.toString(), weight = 0.2f, align = TextAlign.Center)
         }
         Row(modifier = Modifier.fillMaxWidth().padding(top = 0.2.dp)) {
             TableCell(text = "Transport Fee", weight = 0.8f)

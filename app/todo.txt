@@ -1,14 +1,13 @@
-Things to do
 
--- Add button to change active status of a student - Done
--- Need functionality to change class teacher name -Done
--- Extract Progress Bar as a composable function -Done
--- Implement (Show admin setting for a specific user logon) - Done
--- Need functionality to view students who have not paid for a particular month - Done
--- Do the above check before migration -Done
--- Need functionality to view tuition fee collected by day
--- Need functionality to set tuition fee - Done
+Issue
 
+Change admission fee to development fee - Fixed
+Mobile number can be empty - Fixed
+Multiply destination fees by number of months selected - Important - Fixed
 
--- Need functionality to manage books - Done
--- Need functionality to set school information (isOpen, start and end time, total students, transport , new, rte, ) - Done
+Fix state of edit text when adding destination
+Prevent from using same roll number
+Fix Bill S/O is written 2 times
+Fix ( If admission fee is charged then annual fee shouldn't be charged)
+Dialogue shouldn't be dismiss on outside touch
+Add PEN Number

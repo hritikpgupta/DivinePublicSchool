@@ -1,6 +1,5 @@
 package hg.divineschool.admin.data.dashboard.student
 
-import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -151,7 +150,7 @@ class StudentInvoiceRepositoryImpl @Inject constructor(
                                 tuitionFeeMonthList = invo.getString("tuitionFeeMonthList") as String,
                                 bookList = invo.getString("bookList") as String,
                                 supplementsList = invo.getString("supplementsList") as String,
-                                admissionFee = invo.getLong("admissionFee") as Long,
+                                developmentFee = invo.getLong("developmentFee") as Long,
                                 annualCharge = invo.getLong("annualCharge") as Long,
                                 computerFee = invo.getLong("computerFee") as Long,
                                 examFee = invo.getLong("examFee") as Long,

@@ -1,7 +1,7 @@
 package hg.divineschool.admin.data.models
 
 data class FeeStructure(
-    var admissionCharge: Int = 0,
+    var developmentCharge: Int = 0,
     var annualCharge: Int = 0,
     var beltPrice: Int = 0,
     var computerFeeJunior: Int = 0,
