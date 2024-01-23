@@ -102,6 +102,9 @@ fun StudentInvoice(
     val annualFee = remember {
         mutableStateOf(0)
     }
+    val defaultNumberOfMonthsForDestination = remember {
+        mutableStateOf(1)
+    }
 
     val classColor = cardColors[classID.toInt()]
     LaunchedEffect(Unit) {
@@ -339,8 +342,8 @@ fun StudentInvoice(
                                         MonthSelectList(
                                             it.result.monthFeeList, classColor
                                         ) { monthList ->
-
                                             if (monthList.isNotEmpty()) {
+                                                defaultNumberOfMonthsForDestination.value = monthList.size
                                                 selectedMonthFee.value = monthList
                                                 tuitionFee.value =monthList.size * FeeStructure.FEE_STRUCT.getTuitionFee(classID)
                                                 examinationFee.value = monthList.getExamFee()
@@ -353,6 +356,7 @@ fun StudentInvoice(
                                                 annualFee.value = 0
                                                 computerFee.value = 0
                                                 selectedMonthFee.value = emptyList()
+                                                defaultNumberOfMonthsForDestination.value = 1
                                             }
                                         }
                                     }
@@ -436,7 +440,7 @@ fun StudentInvoice(
                                                 FeeStructure.FEE_STRUCT.getPlaces(), classColor
                                             ) { place ->
                                                 if (place != null) {
-                                                    transportFee.value = place.placePrice * selectedMonthFee.value.size
+                                                    transportFee.value = place.placePrice
                                                     transportPlace.value = place.placeName
                                                 } else {
                                                     transportFee.value = 0
@@ -460,6 +464,7 @@ fun StudentInvoice(
                             modifier = Modifier.weight(0.25f),
                             color = classColor,
                             tuitionFee = tuitionFee.value.toLong(),
+                            defaultNumberOfMonthsForDestination = defaultNumberOfMonthsForDestination.value,
                             developmentFee = developmentFee.value.toLong(),
                             transportFee = transportFee.value.toLong(),
                             bookFee = bookFee.value.toLong(),

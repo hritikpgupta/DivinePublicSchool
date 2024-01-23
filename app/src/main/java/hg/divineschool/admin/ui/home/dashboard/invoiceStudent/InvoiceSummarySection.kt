@@ -1,7 +1,15 @@
 package hg.divineschool.admin.ui.home.dashboard.invoiceStudent
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
@@ -29,6 +37,7 @@ fun InvoiceSummarySection(
     color: Color,
     modifier: Modifier,
     tuitionFee: Long,
+    defaultNumberOfMonthsForDestination: Int,
     developmentFee: Long,
     transportFee: Long,
     bookFee: Long,
@@ -79,74 +88,74 @@ fun InvoiceSummarySection(
         Spacer(modifier = Modifier.height(10.dp))
 
         Row {
-            TableHeading(heading = "Tuition Fee", modifier = Modifier.weight(0.6f))
+            TableHeading(heading = "Tuition Fee", modifier = Modifier.weight(0.65f))
             TableValue(
                 value = "$INR $tuitionFee ",
-                modifier = Modifier.weight(0.4f),
+                modifier = Modifier.weight(0.35f),
                 align = TextAlign.End
             )
         }
         Row {
-            TableHeading(heading = "Transport Fee", modifier = Modifier.weight(0.6f))
+            TableHeading(heading = "Transport Fee", modifier = Modifier.weight(0.65f))
             TableValue(
-                value = "$INR $transportFee ",
-                modifier = Modifier.weight(0.4f),
+                value = "$INR ${transportFee * defaultNumberOfMonthsForDestination} ",
+                modifier = Modifier.weight(0.35f),
                 align = TextAlign.End
             )
         }
         Row {
-            TableHeading(heading = "Examination Fee", modifier = Modifier.weight(0.6f))
+            TableHeading(heading = "Examination Fee", modifier = Modifier.weight(0.65f))
             TableValue(
                 value = "$INR $examinationFee ",
-                modifier = Modifier.weight(0.4f),
+                modifier = Modifier.weight(0.35f),
                 align = TextAlign.End
             )
         }
         Row {
-            TableHeading(heading = "Computer Fee", modifier = Modifier.weight(0.6f))
+            TableHeading(heading = "Computer Fee", modifier = Modifier.weight(0.65f))
             TableValue(
                 value = "$INR $computerFee ",
-                modifier = Modifier.weight(0.4f),
+                modifier = Modifier.weight(0.35f),
                 align = TextAlign.End
             )
         }
         Row {
-            TableHeading(heading = "Annual Fee", modifier = Modifier.weight(0.6f))
+            TableHeading(heading = "Annual Fee", modifier = Modifier.weight(0.65f))
             TableValue(
                 value = "$INR $annualFee ",
-                modifier = Modifier.weight(0.4f),
+                modifier = Modifier.weight(0.35f),
                 align = TextAlign.End
             )
         }
         Row {
-            TableHeading(heading = "Development Fee", modifier = Modifier.weight(0.6f))
+            TableHeading(heading = "Development Fee", modifier = Modifier.weight(0.65f))
             TableValue(
                 value = "$INR $developmentFee ",
-                modifier = Modifier.weight(0.4f),
+                modifier = Modifier.weight(0.35f),
                 align = TextAlign.End
             )
         }
         Row {
-            TableHeading(heading = "Supplements Fee", modifier = Modifier.weight(0.6f))
+            TableHeading(heading = "Supplements Fee", modifier = Modifier.weight(0.65f))
             TableValue(
                 value = "$INR $supplementFee ",
-                modifier = Modifier.weight(0.4f),
+                modifier = Modifier.weight(0.35f),
                 align = TextAlign.End
             )
         }
         Row {
-            TableHeading(heading = "Books Fee", modifier = Modifier.weight(0.6f))
+            TableHeading(heading = "Books Fee", modifier = Modifier.weight(0.65f))
             TableValue(
                 value = "$INR $bookFee ",
-                modifier = Modifier.weight(0.4f),
+                modifier = Modifier.weight(0.35f),
                 align = TextAlign.End
             )
         }
         Row {
-            TableHeading2(heading = "Total", modifier = Modifier.weight(0.6f), color = color)
+            TableHeading2(heading = "Total", modifier = Modifier.weight(0.65f), color = color)
             TableValue2(
                 value = "$INR $sum ",
-                modifier = Modifier.weight(0.4f)
+                modifier = Modifier.weight(0.35f)
             )
         }
         Divider(thickness = 2.dp, color = Color.LightGray)
@@ -163,7 +172,7 @@ fun InvoiceSummarySection(
                         Invoice(
                             tuitionFee = tuitionFee,
                             developmentFee = developmentFee,
-                            transportFee = transportFee,
+                            transportFee = transportFee * defaultNumberOfMonthsForDestination,
                             bookFee = bookFee,
                             supplementaryFee = supplementFee,
                             examFee = examinationFee,
