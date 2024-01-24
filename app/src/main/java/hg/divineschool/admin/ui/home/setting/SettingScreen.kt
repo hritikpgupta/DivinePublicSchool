@@ -40,10 +40,10 @@ fun SettingScreen(navController: NavController, viewModel: SettingViewModel) {
     var totalStudent by remember { mutableStateOf("") }
     var transportStudent by remember { mutableStateOf("") }
     var rteStudent by remember { mutableStateOf("") }
-    var isFetched by remember { mutableStateOf(false) }
+    var isFetched by remember { mutableStateOf(true) }
     val context = LocalContext.current
     LaunchedEffect(Unit) {
-        viewModel.getStudentsCount()
+        //viewModel.getStudentsCount()
     }
 
     Scaffold(topBar = { DPSAppBar() }) { padding ->

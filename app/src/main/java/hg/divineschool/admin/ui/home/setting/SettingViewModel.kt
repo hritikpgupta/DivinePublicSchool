@@ -31,8 +31,8 @@ class SettingViewModel @Inject constructor(
     }
 
     fun getStudentsCount() = viewModelScope.launch {
-        _studentCountFlow.value = Resource.Loading
-        _studentCountFlow.value = repository.getStudentsCount()
+        _studentCountFlow.value = Resource.FailureMessage("Not implemented yet")
+        //_studentCountFlow.value = repository.getStudentsCount()
     }
 
 }

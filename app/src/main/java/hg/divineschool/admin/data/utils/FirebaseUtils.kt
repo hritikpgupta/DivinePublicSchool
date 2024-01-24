@@ -5,7 +5,11 @@ import android.net.Uri
 import android.os.Build
 import com.google.android.gms.tasks.Task
 import com.google.firebase.storage.StorageReference
-import hg.divineschool.admin.data.models.*
+import hg.divineschool.admin.data.models.Book
+import hg.divineschool.admin.data.models.FeeStructure
+import hg.divineschool.admin.data.models.Place
+import hg.divineschool.admin.data.models.Student
+import hg.divineschool.admin.data.models.Supplement
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.Serializable
 import kotlin.coroutines.resumeWithException
@@ -63,6 +67,9 @@ fun validateStudentObjectBeforeUpload(student: Student): String? {
     if (student.rollNumber.toString().trim().isEmpty()) {
         return "Roll number is required."
     }
+    if (student.dateOfBirth.length != 10) {
+        return "Date of birth should be in dd/mm/yyyy format."
+    }
     return null
 }
 
@@ -73,36 +80,47 @@ fun FeeStructure.getBooks(classID: String): List<Book> {
         0 -> {
             returnBookList(this.pgBooks, bookList)
         }
+
         1 -> {
             returnBookList(this.lnBooks, bookList)
         }
+
         2 -> {
             returnBookList(this.unBooks, bookList)
         }
+
         3 -> {
             returnBookList(this.classOneBooks, bookList)
         }
+
         4 -> {
             returnBookList(this.classTwoBooks, bookList)
         }
+
         5 -> {
             returnBookList(this.classThreeBooks, bookList)
         }
+
         6 -> {
             returnBookList(this.classFourBooks, bookList)
         }
+
         7 -> {
             returnBookList(this.classFiveBooks, bookList)
         }
+
         8 -> {
             returnBookList(this.classSixBooks, bookList)
         }
+
         9 -> {
             returnBookList(this.classSevenBooks, bookList)
         }
+
         10 -> {
             returnBookList(this.classEightBooks, bookList)
         }
+
         else -> {
             return bookList
         }
@@ -131,36 +149,47 @@ fun FeeStructure.getTuitionFee(classID: String): Int {
         0 -> {
             return this.pgTuition
         }
+
         1 -> {
             return this.lnTuition
         }
+
         2 -> {
             return this.unTuition
         }
+
         3 -> {
             return this.classOneTuition
         }
+
         4 -> {
             return this.classTwoTuition
         }
+
         5 -> {
             return this.classThreeTuition
         }
+
         6 -> {
             return this.classFourTuition
         }
+
         7 -> {
             return this.classFiveTuition
         }
+
         8 -> {
             return this.classSixTuition
         }
+
         9 -> {
             return this.classSevenTuition
         }
+
         10 -> {
             return this.classEightTuition
         }
+
         else -> {
             return fee
         }

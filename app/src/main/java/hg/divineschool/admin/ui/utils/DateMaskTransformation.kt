@@ -36,7 +36,6 @@ class DateMaskTransformation(private val mask: String) : VisualTransformation {
             }
             return masked.length + 1
         }
-
         override fun transformedToOriginal(offset: Int): Int {
             return mask.take(offset.absoluteValue).count { it == '#' }
         }

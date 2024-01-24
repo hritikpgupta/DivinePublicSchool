@@ -3,16 +3,43 @@ package hg.divineschool.admin.ui.home.setting.manageBooks
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Card
+import androidx.compose.material.ExtendedFloatingActionButton
+import androidx.compose.material.FloatingActionButtonDefaults
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.*
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +53,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
 import hg.divineschool.admin.R
@@ -34,7 +62,11 @@ import hg.divineschool.admin.data.models.Book
 import hg.divineschool.admin.ui.home.DPSBar
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.DropDown
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.dropDownModifier
-import hg.divineschool.admin.ui.theme.*
+import hg.divineschool.admin.ui.theme.Purple500
+import hg.divineschool.admin.ui.theme.boldFont
+import hg.divineschool.admin.ui.theme.lightFont
+import hg.divineschool.admin.ui.theme.mediumFont
+import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.CircularProgress
 import hg.divineschool.admin.ui.utils.classNames
 import hg.divineschool.admin.ui.utils.getClassColorFromName
@@ -59,6 +91,8 @@ fun ManageBook(navController: NavController, viewModel: ManageBookViewModel) {
         }, className = "Manage Books")
     }, floatingActionButton = {
         ExtendedFloatingActionButton(onClick = {
+            addBookValue = ""
+            addBookName = ""
             showAddDialog.value = true
         },
             modifier = Modifier.padding(bottom = 70.dp, end = 10.dp),
@@ -138,9 +172,11 @@ fun ManageBook(navController: NavController, viewModel: ManageBookViewModel) {
                             is Resource.Loading -> {
                                 CircularProgress()
                             }
+
                             is Resource.Failure -> {
                                 it.exception.message?.let { it1 -> context.toast(it1) }
                             }
+
                             is Resource.Success -> {
                                 if (it.result.isNotEmpty()) {
                                     LazyVerticalGrid(
@@ -200,6 +236,7 @@ fun ManageBook(navController: NavController, viewModel: ManageBookViewModel) {
                                 }
 
                             }
+
                             else -> {}
                         }
                     }
@@ -209,187 +246,255 @@ fun ManageBook(navController: NavController, viewModel: ManageBookViewModel) {
         if (showDialog.value) {
             AlertDialog(onDismissRequest = {
                 showDialog.value = false
-            }, text = {
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    androidx.compose.material3.Text(
-                        text = "Edit/Remove Book", style = TextStyle(
-                            fontFamily = mediumFont,
-                            fontSize = 32.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    )
-                    Spacer(modifier = Modifier.requiredHeight(10.dp))
-                    androidx.compose.material3.Text(
-                        text = bookName,
-                        style = TextStyle(
-                            fontFamily = mediumFont,
-                            fontSize = 28.sp,
-                            fontWeight = FontWeight.SemiBold
-                        ),
-                        textAlign = TextAlign.Center,
-                        color = Color.Black.copy(0.7f),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(modifier = Modifier.requiredHeight(10.dp))
-                    OutlinedTextField(
-                        value = bookValue,
-                        onValueChange = { bookValue = it },
-                        label = {
-                            androidx.compose.material3.Text(
-                                text = "Price", style = TextStyle(
-                                    fontFamily = mediumFont,
-                                    fontSize = 24.sp,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                            )
-                        },
-                        maxLines = 1,
-                        textStyle = TextStyle(
-                            fontFamily = regularFont,
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Thin
-                        ),
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Done,
-                            keyboardType = KeyboardType.Number,
-                            autoCorrect = false,
-                            capitalization = KeyboardCapitalization.None,
-                        ),
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                }
-            }, buttons = {
-                Row(
-                    modifier = Modifier.padding(all = 8.dp),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f).padding(horizontal = 2.dp), onClick = {
-                            showDialog.value = false
-                            viewModel.deleteBook(className, Book(bookName, bookValue.toInt()))
-                        }, colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
-                    ) {
+            },
+                properties = DialogProperties(
+                    dismissOnBackPress = false,
+                    dismissOnClickOutside = false
+                ), text = {
+                    Column(modifier = Modifier.fillMaxWidth()) {
                         androidx.compose.material3.Text(
-                            "Delete", style = TextStyle(
+                            text = "Edit/Remove Book", style = TextStyle(
                                 fontFamily = mediumFont,
-                                fontSize = 24.sp,
+                                fontSize = 32.sp,
                                 fontWeight = FontWeight.SemiBold
-                            ), color = Color.White
+                            )
+                        )
+                        Spacer(modifier = Modifier.requiredHeight(10.dp))
+                        androidx.compose.material3.Text(
+                            text = bookName,
+                            style = TextStyle(
+                                fontFamily = mediumFont,
+                                fontSize = 28.sp,
+                                fontWeight = FontWeight.SemiBold
+                            ),
+                            textAlign = TextAlign.Center,
+                            color = Color.Black.copy(0.7f),
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.requiredHeight(10.dp))
+                        OutlinedTextField(
+                            value = bookValue,
+                            onValueChange = { bookValue = it },
+                            label = {
+                                androidx.compose.material3.Text(
+                                    text = "Price", style = TextStyle(
+                                        fontFamily = mediumFont,
+                                        fontSize = 24.sp,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                )
+                            },
+                            maxLines = 1,
+                            textStyle = TextStyle(
+                                fontFamily = regularFont,
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.Thin
+                            ),
+                            keyboardOptions = KeyboardOptions(
+                                imeAction = ImeAction.Done,
+                                keyboardType = KeyboardType.Number,
+                                autoCorrect = false,
+                                capitalization = KeyboardCapitalization.None,
+                            ),
+                            modifier = Modifier.fillMaxWidth(),
                         )
                     }
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f).padding(horizontal = 2.dp), onClick = {
-                            showDialog.value = false
-                            if (bookName.isNotEmpty() && bookValue.isNotEmpty()) {
-                                viewModel.updateBook(className, Book(bookName, bookValue.toInt()))
+                }, buttons = {
+                    Column {
+                        Row(
+                            modifier = Modifier.padding(all = 8.dp),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Button(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f)
+                                    .padding(horizontal = 2.dp), onClick = {
+                                    showDialog.value = false
+                                    viewModel.deleteBook(className, Book(bookName, bookValue.toInt()))
+                                }, colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
+                            ) {
+                                androidx.compose.material3.Text(
+                                    "Delete", style = TextStyle(
+                                        fontFamily = mediumFont,
+                                        fontSize = 24.sp,
+                                        fontWeight = FontWeight.SemiBold
+                                    ), color = Color.White
+                                )
                             }
-                        }, colors = ButtonDefaults.buttonColors(backgroundColor = Purple500)
-                    ) {
-                        androidx.compose.material3.Text(
-                            "Update", style = TextStyle(
-                                fontFamily = mediumFont,
-                                fontSize = 24.sp,
-                                fontWeight = FontWeight.SemiBold
-                            ), color = Color.White
-                        )
-                    }
-                }
-            })
-        }
-        if (showAddDialog.value) {
-            AlertDialog(onDismissRequest = {
-                showAddDialog.value = false
-            }, text = {
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    androidx.compose.material3.Text(
-                        text = "Add New Book", style = TextStyle(
-                            fontFamily = mediumFont,
-                            fontSize = 32.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    )
-                    Spacer(modifier = Modifier.requiredHeight(10.dp))
-                    OutlinedTextField(
-                        value = addBookName,
-                        onValueChange = { addBookName = it },
-                        label = {
-                            androidx.compose.material3.Text(
-                                text = "Book Name", style = TextStyle(
-                                    fontFamily = mediumFont,
-                                    fontSize = 24.sp,
-                                    fontWeight = FontWeight.SemiBold
+                            Button(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f)
+                                    .padding(horizontal = 2.dp), onClick = {
+                                    showDialog.value = false
+                                    if (bookName.isNotEmpty() && bookValue.isNotEmpty()) {
+                                        viewModel.updateBook(
+                                            className,
+                                            Book(bookName, bookValue.toInt())
+                                        )
+                                    }
+                                }, colors = ButtonDefaults.buttonColors(backgroundColor = Purple500)
+                            ) {
+                                androidx.compose.material3.Text(
+                                    "Update", style = TextStyle(
+                                        fontFamily = mediumFont,
+                                        fontSize = 24.sp,
+                                        fontWeight = FontWeight.SemiBold
+                                    ), color = Color.White
                                 )
-                            )
-                        },
-                        maxLines = 1,
-                        textStyle = TextStyle(
-                            fontFamily = regularFont,
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Thin
-                        ),
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Done,
-                            keyboardType = KeyboardType.Text,
-                            autoCorrect = false,
-                            capitalization = KeyboardCapitalization.None,
-                        ),
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                    Spacer(modifier = Modifier.requiredHeight(10.dp))
-                    OutlinedTextField(
-                        value = addBookValue,
-                        onValueChange = { addBookValue = it },
-                        label = {
-                            androidx.compose.material3.Text(
-                                text = "Price", style = TextStyle(
-                                    fontFamily = mediumFont,
-                                    fontSize = 24.sp,
-                                    fontWeight = FontWeight.SemiBold
+                            }
+                        }
+                        Row(
+                            modifier = Modifier.padding(all = 8.dp),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Button(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f)
+                                    .padding(horizontal = 2.dp),
+                                onClick = {
+                                    showDialog.value = false
+                                },
+                                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
+                            ) {
+                                androidx.compose.material3.Text(
+                                    "Close", style = TextStyle(
+                                        fontFamily = mediumFont,
+                                        fontSize = 24.sp,
+                                        fontWeight = FontWeight.SemiBold
+                                    ), color = Color.White
                                 )
-                            )
-                        },
-                        maxLines = 1,
-                        textStyle = TextStyle(
-                            fontFamily = regularFont,
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Thin
-                        ),
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Done,
-                            keyboardType = KeyboardType.Number,
-                            autoCorrect = false,
-                            capitalization = KeyboardCapitalization.None,
-                        ),
-                        modifier = Modifier.fillMaxWidth(),
-                    )
+                            }
 
-                }
-            }, buttons = {
-                Row(
-                    modifier = Modifier.padding(all = 8.dp),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth(), onClick = {
-                            showAddDialog.value = false
-                            viewModel.addBook(className, Book(addBookName, addBookValue.toInt()))
-                        }, colors = ButtonDefaults.buttonColors(backgroundColor = Purple500)
-                    ) {
-                        androidx.compose.material3.Text(
-                            "Add Book", style = TextStyle(
-                                fontFamily = mediumFont,
-                                fontSize = 24.sp,
-                                fontWeight = FontWeight.SemiBold
-                            ), color = Color.White
-                        )
+                        }
                     }
-                }
-            })
+
+
+                })
+        }
+
+        if (showAddDialog.value) {
+            AlertDialog(
+                onDismissRequest = {
+                    showAddDialog.value = false
+                },
+                properties = DialogProperties(
+                    dismissOnBackPress = false,
+                    dismissOnClickOutside = false
+                ),
+                text = {
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        androidx.compose.material3.Text(
+                            text = "Add New Book", style = TextStyle(
+                                fontFamily = mediumFont,
+                                fontSize = 32.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        )
+                        Spacer(modifier = Modifier.requiredHeight(10.dp))
+                        OutlinedTextField(
+                            value = addBookName,
+                            onValueChange = { addBookName = it },
+                            label = {
+                                androidx.compose.material3.Text(
+                                    text = "Book Name", style = TextStyle(
+                                        fontFamily = mediumFont,
+                                        fontSize = 24.sp,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                )
+                            },
+                            maxLines = 1,
+                            textStyle = TextStyle(
+                                fontFamily = regularFont,
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.Thin
+                            ),
+                            keyboardOptions = KeyboardOptions(
+                                imeAction = ImeAction.Done,
+                                keyboardType = KeyboardType.Text,
+                                autoCorrect = false,
+                                capitalization = KeyboardCapitalization.None,
+                            ),
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                        Spacer(modifier = Modifier.requiredHeight(10.dp))
+                        OutlinedTextField(
+                            value = addBookValue,
+                            onValueChange = { addBookValue = it },
+                            label = {
+                                androidx.compose.material3.Text(
+                                    text = "Price", style = TextStyle(
+                                        fontFamily = mediumFont,
+                                        fontSize = 24.sp,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                )
+                            },
+                            maxLines = 1,
+                            textStyle = TextStyle(
+                                fontFamily = regularFont,
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.Thin
+                            ),
+                            keyboardOptions = KeyboardOptions(
+                                imeAction = ImeAction.Done,
+                                keyboardType = KeyboardType.Number,
+                                autoCorrect = false,
+                                capitalization = KeyboardCapitalization.None,
+                            ),
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+
+                    }
+                },
+                buttons = {
+                    Row(
+                        modifier = Modifier.padding(all = 8.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+
+                        Button(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(0.5f)
+                                .padding(2.dp), onClick = {
+                                showAddDialog.value = false
+                            }, colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
+                        ) {
+                            androidx.compose.material3.Text(
+                                "Cancel", style = TextStyle(
+                                    fontFamily = mediumFont,
+                                    fontSize = 24.sp,
+                                    fontWeight = FontWeight.SemiBold
+                                ), color = Color.White
+                            )
+                        }
+
+                        Button(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(0.5f)
+                                .padding(2.dp), onClick = {
+                                showAddDialog.value = false
+                                viewModel.addBook(
+                                    className,
+                                    Book(addBookName, addBookValue.toInt())
+                                )
+                            }, colors = ButtonDefaults.buttonColors(backgroundColor = Purple500)
+                        ) {
+                            androidx.compose.material3.Text(
+                                "Add Book", style = TextStyle(
+                                    fontFamily = mediumFont,
+                                    fontSize = 24.sp,
+                                    fontWeight = FontWeight.SemiBold
+                                ), color = Color.White
+                            )
+                        }
+                    }
+                })
         }
 
     }

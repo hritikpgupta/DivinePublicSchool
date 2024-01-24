@@ -395,7 +395,6 @@ fun RegisterStudent(
                         )
                     },
                     onValueChange = {
-                        dateOfBirth = it
                         it.text.length.let { length ->
                             if (length <= DATE_LENGTH) {
                                 dateOfBirth = it
@@ -560,21 +559,17 @@ fun RegisterStudent(
                 is Resource.Failure -> {
                     value.exception.message?.let { it1 -> context.toast(it1) }
                 }
-
                 is Resource.Success -> {
                     LaunchedEffect(Unit) {
                         navController.popBackStack()
                     }
                 }
-
                 is Resource.Loading -> {
                     CircularProgress(color = classColor)
                 }
-
                 is Resource.FailureMessage -> {
                     Toast.makeText(context, value.message, Toast.LENGTH_LONG).show()
                 }
-
                 else -> {}
             }
         }
