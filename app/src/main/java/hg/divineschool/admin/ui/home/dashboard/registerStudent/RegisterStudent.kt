@@ -65,6 +65,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -95,6 +96,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 object DateDefaults {
     const val DATE_MASK = "##/##/####"
@@ -128,6 +130,7 @@ fun RegisterStudent(
     val classColor = cardColors[classID.toInt()]
     var rollNumber by remember { mutableStateOf(TextFieldValue("")) }
     var scholarNumber by remember { mutableStateOf(TextFieldValue("")) }
+    var personalEducationNumber by remember { mutableStateOf(TextFieldValue("")) }
     var firstName by remember { mutableStateOf(TextFieldValue("")) }
     var lastName by remember { mutableStateOf(TextFieldValue("")) }
     var dateOfBirth by remember { mutableStateOf(TextFieldValue("")) }
@@ -198,6 +201,7 @@ fun RegisterStudent(
                         val student = Student(
                             rollNumber = rollNumber.text.toLong(),
                             scholarNumber = scholarNumber.text.toLong(),
+                            personalEducationNumber = personalEducationNumber.text.uppercase(Locale.US),
                             firstName = firstName.text,
                             lastName = lastName.text,
                             dateOfBirth = dateOfBirth.text,
@@ -336,6 +340,13 @@ fun RegisterStudent(
                     modifier = editTextModifier.weight(1f),
                     isEnabled = true,
                     onValueChanged = { scholarNumber = it })
+                FormEditText(textValue = personalEducationNumber,
+                    text = "Personal Education Number",
+                    keyboardType = KeyboardType.Text,
+                    color = classColor,
+                    modifier = editTextModifier.weight(1f),
+                    isEnabled = true,
+                    onValueChanged = { personalEducationNumber = it })
             }
             FormRow(padding = 24) {
                 FormEditText(textValue = firstName,

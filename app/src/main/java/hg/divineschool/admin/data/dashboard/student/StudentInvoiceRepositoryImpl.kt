@@ -43,6 +43,7 @@ class StudentInvoiceRepositoryImpl @Inject constructor(
                         dateOfBirth = value["dateOfBirth"] as String
                         newStudent = value["newStudent"] as Boolean
                         scholarNumber = value["scholarNumber"] as Long
+                        personalEducationNumber = value["personalEducationNumber"] as String
                         entryClass = value["entryClass"] as String
                         orphan = value["orphan"] as Boolean
                         religion = value["religion"] as String

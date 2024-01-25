@@ -24,7 +24,7 @@ class StudentListRepositoryImpl @Inject constructor(
             val result =
                 db.collection("classes").document(classID.convertIdToPath()).collection("students")
                     .orderBy("active", Query.Direction.DESCENDING)
-                    .orderBy("firstName" )
+                    .orderBy("firstName")
                     .get().awaitDocument()
 
             result.documents.let {
@@ -38,6 +38,7 @@ class StudentListRepositoryImpl @Inject constructor(
                                 dateOfAdmission = doc.getString("dateOfAdmission") as String,
                                 dateOfBirth = doc.getString("dateOfBirth") as String,
                                 scholarNumber = doc.getLong("scholarNumber") as Long,
+                                personalEducationNumber = doc.getString("personalEducationNumber") as String,
                                 entryClass = doc.getString("entryClass") as String,
                                 fathersName = doc.getString("fathersName") as String,
                                 firstName = doc.getString("firstName") as String,

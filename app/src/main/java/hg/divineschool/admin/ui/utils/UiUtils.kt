@@ -274,7 +274,11 @@ fun List<MonthFee>.getExamFee(): Int {
     }
 }
 
-fun List<MonthFee>.getAnnualFee(): Int {
+fun List<MonthFee>.getAnnualFee(isNew : Boolean): Int {
+    if (isNew) {
+        //If admission/development fee is charged then annual fee shouldn't be charged for that year.
+        return 0
+    }
     var isJuly = false
     this.forEach { monthFee ->
         if (monthFee.month == "July") {

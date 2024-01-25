@@ -4,6 +4,7 @@ data class Student(
     var image: String = "",
     var rollNumber: Long = 0,
     var scholarNumber: Long = 0,
+    var personalEducationNumber: String = "",
 
 
     var firstName: String = "",

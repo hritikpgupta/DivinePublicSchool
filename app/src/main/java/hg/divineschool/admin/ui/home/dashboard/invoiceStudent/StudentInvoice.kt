@@ -347,7 +347,7 @@ fun StudentInvoice(
                                                 selectedMonthFee.value = monthList
                                                 tuitionFee.value =monthList.size * FeeStructure.FEE_STRUCT.getTuitionFee(classID)
                                                 examinationFee.value = monthList.getExamFee()
-                                                annualFee.value = monthList.getAnnualFee()
+                                                annualFee.value = monthList.getAnnualFee(it.result.student.newStudent)
                                                 computerFee.value =
                                                     monthList.getComputerFee(classID)
                                             } else {

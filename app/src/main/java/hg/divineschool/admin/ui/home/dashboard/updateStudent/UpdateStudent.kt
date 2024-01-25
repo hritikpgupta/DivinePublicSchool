@@ -64,6 +64,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @OptIn(ExperimentalFoundationApi::class, ExperimentalGlideComposeApi::class)
@@ -95,6 +96,7 @@ fun UpdateStudent(
     val classColor = cardColors[classID.toInt()]
     var rollNumber by remember { mutableStateOf(TextFieldValue(currentStudent?.rollNumber.toString())) }
     var scholarNumber by remember { mutableStateOf(TextFieldValue(currentStudent?.scholarNumber.toString())) }
+    var personalEducationNumber by remember { mutableStateOf(TextFieldValue(currentStudent?.personalEducationNumber.toString())) }
     var firstName by remember { mutableStateOf(TextFieldValue(currentStudent?.firstName.toString())) }
     var lastName by remember { mutableStateOf(TextFieldValue(currentStudent?.lastName.toString())) }
     val dateOfBirth by remember {
@@ -171,6 +173,7 @@ fun UpdateStudent(
                     val student = Student(
                         rollNumber = rollNumber.text.toLong(),
                         scholarNumber = scholarNumber.text.toLong(),
+                        personalEducationNumber = personalEducationNumber.text.uppercase(Locale.US),
                         firstName = firstName.text,
                         lastName = lastName.text,
                         dateOfBirth = dateOfBirth,
@@ -321,6 +324,13 @@ fun UpdateStudent(
                     modifier = editTextModifier.weight(1f),
                     isEnabled = false,
                     onValueChanged = { scholarNumber = it })
+                FormEditText(textValue = personalEducationNumber,
+                    text = "Personal Education Number",
+                    keyboardType = KeyboardType.Text,
+                    color = classColor,
+                    modifier = editTextModifier.weight(1f),
+                    isEnabled = true,
+                    onValueChanged = { personalEducationNumber = it })
             }
             FormRow(padding = 24) {
                 FormEditText(textValue = firstName,
