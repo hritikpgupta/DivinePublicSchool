@@ -67,7 +67,7 @@ fun validateStudentObjectBeforeUpload(student: Student): String? {
     if (student.rollNumber.toString().trim().isEmpty()) {
         return "Roll number is required."
     }
-    if (student.dateOfBirth.length != 10) {
+    if (student.dateOfBirth.length != 8) {
         return "Date of birth should be in dd/mm/yyyy format."
     }
     return null
@@ -227,7 +227,7 @@ fun Map<*, *>.convertToBookList(): List<Book> {
     this.entries.forEach {
         bookList.add(Book(it.key.toString(), it.value.toString().toInt()))
     }
-    return bookList;
+    return bookList
 }
 
 fun Map<*, *>.convertToPlaceList(): List<Place> {
@@ -235,5 +235,5 @@ fun Map<*, *>.convertToPlaceList(): List<Place> {
     this.entries.forEach {
         placeList.add(Place(it.key.toString(), it.value.toString().toInt()))
     }
-    return placeList;
+    return placeList
 }

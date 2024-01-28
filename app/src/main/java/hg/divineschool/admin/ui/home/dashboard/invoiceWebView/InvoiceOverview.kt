@@ -40,7 +40,7 @@ class InvoiceOverview : ComponentActivity() {
             DivinePublicSchoolTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = androidx.compose.material.MaterialTheme.colors.background
+                    color = MaterialTheme.colors.background
                 ) {
                     val context = LocalContext.current
                     val startInvoiceScreen =

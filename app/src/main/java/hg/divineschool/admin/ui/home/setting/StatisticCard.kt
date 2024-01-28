@@ -376,7 +376,7 @@ fun StatisticCard(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Image(
-                        painter = painterResource(id = hg.divineschool.admin.R.drawable.open),
+                        painter = painterResource(id = R.drawable.open),
                         contentDescription = "Open",
                         modifier = Modifier
                             .requiredSize(65.dp)
@@ -400,7 +400,7 @@ fun StatisticCard(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Image(
-                        painter = painterResource(id = hg.divineschool.admin.R.drawable.close),
+                        painter = painterResource(id = R.drawable.close),
                         contentDescription = "Close",
                         modifier = Modifier
                             .requiredSize(65.dp)

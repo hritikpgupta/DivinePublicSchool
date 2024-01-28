@@ -266,7 +266,7 @@ fun StudentInvoice(
                             FormRow(padding = 12) {
                                 Card(
                                     elevation = 8.dp,
-                                    modifier = Modifier.padding(horizontal = 10.dp)
+                                    modifier = Modifier.padding(horizontal = 8.dp)
                                 ) {
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         if (it.result.student.newStudent) {
@@ -284,12 +284,12 @@ fun StudentInvoice(
                                                     }
                                                 },
                                                 modifier = Modifier
-                                                    .weight(0.35f)
+                                                    .weight(0.40f)
                                                     .padding(8.dp)
                                             )
                                             Spacer(modifier = Modifier.width(4.dp))
                                         }
-                                        Row(modifier = Modifier.weight(0.65f)) {
+                                        Row(modifier = Modifier.weight(0.60f)) {
                                             AccessoryDropdown(
                                                 items = FeeStructure.FEE_STRUCT.getSupplement(),
                                                 selectedItems = selectedSupplement,

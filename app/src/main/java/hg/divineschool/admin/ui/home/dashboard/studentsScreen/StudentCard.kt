@@ -33,6 +33,7 @@ import hg.divineschool.admin.ui.theme.NoImageBackground
 import hg.divineschool.admin.ui.theme.lightFont
 import hg.divineschool.admin.ui.theme.regularFont
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun StudentCard(
     student: Student, color: Color, onViewClick: () -> Unit, onInvoiceClick: () -> Unit
@@ -51,7 +52,10 @@ fun StudentCard(
     Card(
         elevation = 8.dp,
         backgroundColor = MaterialTheme.colors.background.copy(1f),
-        modifier = modifier
+        modifier = modifier,
+        onClick = {
+            expanded = true
+        }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -72,7 +76,8 @@ fun StudentCard(
                         )
                         .background(color = color)
                 )
-            }else{
+            }
+            else{
                 Image(
                     painter = painterResource(id = R.drawable.image_missing),
                     contentDescription = "Missing Image",
@@ -135,6 +140,21 @@ fun StudentCard(
                             Text(text = "Invoice", style = TextStyle(fontSize = 18.sp))
                         }
                     }
+                }
+            }
+            if (student.newStudent){
+                Box(contentAlignment = Alignment.TopStart,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ){
+                    Image(
+                        painter = painterResource(id = R.drawable.new_logo),
+                        modifier = Modifier
+                            .requiredSize(35.dp)
+                            .padding(start = 4.dp, end = 0.dp, top = 4.dp, bottom = 0.dp)
+                            .clip(CircleShape),
+                        contentDescription = ""
+                    )
                 }
             }
         }

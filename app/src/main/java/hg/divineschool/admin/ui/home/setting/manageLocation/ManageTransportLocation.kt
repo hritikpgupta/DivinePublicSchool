@@ -106,7 +106,7 @@ fun ManageTransportLocation(
                     )
                 },
                 text = {
-                    androidx.compose.material3.Text(
+                    Text(
                         text = "Add Location", style = TextStyle(
                             fontFamily = boldFont,
                             fontSize = 22.sp,
@@ -327,7 +327,7 @@ fun ManageTransportLocation(
                 ),
                 text = {
                     Column(modifier = Modifier.fillMaxWidth()) {
-                        androidx.compose.material3.Text(
+                        Text(
                             text = "Add New Book", style = TextStyle(
                                 fontFamily = mediumFont,
                                 fontSize = 32.sp,
@@ -339,7 +339,7 @@ fun ManageTransportLocation(
                             value = addPlaceName,
                             onValueChange = { addPlaceName = it },
                             label = {
-                                androidx.compose.material3.Text(
+                                Text(
                                     text = "Place Name", style = TextStyle(
                                         fontFamily = mediumFont,
                                         fontSize = 24.sp,
@@ -366,7 +366,7 @@ fun ManageTransportLocation(
                             value = addPlacePrice,
                             onValueChange = { addPlacePrice = it },
                             label = {
-                                androidx.compose.material3.Text(
+                                Text(
                                     text = "Price", style = TextStyle(
                                         fontFamily = mediumFont,
                                         fontSize = 24.sp,
@@ -422,7 +422,7 @@ fun ManageTransportLocation(
                                 viewModel.addPlace(Place(addPlaceName, addPlacePrice.toInt()))
                             }, colors = ButtonDefaults.buttonColors(backgroundColor = Purple500)
                         ) {
-                            androidx.compose.material3.Text(
+                            Text(
                                 "Add Location", style = TextStyle(
                                     fontFamily = mediumFont,
                                     fontSize = 24.sp,

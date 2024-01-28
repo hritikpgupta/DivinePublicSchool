@@ -128,7 +128,7 @@ class CameraActivity : ComponentActivity() {
         onImageCaptured: (Uri) -> Unit,
         onError: (ImageCaptureException) -> Unit
     ) {
-        val lensFacing = CameraSelector.LENS_FACING_BACK
+        val lensFacing = LENS_FACING_BACK
         val context = LocalContext.current
         val lifecycleOwner = LocalLifecycleOwner.current
         val preview = Preview.Builder().build()
@@ -147,9 +147,7 @@ class CameraActivity : ComponentActivity() {
             preview.setSurfaceProvider(previewView.surfaceProvider)
         }
 
-        Box(
-
-        ) {
+        Box {
             AndroidView({ previewView }, modifier = Modifier.fillMaxSize())
             Surface(shape = CutOutShape(), color = Color.Black.copy(0.45f), modifier = Modifier.fillMaxSize()) {}
             Column(

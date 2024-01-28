@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.FileUtils
+import android.text.format.DateFormat
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -46,7 +48,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,15 +66,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.text.trimmedLength
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.datetime.date.datepicker
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Student
 import hg.divineschool.admin.data.utils.validateStudentObjectBeforeUpload
@@ -95,13 +93,15 @@ import id.zelory.compressor.constraint.size
 import kotlinx.coroutines.launch
 import java.io.File
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 object DateDefaults {
     const val DATE_MASK = "##/##/####"
     const val DATE_LENGTH = 8
 }
+
 @OptIn(
     ExperimentalGlideComposeApi::class,
     ExperimentalFoundationApi::class,
@@ -123,10 +123,6 @@ fun RegisterStudent(
                 coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
             }
         }
-
-    var pickedAdmissionDate by remember {
-        mutableStateOf(LocalDate.now())
-    }
     val classColor = cardColors[classID.toInt()]
     var rollNumber by remember { mutableStateOf(TextFieldValue("")) }
     var scholarNumber by remember { mutableStateOf(TextFieldValue("")) }
@@ -143,18 +139,20 @@ fun RegisterStudent(
     var address by remember { mutableStateOf(TextFieldValue("")) }
     var contactNumber by remember { mutableStateOf(TextFieldValue("")) }
     var aadharNumber by remember { mutableStateOf(TextFieldValue("")) }
-    val dateOfAdmission by remember {
-        derivedStateOf {
-            DateTimeFormatter.ofPattern("MMM dd yyyy").format(pickedAdmissionDate)
-        }
+
+    var dateOfAdmission by remember {
+        val localDate = LocalDate.now()
+        val calendar: Calendar = Calendar.getInstance()
+        calendar.set(localDate.year, localDate.monthValue - 1, localDate.dayOfMonth)
+        mutableStateOf(TextFieldValue(DateFormat.format("dd/MM/yyyy", calendar.time).toString()))
     }
+
     var entryClass by remember { mutableStateOf(classID.getDefaultClassEntryOption()) }
     var schoolAttended by remember { mutableStateOf(TextFieldValue("")) }
     var transportStudent by remember { mutableStateOf(false) }
     var newStudent by remember { mutableStateOf(false) }
     var isOrphan by remember { mutableStateOf(false) }
     var isRte by remember { mutableStateOf(false) }
-    val admissionDateDialogState = rememberMaterialDialogState()
     var genderExpanded by remember { mutableStateOf(false) }
     var religionExpanded by remember { mutableStateOf(false) }
     var entryClassExpanded by remember { mutableStateOf(false) }
@@ -201,9 +199,11 @@ fun RegisterStudent(
                         val student = Student(
                             rollNumber = rollNumber.text.toLong(),
                             scholarNumber = scholarNumber.text.toLong(),
-                            personalEducationNumber = personalEducationNumber.text.uppercase(Locale.US),
-                            firstName = firstName.text,
-                            lastName = lastName.text,
+                            personalEducationNumber = personalEducationNumber.text.uppercase(
+                                Locale.US
+                            ),
+                            firstName = firstName.text.trim(),
+                            lastName = lastName.text.trim(),
                             dateOfBirth = dateOfBirth.text,
                             gender = gender,
                             fathersName = fathersName.text,
@@ -213,7 +213,7 @@ fun RegisterStudent(
                             address = address.text,
                             contactNumber = contactNumber.text.toLong(),
                             aadharNumber = aadharNumber.text.toLong(),
-                            dateOfAdmission = dateOfAdmission,
+                            dateOfAdmission = dateOfAdmission.text,
                             entryClass = entryClass,
                             schoolAttended = schoolAttended.text,
                             transportStudent = transportStudent,
@@ -341,7 +341,7 @@ fun RegisterStudent(
                     isEnabled = true,
                     onValueChanged = { scholarNumber = it })
                 FormEditText(textValue = personalEducationNumber,
-                    text = "Personal Education Number",
+                    text = "PEN",
                     keyboardType = KeyboardType.Text,
                     color = classColor,
                     modifier = editTextModifier.weight(1f),
@@ -365,7 +365,8 @@ fun RegisterStudent(
                     onValueChanged = { lastName = it })
             }
             FormRow(padding = 24) {
-                OutlinedTextField(value = dateOfBirth,
+                OutlinedTextField(
+                    value = dateOfBirth,
                     label = {
                         Text(
                             text = "Birthday", style = TextStyle(
@@ -504,7 +505,19 @@ fun RegisterStudent(
                     onValueChanged = { schoolAttended = it })
             }
             FormRow(padding = 24) {
-                OutlinedTextField(value = "Date of Admission $dateOfAdmission",
+
+                OutlinedTextField(
+                    value = dateOfAdmission,
+                    label = {
+                        Text(
+                            text = "Date of Admission", style = TextStyle(
+                                fontFamily = mediumFont,
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                textAlign = TextAlign.Center,
+                            )
+                        )
+                    },
                     textStyle = TextStyle(
                         textAlign = TextAlign.Center,
                         fontFamily = regularFont,
@@ -512,8 +525,12 @@ fun RegisterStudent(
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colors.onBackground
                     ),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next
+                    ),
                     maxLines = 1,
-                    enabled = false,
+                    enabled = true,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = classColor,
                         focusedLabelColor = classColor,
@@ -529,14 +546,14 @@ fun RegisterStudent(
                             modifier = Modifier.requiredSize(34.dp)
                         )
                     },
-                    onValueChange = { },
+                    onValueChange = {
+                        dateOfAdmission = it
+                    },
                     modifier = Modifier
                         .weight(1f)
                         .padding(horizontal = 10.dp)
-                        .clickable {
-                            admissionDateDialogState.show()
-                        })
 
+                )
                 DropDown(
                     lableText = "Select Entry Class",
                     expanded = entryClassExpanded,
@@ -570,34 +587,25 @@ fun RegisterStudent(
                 is Resource.Failure -> {
                     value.exception.message?.let { it1 -> context.toast(it1) }
                 }
+
                 is Resource.Success -> {
                     LaunchedEffect(Unit) {
                         navController.popBackStack()
                     }
                 }
+
                 is Resource.Loading -> {
                     CircularProgress(color = classColor)
                 }
+
                 is Resource.FailureMessage -> {
                     Toast.makeText(context, value.message, Toast.LENGTH_LONG).show()
                 }
+
                 else -> {}
             }
         }
 
-
-        MaterialDialog(dialogState = admissionDateDialogState, buttons = {
-            positiveButton(text = "Ok") {}
-            negativeButton(text = "Cancel")
-        }) {
-            datepicker(
-                initialDate = LocalDate.now(),
-                title = "Pick a date",
-                yearRange = IntRange(1950, 2099),
-            ) {
-                pickedAdmissionDate = it
-            }
-        }
     }
 }
 
