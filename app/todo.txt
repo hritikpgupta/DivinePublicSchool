@@ -9,7 +9,7 @@ Dialogue shouldn't be dismiss on outside touch - Fixed
 Fix ( If admission/development fee is charged then annual fee shouldn't be charged) - Fixed  Testing Required
 Add PEN Number - Fixed
 Fix date of admission -Fixed
+Fix Bill S/O is written 2 times - Fixed
 
 Prevent from using same roll number
-Fix Bill S/O is written 2 times
 

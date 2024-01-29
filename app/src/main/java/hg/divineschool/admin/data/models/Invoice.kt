@@ -27,4 +27,5 @@ data class Invoice(
     var address: String = "",
     var rollNumber: Long = 0,
     var placeName: String = "",
+    var systemPaid: Boolean = false,
 ) : java.io.Serializable

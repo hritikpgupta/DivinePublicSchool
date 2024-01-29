@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.FileUtils
 import android.text.format.DateFormat
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -68,7 +67,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.text.trimmedLength
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -94,7 +92,6 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.time.LocalDate
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 
 object DateDefaults {
@@ -211,8 +208,16 @@ fun RegisterStudent(
                             guardianOccupation = guardianOccupation.text,
                             religion = religion,
                             address = address.text,
-                            contactNumber = contactNumber.text.toLong(),
-                            aadharNumber = aadharNumber.text.toLong(),
+                            contactNumber = if (contactNumber.text.isNotEmpty()) {
+                                contactNumber.text.toLong()
+                            } else {
+                                0
+                            },
+                            aadharNumber = if (aadharNumber.text.isNotEmpty()) {
+                                aadharNumber.text.toLong()
+                            } else {
+                                0
+                            },
                             dateOfAdmission = dateOfAdmission.text,
                             entryClass = entryClass,
                             schoolAttended = schoolAttended.text,
@@ -230,7 +235,6 @@ fun RegisterStudent(
                         } else {
                             context.toast(formValidation)
                         }
-
                     } catch (_: NumberFormatException) {
                         context.toast("Roll or Enrollment can't be null")
                     }

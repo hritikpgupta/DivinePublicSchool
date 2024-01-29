@@ -87,7 +87,7 @@ fun MonthSelectList(
                 isSelected = selectedItems.contains(item),
                 color = color,
                 onSelected = {
-                    if (!item.isPaid) {
+                    if (!item.paid) {
                         if (selectedItems.contains(item)) {
                             selectedItems.remove(item)
                         } else {
@@ -103,7 +103,7 @@ fun MonthSelectList(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MonthCard(month: MonthFee, isSelected: Boolean, color: Color, onSelected: () -> Unit) {
-    val backgroundColor = if (month.isPaid) {
+    val backgroundColor = if (month.paid) {
         color
     } else {
         if (isSelected) {
@@ -139,7 +139,7 @@ fun MonthCard(month: MonthFee, isSelected: Boolean, color: Color, onSelected: ()
                 )
 
             }
-            if (month.isPaid) {
+            if (month.paid) {
                 Image(
                     painter = painterResource(id = R.drawable.green_tick),
                     modifier = Modifier

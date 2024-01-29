@@ -61,7 +61,7 @@ class StudentInvoiceRepositoryImpl @Inject constructor(
                     it.forEach { doc ->
                         monthFeeList.add(
                             MonthFee(
-                                isPaid = doc.getBoolean("paid") as Boolean,
+                                paid = doc.getBoolean("paid") as Boolean,
                                 month = doc.getString("month") as String,
                                 monthIndex = doc.getLong("monthIndex") as Long
                             )
@@ -168,6 +168,7 @@ class StudentInvoiceRepositoryImpl @Inject constructor(
                                 address = invo.getString("address") as String,
                                 rollNumber = invo.getLong("rollNumber") as Long,
                                 placeName = invo.getString("placeName") as String,
+                                systemPaid = invo.getBoolean("systemPaid") as Boolean,
                             )
                         )
                     }

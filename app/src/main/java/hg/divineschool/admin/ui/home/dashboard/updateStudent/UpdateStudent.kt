@@ -170,8 +170,16 @@ fun UpdateStudent(
                         guardianOccupation = guardianOccupation.text,
                         religion = religion,
                         address = address.text,
-                        contactNumber = contactNumber.text.toLong(),
-                        aadharNumber = aadharNumber.text.toLong(),
+                        contactNumber = if (contactNumber.text.isNotEmpty()) {
+                            contactNumber.text.toLong()
+                        } else {
+                            0
+                        },
+                        aadharNumber = if (aadharNumber.text.isNotEmpty()) {
+                            aadharNumber.text.toLong()
+                        } else {
+                            0
+                        },
                         dateOfAdmission = dateOfAdmission.text,
                         entryClass = entryClass,
                         schoolAttended = schoolAttended.text,

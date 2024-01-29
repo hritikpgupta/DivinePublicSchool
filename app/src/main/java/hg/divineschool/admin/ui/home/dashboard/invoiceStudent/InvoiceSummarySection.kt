@@ -185,7 +185,8 @@ fun InvoiceSummarySection(
                             guardianName = "S/0 ${student.fathersName}",
                             address = student.address,
                             className = classID.convertIdToName(),
-                            invoiceNumber = "${student.scholarNumber}-1"
+                            invoiceNumber = "${student.scholarNumber}-1",
+                            systemPaid = false,
                         )
                     )
                 }, elevation = ButtonDefaults.elevation(

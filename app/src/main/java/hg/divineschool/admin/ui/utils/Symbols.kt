@@ -14,18 +14,18 @@ const val INR = "₹"
 const val Log_Tag = "Dps"
 
 val defaultTuitionFeeList = listOf(
-    MonthFee(isPaid = false, month = "April", monthIndex = 1),
-    MonthFee(isPaid = false, month = "May", monthIndex = 2),
-    MonthFee(isPaid = false, month = "June", monthIndex = 3),
-    MonthFee(isPaid = false, month = "July", monthIndex = 4),
-    MonthFee(isPaid = false, month = "August", monthIndex = 5),
-    MonthFee(isPaid = false, month = "September", monthIndex = 6),
-    MonthFee(isPaid = false, month = "October", monthIndex = 7),
-    MonthFee(isPaid = false, month = "November", monthIndex = 8),
-    MonthFee(isPaid = false, month = "December", monthIndex = 9),
-    MonthFee(isPaid = false, month = "January", monthIndex = 10),
-    MonthFee(isPaid = false, month = "February", monthIndex = 11),
-    MonthFee(isPaid = false, month = "March", monthIndex = 12)
+    MonthFee(paid = false, month = "April", monthIndex = 1),
+    MonthFee(paid = false, month = "May", monthIndex = 2),
+    MonthFee(paid = false, month = "June", monthIndex = 3),
+    MonthFee(paid = false, month = "July", monthIndex = 4),
+    MonthFee(paid = false, month = "August", monthIndex = 5),
+    MonthFee(paid = false, month = "September", monthIndex = 6),
+    MonthFee(paid = false, month = "October", monthIndex = 7),
+    MonthFee(paid = false, month = "November", monthIndex = 8),
+    MonthFee(paid = false, month = "December", monthIndex = 9),
+    MonthFee(paid = false, month = "January", monthIndex = 10),
+    MonthFee(paid = false, month = "February", monthIndex = 11),
+    MonthFee(paid = false, month = "March", monthIndex = 12)
     )
 val monthList = listOf(
     "January",

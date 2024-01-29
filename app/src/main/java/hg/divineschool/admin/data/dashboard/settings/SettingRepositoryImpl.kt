@@ -389,6 +389,7 @@ class SettingRepositoryImpl @Inject constructor(
                     address = invo.getString("address") as String
                     rollNumber = invo.getLong("rollNumber") as Long
                     placeName = invo.getString("placeName") as String
+                    systemPaid = invo.getBoolean("systemPaid") as Boolean
                 }
             }
             Resource.Success(invoice)
