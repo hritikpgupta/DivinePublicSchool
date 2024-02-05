@@ -24,6 +24,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.auth.FirebaseAuth
 import hg.divineschool.admin.data.models.Invoice
 import hg.divineschool.admin.data.models.Student
 import hg.divineschool.admin.ui.theme.lightFont
@@ -166,43 +167,83 @@ fun InvoiceSummarySection(
                 .fillMaxSize()
                 .padding(bottom = 10.dp, start = 2.dp, end = 2.dp, top = 0.dp)
         ) {
-            Button(
-                colors = ButtonDefaults.buttonColors(backgroundColor = color), onClick = {
-                    onGenerateClicked(
-                        Invoice(
-                            tuitionFee = tuitionFee,
-                            developmentFee = developmentFee,
-                            transportFee = transportFee * defaultNumberOfMonthsForDestination,
-                            bookFee = bookFee,
-                            supplementaryFee = supplementFee,
-                            examFee = examinationFee,
-                            annualCharge = annualFee,
-                            computerFee = computerFee,
-                            total = sum,
-                            rollNumber = student.rollNumber,
-                            studentName = "${student.firstName} ${student.lastName}",
-                            scholarNumber = student.scholarNumber,
-                            guardianName = "S/0 ${student.fathersName}",
-                            address = student.address,
-                            className = classID.convertIdToName(),
-                            invoiceNumber = "${student.scholarNumber}-1",
-                            systemPaid = false,
+            Column{
+                Button(
+                    colors = ButtonDefaults.buttonColors(backgroundColor = color), onClick = {
+                        onGenerateClicked(
+                            Invoice(
+                                tuitionFee = tuitionFee,
+                                developmentFee = developmentFee,
+                                transportFee = transportFee * defaultNumberOfMonthsForDestination,
+                                bookFee = bookFee,
+                                supplementaryFee = supplementFee,
+                                examFee = examinationFee,
+                                annualCharge = annualFee,
+                                computerFee = computerFee,
+                                total = sum,
+                                rollNumber = student.rollNumber,
+                                studentName = "${student.firstName} ${student.lastName}",
+                                scholarNumber = student.scholarNumber,
+                                guardianName = "S/0 ${student.fathersName}",
+                                address = student.address,
+                                className = classID.convertIdToName(),
+                                invoiceNumber = "${student.scholarNumber}-1",
+                                systemPaid = false,
+                            )
                         )
+                    }, elevation = ButtonDefaults.elevation(
+                        defaultElevation = 5.dp,
+                        pressedElevation = 5.dp,
+                        disabledElevation = 0.dp
+                    ),
+                modifier = Modifier.fillMaxWidth(), enabled = !FirebaseAuth.getInstance().currentUser?.email.equals("hgupta@dps.com")
+                ) {
+                    Text(
+                        text = "Generate Invoice",
+                        color = Color.White,
+                        style = TextStyle(fontSize = 24.sp)
                     )
-                }, elevation = ButtonDefaults.elevation(
-                    defaultElevation = 5.dp,
-                    pressedElevation = 5.dp,
-                    disabledElevation = 0.dp
-                ), modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = "Generate Invoice",
-                    color = Color.White,
-                    style = TextStyle(fontSize = 24.sp)
-                )
+                }
+                if (FirebaseAuth.getInstance().currentUser?.email.equals("hgupta@dps.com")){
+                    Spacer(modifier = Modifier.requiredHeight(15.dp))
+                    Button(
+                        colors = ButtonDefaults.buttonColors(backgroundColor = color), onClick = {
+                            onGenerateClicked(
+                                Invoice(
+                                    tuitionFee = tuitionFee,
+                                    developmentFee = developmentFee,
+                                    transportFee = transportFee * defaultNumberOfMonthsForDestination,
+                                    bookFee = bookFee,
+                                    supplementaryFee = supplementFee,
+                                    examFee = examinationFee,
+                                    annualCharge = annualFee,
+                                    computerFee = computerFee,
+                                    total = sum,
+                                    rollNumber = student.rollNumber,
+                                    studentName = "${student.firstName} ${student.lastName}",
+                                    scholarNumber = student.scholarNumber,
+                                    guardianName = "S/0 ${student.fathersName}",
+                                    address = student.address,
+                                    className = classID.convertIdToName(),
+                                    invoiceNumber = "${student.scholarNumber}-1",
+                                    systemPaid = true,
+                                )
+                            )
+                        }, elevation = ButtonDefaults.elevation(
+                            defaultElevation = 5.dp,
+                            pressedElevation = 5.dp,
+                            disabledElevation = 0.dp
+                        ), modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "Pending Invoice",
+                            color = Color.White,
+                            style = TextStyle(fontSize = 24.sp)
+                        )
+                    }
+                }
             }
         }
-
 
     }
 

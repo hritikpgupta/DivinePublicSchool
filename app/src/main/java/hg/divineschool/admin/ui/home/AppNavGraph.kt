@@ -23,6 +23,7 @@ import hg.divineschool.admin.ui.home.setting.checkDues.CheckDue
 import hg.divineschool.admin.ui.home.setting.manageBooks.ManageBook
 import hg.divineschool.admin.ui.home.setting.manageFees.ManageFee
 import hg.divineschool.admin.ui.home.setting.manageLocation.ManageTransportLocation
+import hg.divineschool.admin.ui.home.setting.pendingDues.PendingDues
 import hg.divineschool.admin.ui.home.setting.transactions.Transactions
 
 @Composable
@@ -64,6 +65,9 @@ fun NavGraphBuilder.settingsNav(navController: NavHostController) {
         }
         composable(AppScreen.SettingScreen.ManageLocation.route) {
             ManageTransportLocation(navController, hiltViewModel())
+        }
+        composable(AppScreen.SettingScreen.PendingDues.route) {
+            PendingDues(hiltViewModel(),navController)
         }
         composable(AppScreen.SettingScreen.LogOut.route) {
             LoginScreen(hiltViewModel())

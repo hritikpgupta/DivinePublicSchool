@@ -35,7 +35,7 @@ import hg.divineschool.admin.ui.utils.toast
 @Composable
 fun SettingScreen(navController: NavController, viewModel: SettingViewModel) {
 
-    val isAdmin = FirebaseAuth.getInstance().currentUser?.email.equals("admin@dps.com")
+    val isAdmin = FirebaseAuth.getInstance().currentUser?.email.equals("admin@dps.com").or(FirebaseAuth.getInstance().currentUser?.email.equals("hgupta@dps.com"))
     val state = viewModel.studentCountFlow.collectAsState()
     var totalStudent by remember { mutableStateOf("") }
     var transportStudent by remember { mutableStateOf("") }
@@ -69,16 +69,16 @@ fun SettingScreen(navController: NavController, viewModel: SettingViewModel) {
                 modifier = Modifier
                     .fillMaxSize()
                     .background(color = MaterialTheme.colors.background.copy(0.6f)),
-                columns = GridCells.Adaptive(280.dp)
+                columns = GridCells.Fixed(4)
             ) {
                 items(isAdmin.decideSettingMenu()) { str ->
                     val cardModifier = if (str.enabled) {
                         Modifier
-                            .requiredWidth(280.dp)
+                            .requiredWidth(250.dp)
                             .requiredHeight(150.dp)
                     } else {
                         Modifier
-                            .requiredWidth(280.dp)
+                            .requiredWidth(250.dp)
                             .requiredHeight(150.dp)
                             .drawWithContent {
                                 drawContent()
@@ -109,6 +109,9 @@ fun SettingScreen(navController: NavController, viewModel: SettingViewModel) {
                                     navController.navigate(AppScreen.SettingScreen.ManageLocation.route)
                                 }
                                 6 -> {
+                                    navController.navigate(AppScreen.SettingScreen.PendingDues.route)
+                                }
+                                7 -> {
                                     FirebaseAuth.getInstance().signOut()
                                     context.findActivity()?.finish()
 /*                                    navController.navigate(AppScreen.SettingScreen.LogOut.route) {

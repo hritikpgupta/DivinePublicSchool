@@ -100,7 +100,7 @@ fun StatisticCard(
                 modifier = Modifier
                     .fillMaxHeight()
                     .padding(start = 10.dp)
-                    .weight(0.7f)
+                    .weight(0.8f)
 
             ) {
                 Text(
@@ -246,7 +246,7 @@ fun StatisticCard(
 
             }
 
-            Column(
+/*            Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top,
                 modifier = Modifier
@@ -360,7 +360,7 @@ fun StatisticCard(
                         }
                     }
                 }
-            }
+            }*/
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top,

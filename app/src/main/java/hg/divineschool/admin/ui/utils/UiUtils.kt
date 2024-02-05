@@ -93,7 +93,8 @@ val settingsItem = listOf(
     SettingItem(3, "Manage Fees", R.drawable.manage_fees, true),
     SettingItem(4, "Manage Books", R.drawable.manage_books, true),
     SettingItem(5, "Manage Location", R.drawable.manage_navigation, true),
-    SettingItem(6, "Log Out", R.drawable.logout, true)
+    SettingItem(6, "Pending Dues", R.drawable.pending, true),
+    SettingItem(7, "Log Out", R.drawable.logout, true)
 )
 
 fun Boolean.decideSettingMenu(): List<SettingItem> {
