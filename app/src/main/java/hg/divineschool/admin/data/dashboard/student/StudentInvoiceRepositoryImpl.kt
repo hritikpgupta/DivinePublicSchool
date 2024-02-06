@@ -1,13 +1,20 @@
 package hg.divineschool.admin.data.dashboard.student
 
+import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import hg.divineschool.admin.data.Resource
-import hg.divineschool.admin.data.models.*
+import hg.divineschool.admin.data.models.Invoice
+import hg.divineschool.admin.data.models.MonthFee
+import hg.divineschool.admin.data.models.PendingInvoice
+import hg.divineschool.admin.data.models.Student
+import hg.divineschool.admin.data.models.StudentMonthFee
+import hg.divineschool.admin.data.models.Transaction
 import hg.divineschool.admin.data.utils.awaitDocument
 import hg.divineschool.admin.ui.utils.convertIdToPath
 import hg.divineschool.admin.ui.utils.getMonthName
+import java.util.Calendar
 import javax.inject.Inject
 
 class StudentInvoiceRepositoryImpl @Inject constructor(
@@ -118,10 +125,18 @@ class StudentInvoiceRepositoryImpl @Inject constructor(
                     studentName = invoice.studentName,
                     timestamp = Timestamp.now()
                 )
-
                 db.collection("transactions").document(invoice.invoiceNumber).set(transaction)
                     .awaitDocument()
 
+                val calendar: Calendar = Calendar.getInstance()
+                val year = calendar.get(Calendar.YEAR)
+
+                if (invoice.systemPaid) {
+                    val pendingInvoice = PendingInvoice(listOf("Add Collection Remarks"), invoice)
+                    db.collection("pendingDues").document("${year-1}-$year")
+                        .collection("transactions").document(invoice.invoiceNumber).set(pendingInvoice)
+                        .awaitDocument()
+                }
             }
             Resource.Success(invoice)
         } catch (e: Exception) {
