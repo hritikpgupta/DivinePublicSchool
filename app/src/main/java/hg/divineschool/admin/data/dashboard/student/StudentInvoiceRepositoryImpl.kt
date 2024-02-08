@@ -133,6 +133,12 @@ class StudentInvoiceRepositoryImpl @Inject constructor(
 
                 if (invoice.systemPaid) {
                     val pendingInvoice = PendingInvoice(listOf("Add Collection Remarks"), invoice)
+                    val data = hashMapOf(
+                        "session" to "${year-1}-$year",
+                    )
+                    db.collection("pendingDues").document("${year-1}-$year").set(data)
+                        .awaitDocument()
+
                     db.collection("pendingDues").document("${year-1}-$year")
                         .collection("transactions").document(invoice.invoiceNumber).set(pendingInvoice)
                         .awaitDocument()

@@ -55,6 +55,8 @@ object AppModule {
     fun provideStudentInvoiceRepository(impl: StudentInvoiceRepositoryImpl): StudentInvoiceRepository = impl
     @Provides
     fun provideSettingsRepository(impl: SettingRepositoryImpl): SettingRepository = impl
+    @Provides
+    fun providePendingInvoiceRepository(impl: PendingInvoiceRepositoryImpl): PendingInvoiceRepository = impl
 
 }
 

@@ -261,7 +261,8 @@ fun RegisterStudent(
                         ), color = Color.White
                     )
                 })
-        }, floatingActionButtonPosition = FabPosition.End
+        },
+        floatingActionButtonPosition = FabPosition.End
     ) { paddingValues ->
         Column(
             horizontalAlignment = Alignment.Start,

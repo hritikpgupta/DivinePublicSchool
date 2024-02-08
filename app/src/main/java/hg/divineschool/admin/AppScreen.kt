@@ -20,7 +20,6 @@ sealed class AppScreen(@StringRes val title: Int?, @DrawableRes val icon: Int?, 
         object LogOut : AppScreen(null, null,"log_out")
         object ManageLocation : AppScreen(null, null,"manage_location")
         object PendingDues : AppScreen(null, null,"pending_dues")
-
     }
 
 }
