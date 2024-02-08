@@ -137,23 +137,24 @@ fun PendingDues(viewModel: PendingDuesViewModel, navController: NavController) {
                                 }
                             }
                             Divider(
-                                color = Color.Black,
+                                color = Color.LightGray,
+                                thickness = 4.dp,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .requiredHeight(4.dp)
                                     .padding(
-                                        horizontal = 20.dp, vertical = 8.dp
+                                        horizontal = 5.dp, vertical = 3.dp
                                     )
                             )
                             PendingInvoiceDetailedSection(
                                 pendingInvoiceList,
-                                modifier = Modifier.weight(0.9f).padding(
-                                    horizontal = 20.dp, vertical = 4.dp
-                                )
+                                modifier = Modifier
+                                    .weight(0.9f)
+                                    .padding(
+                                        horizontal = 20.dp, vertical = 4.dp
+                                    )
                             ) {}
                         }
-                    }
-                    else {
+                    } else {
                         Box(
                             contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
                         ) {
