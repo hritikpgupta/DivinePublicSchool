@@ -1,5 +1,6 @@
 package hg.divineschool.admin.data.dashboard.student
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.utils.awaitDocument
@@ -11,11 +12,11 @@ class PendingInvoiceRepositoryImpl @Inject constructor(
 
     override suspend fun getPendingInvoices(): Resource<List<String>> {
         return try {
-            val pendingYearList = emptyList<String>()
+            val pendingYearList = mutableListOf<String>()
             val pendingYears = db.collection("pendingDues").get().awaitDocument()
             if (!pendingYears.isEmpty) {
                 pendingYears.forEach {
-                    pendingYearList.plus(it.id)
+                    pendingYearList.add(it.id)
                 }
             }
             Resource.Success(pendingYearList)
