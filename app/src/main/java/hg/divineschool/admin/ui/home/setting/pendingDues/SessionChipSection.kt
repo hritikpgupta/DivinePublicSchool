@@ -25,7 +25,7 @@ fun SessionChipSection(it: List<String>, modifier: Modifier, onItemSelected: (St
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(15.dp),
             modifier = Modifier.padding(
-                horizontal = 25.dp, vertical = 15.dp
+                horizontal = 20.dp, vertical = 15.dp
             )
         ) {
             items(it) { cardName ->

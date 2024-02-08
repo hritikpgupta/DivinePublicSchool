@@ -2,7 +2,6 @@ package hg.divineschool.admin.ui.home.setting.pendingDues
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,6 +16,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,19 +29,22 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
 import hg.divineschool.admin.data.Resource
+import hg.divineschool.admin.data.models.PendingInvoice
 import hg.divineschool.admin.ui.home.DPSBar
 import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.CircularProgress
 import hg.divineschool.admin.ui.utils.toast
+import kotlinx.coroutines.launch
 
 @Composable
 fun PendingDues(viewModel: PendingDuesViewModel, navController: NavController) {
 
     val pendingInvoiceYears = viewModel.pendingInvoiceListFlow.collectAsState()
+    val pendingInvoice = viewModel.pendingInvoiceFlow.collectAsState()
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     var sessionId by remember { mutableStateOf("") }
-
-
+    var pendingInvoiceList by remember { mutableStateOf<List<PendingInvoice>>(emptyList()) }
 
     Scaffold(
         scaffoldState = rememberScaffoldState(), topBar = {
@@ -50,6 +53,49 @@ fun PendingDues(viewModel: PendingDuesViewModel, navController: NavController) {
             }, className = "Pending Dues")
         }, modifier = Modifier.fillMaxSize()
     ) { padding ->
+
+        pendingInvoice.value.let {
+            when (it) {
+                is Resource.Loading -> {
+                    CircularProgress()
+                }
+
+                is Resource.Failure -> {
+                    it.exception.message?.let { it1 -> context.toast(it1) }
+                }
+
+                is Resource.FailureMessage -> {
+                    it.message.let { it1 -> context.toast(it1) }
+                }
+
+                is Resource.Success -> {
+                    if (it.result.isNotEmpty()) {
+                        it.result.let { it1 -> pendingInvoiceList = it1 }
+                    } else {
+                        Box(
+                            contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier
+                                    .wrapContentHeight()
+                                    .wrapContentWidth()
+                            ) {
+                                Text(
+                                    text = "No Invoices Found", style = TextStyle(
+                                        fontFamily = regularFont,
+                                        fontSize = 34.sp,
+                                        fontWeight = FontWeight.Medium
+                                    ), color = Color.DarkGray
+                                )
+                            }
+                        }
+                    }
+                }
+
+                else -> {}
+            }
+        }
 
         pendingInvoiceYears.value.let {
             when (it) {
@@ -71,6 +117,7 @@ fun PendingDues(viewModel: PendingDuesViewModel, navController: NavController) {
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(padding)
+                                .padding(horizontal = 5.dp)
                         ) {
                             Text(
                                 text = "Select Session", style = TextStyle(
@@ -82,24 +129,31 @@ fun PendingDues(viewModel: PendingDuesViewModel, navController: NavController) {
                                 )
                             )
                             SessionChipSection(
-                                it = it.result,
-                                modifier = Modifier.weight(0.1f)
+                                it = it.result, modifier = Modifier.weight(0.1f)
                             ) { id ->
                                 sessionId = id
+                                scope.launch {
+                                    viewModel.getPendingInvoiceForYear(id)
+                                }
                             }
-
                             Divider(
-                                color = Color.LightGray, modifier = Modifier
+                                color = Color.Black,
+                                modifier = Modifier
                                     .fillMaxWidth()
-                                    .requiredHeight(2.dp)
+                                    .requiredHeight(4.dp)
                                     .padding(
-                                        horizontal = 25.dp, vertical = 5.dp
+                                        horizontal = 20.dp, vertical = 8.dp
                                     )
                             )
-                            PendingInvoiceDetailedSection(modifier = Modifier.weight(0.9f)) {
-                            }
+                            PendingInvoiceDetailedSection(
+                                pendingInvoiceList,
+                                modifier = Modifier.weight(0.9f).padding(
+                                    horizontal = 20.dp, vertical = 4.dp
+                                )
+                            ) {}
                         }
-                    } else {
+                    }
+                    else {
                         Box(
                             contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
                         ) {
@@ -120,6 +174,7 @@ fun PendingDues(viewModel: PendingDuesViewModel, navController: NavController) {
                         }
                     }
                 }
+
                 else -> {}
             }
         }
