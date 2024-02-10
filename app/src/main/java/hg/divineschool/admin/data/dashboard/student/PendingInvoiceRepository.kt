@@ -9,4 +9,8 @@ interface PendingInvoiceRepository {
 
     suspend fun getPendingInvoiceForYear(yearId : String): Resource<List<PendingInvoice>>
 
+    suspend fun addRemark(remark: String, invoiceId: String,yearId: String, currentRemarkList: List<String>) : Resource<List<PendingInvoice>>
+
+    suspend fun settleInvoice(invoice: PendingInvoice,yearId: String) : Resource<List<PendingInvoice>>
+
 }

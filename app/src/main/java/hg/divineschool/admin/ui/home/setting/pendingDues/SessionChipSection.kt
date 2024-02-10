@@ -21,7 +21,7 @@ fun SessionChipSection(it: List<String>, modifier: Modifier, onItemSelected: (St
         modifier = modifier
             .fillMaxWidth()
     ) {
-        var selectedItem by remember { mutableStateOf(it[0]) }
+        var selectedItem by remember { mutableStateOf("") }
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(15.dp),
             modifier = Modifier.padding(

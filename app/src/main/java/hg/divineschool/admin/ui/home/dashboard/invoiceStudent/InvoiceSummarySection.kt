@@ -169,7 +169,13 @@ fun InvoiceSummarySection(
         ) {
             Column{
                 Button(
-                    colors = ButtonDefaults.buttonColors(backgroundColor = color), onClick = {
+                    colors = ButtonDefaults.buttonColors(backgroundColor = color),
+                    elevation = ButtonDefaults.elevation(
+                        defaultElevation = 5.dp,
+                        pressedElevation = 5.dp,
+                        disabledElevation = 0.dp
+                    ),
+                    onClick = {
                         onGenerateClicked(
                             Invoice(
                                 tuitionFee = tuitionFee,
@@ -191,12 +197,9 @@ fun InvoiceSummarySection(
                                 systemPaid = false,
                             )
                         )
-                    }, elevation = ButtonDefaults.elevation(
-                        defaultElevation = 5.dp,
-                        pressedElevation = 5.dp,
-                        disabledElevation = 0.dp
-                    ),
-                modifier = Modifier.fillMaxWidth(), enabled = !FirebaseAuth.getInstance().currentUser?.email.equals("hgupta@dps.com")
+                    },
+                modifier = Modifier.fillMaxWidth(),
+                    enabled = !FirebaseAuth.getInstance().currentUser?.email.equals("hgupta@dps.com")
                 ) {
                     Text(
                         text = "Generate Invoice",

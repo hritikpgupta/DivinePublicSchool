@@ -227,6 +227,37 @@ fun String.convertIdToPath(): String {
     }
 }
 
+fun Int.convertIdToPath(): String {
+    return if (this == 0) {
+        "classPlayGroup"
+    } else if (this == 1) {
+        "classLowerNursery"
+    } else if (this == 2) {
+        "classUpperNursery"
+    } else if (this == 3) {
+        "classOne"
+    } else if (this == 4) {
+        "classTwo"
+    } else if (this == 5) {
+        "classThree"
+    } else if (this == 6) {
+        "classFour"
+    } else if (this == 7) {
+        "classFive"
+    } else if (this == 8) {
+        "classSix"
+    } else if (this == 9) {
+        "classSeven"
+    } else if (this == 10) {
+        "classEight"
+    } else {
+        ""
+    }
+}
+
+
+
+
 fun String.convertIdToName(): String {
     return if (this.toInt() == 0) {
         "Play Group"
@@ -254,6 +285,35 @@ fun String.convertIdToName(): String {
         ""
     }
 }
+
+fun String.convertClassNameToId(): Int {
+    return if (this == "Play Group") {
+        0
+    } else if (this == "Lower Nursery") {
+        1
+    } else if (this == "Upper Nursery") {
+        2
+    } else if (this == "Class One") {
+        3
+    } else if (this == "Class Two") {
+        4
+    } else if (this == "Class Three") {
+        5
+    } else if (this == "Class Four") {
+        6
+    } else if (this == "Class Five") {
+        7
+    } else if (this == "Class Six") {
+        8
+    } else if (this == "Class Seven") {
+        9
+    } else if (this == "Class Eight") {
+        10
+    } else {
+        0
+    }
+}
+
 
 fun List<MonthFee>.getExamFee(): Int {
     var isJan = false

@@ -40,6 +40,7 @@ fun PendingDues(viewModel: PendingDuesViewModel, navController: NavController) {
 
     val pendingInvoiceYears = viewModel.pendingInvoiceListFlow.collectAsStateWithLifecycle()
     val pendingInvoice = viewModel.pendingInvoiceFlow.collectAsStateWithLifecycle()
+
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var sessionId by remember { mutableStateOf("") }
@@ -70,7 +71,8 @@ fun PendingDues(viewModel: PendingDuesViewModel, navController: NavController) {
                 is Resource.Success -> {
                     if (it.result.isNotEmpty()) {
                         it.result.let { it1 -> pendingInvoiceList = it1 }
-                    } else {
+                    }
+                    else {
                         Box(
                             contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
                         ) {
@@ -91,11 +93,9 @@ fun PendingDues(viewModel: PendingDuesViewModel, navController: NavController) {
                         }
                     }
                 }
-
                 else -> {}
             }
         }
-
         pendingInvoiceYears.value.let {
             when (it) {
                 is Resource.Loading -> {
@@ -122,7 +122,7 @@ fun PendingDues(viewModel: PendingDuesViewModel, navController: NavController) {
                                 text = "Select Session", style = TextStyle(
                                     fontFamily = regularFont,
                                     fontSize = 24.sp,
-                                    fontWeight = FontWeight.Medium
+                                    fontWeight = FontWeight.ExtraBold
                                 ), color = Color.DarkGray, modifier = Modifier.padding(
                                     horizontal = 25.dp, vertical = 5.dp
                                 )
@@ -146,17 +146,29 @@ fun PendingDues(viewModel: PendingDuesViewModel, navController: NavController) {
                                     )
                             )
 
-                            PendingInvoiceDetailedSection(
-                                pendingInvoiceList, modifier = Modifier
-                                    .weight(0.9f)
-                                    .padding(
-                                        horizontal = 8.dp, vertical = 4.dp
-                                    )
-                            ) {}
-
-
+                            if (pendingInvoiceList.isNotEmpty()) {
+                                PendingInvoiceDetailedSection(
+                                    pendingInvoiceList, modifier = Modifier
+                                        .weight(0.9f)
+                                        .padding(
+                                            horizontal = 8.dp, vertical = 4.dp
+                                        ), { remark, invoiceId, remarkList ->
+                                        scope.launch {
+                                            pendingInvoiceList = emptyList()
+                                            viewModel.addRemark(
+                                                remark, invoiceId, sessionId, remarkList
+                                            )
+                                        }
+                                    }
+                                ) {
+                                    scope.launch {
+                                        viewModel.settleInvoice(it, sessionId)
+                                    }
+                                }
+                            }
                         }
-                    } else {
+                    }
+                    else {
                         Box(
                             contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
                         ) {

@@ -35,4 +35,12 @@ class PendingDuesViewModel @Inject constructor(
         _pendingInvoiceFlow.value = Resource.Loading
         _pendingInvoiceFlow.value = repository.getPendingInvoiceForYear(yearId)
     }
+
+    fun addRemark(remark: String, invoiceId: String,yearId: String, currentRemarkList: List<String>) = viewModelScope.launch {
+        _pendingInvoiceFlow.value = Resource.Loading
+        _pendingInvoiceFlow.value = repository.addRemark(remark, invoiceId,yearId,currentRemarkList)
+    }
+
+    fun settleInvoice(invoice: PendingInvoice,yearId: String) = viewModelScope.launch {
+    }
 }

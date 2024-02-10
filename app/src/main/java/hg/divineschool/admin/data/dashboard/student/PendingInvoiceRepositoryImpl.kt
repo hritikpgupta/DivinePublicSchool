@@ -5,6 +5,10 @@ import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Invoice
 import hg.divineschool.admin.data.models.PendingInvoice
 import hg.divineschool.admin.data.utils.awaitDocument
+import hg.divineschool.admin.ui.utils.convertClassNameToId
+import hg.divineschool.admin.ui.utils.convertIdToPath
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class PendingInvoiceRepositoryImpl @Inject constructor(
@@ -27,10 +31,31 @@ class PendingInvoiceRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun addRemark(
+        remark: String, invoiceId: String, yearId: String, currentRemarkList: List<String>
+    ): Resource<List<PendingInvoice>> {
+        return try {
+            val remarkList = currentRemarkList.toMutableList()
+            remarkList.add(
+                "$remark - ${
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"))
+                }"
+            )
+            db.collection("pendingDues").document(yearId).collection("transactions")
+                .document(invoiceId).update("remarks", remarkList).awaitDocument()
+            getPendingInvoiceForYear(yearId)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
     override suspend fun getPendingInvoiceForYear(yearId: String): Resource<List<PendingInvoice>> {
         return try {
-            val pendingInvoices = db.collection("pendingDues").document(yearId)
-                .collection("transactions").get().awaitDocument()
+            val pendingInvoices =
+                db.collection("pendingDues").document(yearId).collection("transactions").get()
+                    .awaitDocument()
 
             val invoiceList = ArrayList<PendingInvoice>()
 
@@ -65,14 +90,52 @@ class PendingInvoiceRepositoryImpl @Inject constructor(
                         placeName = invo["placeName"] as String,
                         systemPaid = invo["systemPaid"] as Boolean,
                     )
-                    invoiceList.add(PendingInvoice(
-                        invoice = invoice,
-                        remarks = remarks as List<String>
-                    ))
+                    invoiceList.add(
+                        PendingInvoice(
+                            invoice = invoice, remarks = remarks as List<String>
+                        )
+                    )
                 }
                 Resource.Success(invoiceList)
             }
 
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun settleInvoice(
+        invoice: PendingInvoice,
+        yearId: String
+    ): Resource<List<PendingInvoice>> {
+        return try {
+            val currentInvoiceClassId = invoice.invoice.className.convertClassNameToId()
+            if (currentInvoiceClassId < 10) {
+                // Class Eight Student, Take Different Approach
+            } else {
+                for (i in currentInvoiceClassId + 1..9) {
+                    val futureClassInvoiceId = i.convertIdToPath()
+
+                    val data = db.collection("classes").document(futureClassInvoiceId)
+                        .collection("students")
+                        .whereEqualTo("scholarNumber", invoice.invoice.scholarNumber)
+                        .get().awaitDocument()
+                    if(data != null){
+                        db.collection("classes").document(futureClassInvoiceId)
+                            .collection("students")
+                            .document(invoice.invoice.scholarNumber.toString())
+                            .collection("invoices")
+                            .document(invoice.invoice.invoiceNumber).update("systemPaid", false)
+                            .awaitDocument()
+                        break
+                    }
+                }
+            }
+            db.collection("pendingDues").document(yearId).collection("transactions")
+                .document(invoice.invoice.invoiceNumber).delete().awaitDocument()
+
+            getPendingInvoiceForYear(yearId)
         } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
