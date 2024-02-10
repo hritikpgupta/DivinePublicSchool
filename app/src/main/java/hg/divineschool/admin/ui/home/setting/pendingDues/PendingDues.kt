@@ -5,14 +5,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.Divider
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,6 +24,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
 import hg.divineschool.admin.data.Resource
@@ -39,8 +38,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun PendingDues(viewModel: PendingDuesViewModel, navController: NavController) {
 
-    val pendingInvoiceYears = viewModel.pendingInvoiceListFlow.collectAsState()
-    val pendingInvoice = viewModel.pendingInvoiceFlow.collectAsState()
+    val pendingInvoiceYears = viewModel.pendingInvoiceListFlow.collectAsStateWithLifecycle()
+    val pendingInvoice = viewModel.pendingInvoiceFlow.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var sessionId by remember { mutableStateOf("") }
@@ -131,6 +130,7 @@ fun PendingDues(viewModel: PendingDuesViewModel, navController: NavController) {
                             SessionChipSection(
                                 it = it.result, modifier = Modifier.weight(0.1f)
                             ) { id ->
+                                pendingInvoiceList = emptyList()
                                 sessionId = id
                                 scope.launch {
                                     viewModel.getPendingInvoiceForYear(id)
@@ -145,14 +145,16 @@ fun PendingDues(viewModel: PendingDuesViewModel, navController: NavController) {
                                         horizontal = 5.dp, vertical = 3.dp
                                     )
                             )
+
                             PendingInvoiceDetailedSection(
-                                pendingInvoiceList,
-                                modifier = Modifier
+                                pendingInvoiceList, modifier = Modifier
                                     .weight(0.9f)
                                     .padding(
-                                        horizontal = 20.dp, vertical = 4.dp
+                                        horizontal = 8.dp, vertical = 4.dp
                                     )
                             ) {}
+
+
                         }
                     } else {
                         Box(

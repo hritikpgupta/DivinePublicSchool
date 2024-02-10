@@ -2,11 +2,9 @@ package hg.divineschool.admin.ui.home.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.dashboard.DashboardRepository
-import hg.divineschool.admin.data.dashboard.settings.SettingRepositoryImpl
 import hg.divineschool.admin.data.models.ClassInformation
 import hg.divineschool.admin.ui.utils.convertIdToPath
 import kotlinx.coroutines.flow.MutableStateFlow

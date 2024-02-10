@@ -1,18 +1,43 @@
 package hg.divineschool.admin.ui.home.dashboard
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ExtendedFloatingActionButton
+import androidx.compose.material.FloatingActionButtonDefaults
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Scaffold
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,13 +49,17 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import hg.divineschool.admin.AppScreen
 import hg.divineschool.admin.BottomNavItem
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.ui.home.DPSAppBar
-import hg.divineschool.admin.ui.theme.*
+import hg.divineschool.admin.ui.theme.boldFont
+import hg.divineschool.admin.ui.theme.cardColors
+import hg.divineschool.admin.ui.theme.mediumFont
+import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.CircularProgress
 import hg.divineschool.admin.ui.utils.toast
 
@@ -38,13 +67,13 @@ import hg.divineschool.admin.ui.utils.toast
 @Composable
 fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController) {
 
-    val classListFlow = viewModel.classListFlow.collectAsState()
-    val nameUpdateFlow = viewModel.nameUpdateFlow.collectAsState()
+    val classListFlow = viewModel.classListFlow.collectAsStateWithLifecycle()
+    val nameUpdateFlow = viewModel.nameUpdateFlow.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val showDialog = remember { mutableStateOf(false) }
     var classTeacherText by remember { mutableStateOf("") }
     var dialogColor by remember { mutableStateOf(Color.White) }
-    var selectedClassID by remember { mutableStateOf(0L) }
+    var selectedClassID by remember { mutableLongStateOf(0L) }
 
     Scaffold(topBar = { DPSAppBar() },
         floatingActionButton = {

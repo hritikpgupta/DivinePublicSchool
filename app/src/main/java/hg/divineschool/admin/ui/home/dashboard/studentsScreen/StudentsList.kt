@@ -1,20 +1,47 @@
 package hg.divineschool.admin.ui.home.dashboard.studentsScreen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.ExtendedFloatingActionButton
+import androidx.compose.material.FabPosition
+import androidx.compose.material.FloatingActionButtonDefaults
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,12 +54,17 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import hg.divineschool.admin.AppScreen
 import hg.divineschool.admin.R
 import hg.divineschool.admin.data.Resource
-import hg.divineschool.admin.ui.theme.*
+import hg.divineschool.admin.ui.theme.boldFont
+import hg.divineschool.admin.ui.theme.cardColors
+import hg.divineschool.admin.ui.theme.mediumFont
+import hg.divineschool.admin.ui.theme.regularFont
 import hg.divineschool.admin.ui.utils.CircularProgress
+import hg.divineschool.admin.ui.utils.Log_Tag
 import hg.divineschool.admin.ui.utils.toast
 
 @Composable
@@ -42,13 +74,13 @@ fun StudentsList(
     navController: NavController,
     viewModel: StudentListViewModel
 ) {
-    val studentListFlow = viewModel.studentListFlow.collectAsState()
-    val searchText = viewModel.searchText.collectAsState()
-    val students = viewModel.students.collectAsState()
-    val isSearching = viewModel.isSearching.collectAsState()
+    val studentListFlow = viewModel.studentListFlow.collectAsStateWithLifecycle()
+    val searchText = viewModel.searchText.collectAsStateWithLifecycle()
+    val students = viewModel.students.collectAsStateWithLifecycle()
+    val isSearching = viewModel.isSearching.collectAsStateWithLifecycle()
     val classColor = cardColors[classID.toInt()]
     val context = LocalContext.current
-    val searchWidth = remember { mutableStateOf(0.0f) }
+    val searchWidth = remember { mutableFloatStateOf(0.0f) }
 
     LaunchedEffect(Unit) {
         viewModel.getAllStudents(classID.toLong())
@@ -70,10 +102,10 @@ fun StudentsList(
         }, actions = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = {
-                    if (searchWidth.value == 0.4f) {
-                        searchWidth.value = 0.0f
+                    if (searchWidth.floatValue == 0.4f) {
+                        searchWidth.floatValue = 0.0f
                     } else {
-                        searchWidth.value = 0.4f
+                        searchWidth.floatValue = 0.4f
                     }
 
                 }) {
@@ -107,7 +139,7 @@ fun StudentsList(
                         unfocusedIndicatorColor = Color.Transparent
                     ),
                     onValueChange = viewModel::onSearchTextChange,
-                    modifier = Modifier.fillMaxWidth(searchWidth.value),
+                    modifier = Modifier.fillMaxWidth(searchWidth.floatValue),
                     placeholder = {
                         Text(
                             text = "Search Student", style = TextStyle(
@@ -119,7 +151,7 @@ fun StudentsList(
         })
     }, floatingActionButton = {
         ExtendedFloatingActionButton(onClick = {
-            searchWidth.value = 0.0f
+            searchWidth.floatValue = 0.0f
             if (searchText.value.isNotEmpty()) {
                 viewModel.onClearSearchText()
             }
@@ -217,7 +249,7 @@ fun StudentsList(
                                         putSerializable("studentObj", studentInfo)
                                     }
                                     navController.navigate(AppScreen.StudentScreen.UpdateStudent.route + "/${classID}/$className")
-                                    searchWidth.value = 0.0f
+                                    searchWidth.floatValue = 0.0f
                                     if (searchText.value.isNotEmpty()) {
                                         viewModel.onClearSearchText()
                                     }
@@ -227,7 +259,7 @@ fun StudentsList(
                                         putSerializable("studentObj", studentInfo)
                                     }
                                     navController.navigate(AppScreen.StudentScreen.StudentInvoice.route + "/${classID}/$className/${studentInfo.scholarNumber}")
-                                    searchWidth.value = 0.0f
+                                    searchWidth.floatValue = 0.0f
                                     if (searchText.value.isNotEmpty()) {
                                         viewModel.onClearSearchText()
                                     }

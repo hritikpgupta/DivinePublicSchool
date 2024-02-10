@@ -1,7 +1,14 @@
 package hg.divineschool.admin.ui.home.dashboard.invoiceWebView.invoiceUIUnit
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,7 +20,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hg.divineschool.admin.ui.theme.boldFont
-import hg.divineschool.admin.ui.theme.regularFont
 
 @Composable
 fun ColumnFooter(bookDetail: String, supplementDetail: String) {

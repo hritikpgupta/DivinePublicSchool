@@ -46,7 +46,6 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -67,6 +66,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -155,7 +155,7 @@ fun RegisterStudent(
     var entryClassExpanded by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     val context = LocalContext.current
-    val registerState = viewModel.registerStudentFlow.collectAsState()
+    val registerState = viewModel.registerStudentFlow.collectAsStateWithLifecycle()
     val uriString = remember {
         mutableStateOf("")
     }

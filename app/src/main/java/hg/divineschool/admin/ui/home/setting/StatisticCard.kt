@@ -3,11 +3,20 @@ package hg.divineschool.admin.ui.home.setting
 import android.app.TimePickerDialog
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -15,7 +24,11 @@ import androidx.compose.material.icons.filled.AlternateEmail
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Place
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,7 +47,7 @@ import hg.divineschool.admin.data.models.SchoolInformation
 import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.theme.regularFont
-import java.util.*
+import java.util.Calendar
 
 @Composable
 fun StatisticCard(

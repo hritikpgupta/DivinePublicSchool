@@ -1,14 +1,11 @@
 package hg.divineschool.admin.ui.home.dashboard.registerStudent
 
-import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.dashboard.student.RegisterStudentRepository
 import hg.divineschool.admin.data.models.Student
-import hg.divineschool.admin.ui.utils.Log_Tag
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

@@ -3,7 +3,12 @@ package hg.divineschool.admin.data.dashboard.settings
 import androidx.compose.material3.DateRangePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import hg.divineschool.admin.data.Resource
-import hg.divineschool.admin.data.models.*
+import hg.divineschool.admin.data.models.Book
+import hg.divineschool.admin.data.models.FeeStructure
+import hg.divineschool.admin.data.models.Invoice
+import hg.divineschool.admin.data.models.Place
+import hg.divineschool.admin.data.models.StudentDue
+import hg.divineschool.admin.data.models.Transaction
 
 interface SettingRepository {
     suspend fun getAllStudentsDue(className: String, monthName: String): Resource<List<StudentDue>>

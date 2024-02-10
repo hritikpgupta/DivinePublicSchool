@@ -3,21 +3,38 @@ package hg.divineschool.admin.ui.auth
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusEvent
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -31,6 +48,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import hg.divineschool.admin.R
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.ui.home.HomeActivity
@@ -55,7 +73,7 @@ fun LoginScreen(viewModel: AuthViewModel) {
     val bringIntoViewRequester = BringIntoViewRequester()
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
-    val loginFlow = viewModel.loginFlow.collectAsState()
+    val loginFlow = viewModel.loginFlow.collectAsStateWithLifecycle()
     Box(
         modifier = Modifier
             .fillMaxSize()

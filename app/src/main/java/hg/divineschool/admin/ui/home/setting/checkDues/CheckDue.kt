@@ -3,13 +3,34 @@ package hg.divineschool.admin.ui.home.setting.checkDues
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Button
+import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,6 +42,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
 import hg.divineschool.admin.R
@@ -30,13 +52,17 @@ import hg.divineschool.admin.ui.home.dashboard.registerStudent.DropDown
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.dropDownModifier
 import hg.divineschool.admin.ui.theme.lightFont
 import hg.divineschool.admin.ui.theme.regularFont
-import hg.divineschool.admin.ui.utils.*
+import hg.divineschool.admin.ui.utils.CircularProgress
+import hg.divineschool.admin.ui.utils.classNames
+import hg.divineschool.admin.ui.utils.convertClassNameToPath
+import hg.divineschool.admin.ui.utils.monthList
+import hg.divineschool.admin.ui.utils.toast
 
 @Composable
 fun CheckDue(viewModel: CheckDueViewModel, navController: NavController) {
 
 
-    val studentListFlow = viewModel.studentListFlow.collectAsState()
+    val studentListFlow = viewModel.studentListFlow.collectAsStateWithLifecycle()
     var monthExpanded by remember { mutableStateOf(false) }
     var month by remember { mutableStateOf(monthList[0]) }
     var classExpanded by remember { mutableStateOf(false) }

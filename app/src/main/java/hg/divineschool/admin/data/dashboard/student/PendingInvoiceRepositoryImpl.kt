@@ -1,6 +1,5 @@
 package hg.divineschool.admin.data.dashboard.student
 
-import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Invoice

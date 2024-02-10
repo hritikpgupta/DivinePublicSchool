@@ -3,27 +3,54 @@ package hg.divineschool.admin.ui.home.dashboard.updateStudent
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.FileUtils
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Card
+import androidx.compose.material.ExtendedFloatingActionButton
+import androidx.compose.material.FabPosition
+import androidx.compose.material.FloatingActionButtonDefaults
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Scaffold
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.Cake
 import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusEvent
@@ -39,7 +66,9 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -49,7 +78,18 @@ import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Student
 import hg.divineschool.admin.data.utils.validateStudentObjectBeforeUpload
 import hg.divineschool.admin.ui.home.DPSBar
-import hg.divineschool.admin.ui.home.dashboard.registerStudent.*
+import hg.divineschool.admin.ui.home.dashboard.registerStudent.CameraActivity
+import hg.divineschool.admin.ui.home.dashboard.registerStudent.DateDefaults
+import hg.divineschool.admin.ui.home.dashboard.registerStudent.DropDown
+import hg.divineschool.admin.ui.home.dashboard.registerStudent.FormEditText
+import hg.divineschool.admin.ui.home.dashboard.registerStudent.FormRow
+import hg.divineschool.admin.ui.home.dashboard.registerStudent.RegisterStudentViewModel
+import hg.divineschool.admin.ui.home.dashboard.registerStudent.UpdateFormCheckboxes
+import hg.divineschool.admin.ui.home.dashboard.registerStudent.classEntryOptions
+import hg.divineschool.admin.ui.home.dashboard.registerStudent.dropDownModifier
+import hg.divineschool.admin.ui.home.dashboard.registerStudent.genderOptions
+import hg.divineschool.admin.ui.home.dashboard.registerStudent.getValue
+import hg.divineschool.admin.ui.home.dashboard.registerStudent.religionOptions
 import hg.divineschool.admin.ui.theme.NoImageBackground
 import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.cardColors
@@ -63,8 +103,6 @@ import hg.divineschool.admin.ui.utils.toast
 import id.zelory.compressor.Compressor
 import kotlinx.coroutines.launch
 import java.io.File
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalGlideComposeApi::class)
@@ -103,7 +141,7 @@ fun UpdateStudent(
     var address by remember { mutableStateOf(TextFieldValue(currentStudent?.address.toString())) }
     var contactNumber by remember { mutableStateOf(TextFieldValue(currentStudent?.contactNumber.toString())) }
     var aadharNumber by remember { mutableStateOf(TextFieldValue(currentStudent?.aadharNumber.toString())) }
-    var dateOfAdmission by remember { mutableStateOf(TextFieldValue(currentStudent?.dateOfAdmission.toString())) }
+    val dateOfAdmission by remember { mutableStateOf(TextFieldValue(currentStudent?.dateOfAdmission.toString())) }
 
     var entryClass by remember { mutableStateOf(classEntryOptions.getValue(currentStudent?.entryClass.toString())) }
     var schoolAttended by remember { mutableStateOf(TextFieldValue(currentStudent?.schoolAttended.toString())) }
@@ -118,7 +156,7 @@ fun UpdateStudent(
     var entryClassExpanded by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     val context = LocalContext.current
-    val updateState = viewModel.updateStudentFlow.collectAsState()
+    val updateState = viewModel.updateStudentFlow.collectAsStateWithLifecycle()
     val uriString = remember {
         if (currentStudent!!.image.isEmpty()) {
             mutableStateOf("")

@@ -4,14 +4,34 @@ import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
@@ -28,11 +48,18 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
 import hg.divineschool.admin.data.Resource
-import hg.divineschool.admin.data.models.*
-import hg.divineschool.admin.data.utils.*
+import hg.divineschool.admin.data.models.Book
+import hg.divineschool.admin.data.models.FeeStructure
+import hg.divineschool.admin.data.models.MonthFee
+import hg.divineschool.admin.data.models.Supplement
+import hg.divineschool.admin.data.utils.getBooks
+import hg.divineschool.admin.data.utils.getPlaces
+import hg.divineschool.admin.data.utils.getSupplement
+import hg.divineschool.admin.data.utils.getTuitionFee
 import hg.divineschool.admin.ui.home.DPSBarWithAction
 import hg.divineschool.admin.ui.home.dashboard.invoiceWebView.InvoiceOverview
 import hg.divineschool.admin.ui.home.dashboard.registerStudent.FormRow
@@ -40,7 +67,15 @@ import hg.divineschool.admin.ui.theme.boldFont
 import hg.divineschool.admin.ui.theme.cardColors
 import hg.divineschool.admin.ui.theme.mediumFont
 import hg.divineschool.admin.ui.theme.regularFont
-import hg.divineschool.admin.ui.utils.*
+import hg.divineschool.admin.ui.utils.CircularProgress
+import hg.divineschool.admin.ui.utils.INR
+import hg.divineschool.admin.ui.utils.getAnnualFee
+import hg.divineschool.admin.ui.utils.getComputerFee
+import hg.divineschool.admin.ui.utils.getExamFee
+import hg.divineschool.admin.ui.utils.getFormattedBookString
+import hg.divineschool.admin.ui.utils.getFormattedMonthString
+import hg.divineschool.admin.ui.utils.getFormattedSupplementString
+import hg.divineschool.admin.ui.utils.toast
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -56,9 +91,9 @@ fun StudentInvoice(
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
     val scaffoldState = rememberScaffoldState()
-    val studentInfoState = viewModel.studentInformation.collectAsState()
-    val invoiceState = viewModel.saveInvoice.collectAsState()
-    val studentInvoices = viewModel.studentInvoices.collectAsState()
+    val studentInfoState = viewModel.studentInformation.collectAsStateWithLifecycle()
+    val invoiceState = viewModel.saveInvoice.collectAsStateWithLifecycle()
+    val studentInvoices = viewModel.studentInvoices.collectAsStateWithLifecycle()
 
     val selectedSupplement = remember {
         mutableStateOf(emptyList<Supplement>())

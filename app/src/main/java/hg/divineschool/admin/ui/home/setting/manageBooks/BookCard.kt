@@ -1,7 +1,11 @@
 package hg.divineschool.admin.ui.home.setting.manageBooks
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi

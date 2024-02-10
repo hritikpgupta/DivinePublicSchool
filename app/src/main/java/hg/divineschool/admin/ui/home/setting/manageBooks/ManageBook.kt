@@ -35,7 +35,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,6 +53,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ui.Scaffold
 import hg.divineschool.admin.R
@@ -78,7 +78,7 @@ fun ManageBook(navController: NavController, viewModel: ManageBookViewModel) {
     var className by remember { mutableStateOf(classNames[0]) }
     val showDialog = remember { mutableStateOf(false) }
     val showAddDialog = remember { mutableStateOf(false) }
-    val bookState = viewModel.bookListFlow.collectAsState()
+    val bookState = viewModel.bookListFlow.collectAsStateWithLifecycle()
     var bookName by remember { mutableStateOf("") }
     var addBookName by remember { mutableStateOf("") }
     var bookValue by remember { mutableStateOf("") }

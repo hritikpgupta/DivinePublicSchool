@@ -1,6 +1,5 @@
 package hg.divineschool.admin.ui.home.dashboard.registerStudent
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
