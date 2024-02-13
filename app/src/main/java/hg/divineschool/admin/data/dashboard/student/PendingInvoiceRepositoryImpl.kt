@@ -1,10 +1,12 @@
 package hg.divineschool.admin.data.dashboard.student
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.models.Invoice
 import hg.divineschool.admin.data.models.PendingInvoice
 import hg.divineschool.admin.data.utils.awaitDocument
+import hg.divineschool.admin.ui.utils.Log_Tag
 import hg.divineschool.admin.ui.utils.convertClassNameToId
 import hg.divineschool.admin.ui.utils.convertIdToPath
 import java.time.LocalDateTime
@@ -111,7 +113,8 @@ class PendingInvoiceRepositoryImpl @Inject constructor(
     ): Resource<List<PendingInvoice>> {
         return try {
             val currentInvoiceClassId = invoice.invoice.className.convertClassNameToId()
-            if (currentInvoiceClassId < 10) {
+
+            if (currentInvoiceClassId == 10) {
                 // Class Eight Student, Take Different Approach
             } else {
                 for (i in currentInvoiceClassId + 1..9) {
@@ -128,12 +131,14 @@ class PendingInvoiceRepositoryImpl @Inject constructor(
                             .collection("invoices")
                             .document(invoice.invoice.invoiceNumber).update("systemPaid", false)
                             .awaitDocument()
+
+                        db.collection("pendingDues").document(yearId).collection("transactions")
+                            .document(invoice.invoice.invoiceNumber).delete().awaitDocument()
+
                         break
                     }
                 }
             }
-            db.collection("pendingDues").document(yearId).collection("transactions")
-                .document(invoice.invoice.invoiceNumber).delete().awaitDocument()
 
             getPendingInvoiceForYear(yearId)
         } catch (e: Exception) {

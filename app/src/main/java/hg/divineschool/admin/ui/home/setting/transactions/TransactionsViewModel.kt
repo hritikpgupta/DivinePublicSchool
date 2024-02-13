@@ -9,14 +9,17 @@ import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.dashboard.settings.SettingRepository
 import hg.divineschool.admin.data.models.Invoice
 import hg.divineschool.admin.data.models.Transaction
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class TransactionsViewModel @Inject constructor(
-    private var respository: SettingRepository
+    private val repository: SettingRepository,
+    private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private var _transactionListFlow = MutableStateFlow<Resource<List<Transaction>>?>(null)
@@ -28,12 +31,16 @@ class TransactionsViewModel @Inject constructor(
     @OptIn(ExperimentalMaterial3Api::class)
     fun getAllTransaction(dateRangeState: DateRangePickerState) = viewModelScope.launch {
         _transactionListFlow.value = Resource.Loading
-        _transactionListFlow.value = respository.getTransactions(dateRangeState)
+        _transactionListFlow.value = withContext(ioDispatcher) {
+            repository.getTransactions(dateRangeState)
+        }
     }
 
     fun getInvoice(transaction: Transaction) = viewModelScope.launch {
         _invoiceFlow.value = Resource.Loading
-        _invoiceFlow.value = respository.getInvoice(transaction)
+        _invoiceFlow.value = withContext(ioDispatcher) {
+            repository.getInvoice(transaction)
+        }
 
     }
 }

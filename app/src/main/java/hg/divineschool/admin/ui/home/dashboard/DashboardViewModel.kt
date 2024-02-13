@@ -7,15 +7,19 @@ import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.dashboard.DashboardRepository
 import hg.divineschool.admin.data.models.ClassInformation
 import hg.divineschool.admin.ui.utils.convertIdToPath
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val repository: DashboardRepository
+    private val repository: DashboardRepository,
+    private val ioDispatcher: CoroutineDispatcher
+
 ) : ViewModel() {
 
     private val _classListFlow = MutableStateFlow<Resource<List<ClassInformation>>?>(null)
@@ -31,15 +35,22 @@ class DashboardViewModel @Inject constructor(
 
     fun getAllClasses() = viewModelScope.launch {
         _classListFlow.value = Resource.Loading
-        val result = repository.getAllClasses()
-        _classListFlow.value = result
+        _classListFlow.value = withContext(ioDispatcher) {
+            repository.getAllClasses()
+        }
     }
+
     private fun getFeeStructure() = viewModelScope.launch {
-        repository.getFeeStructure()
-        repository.getSchoolInformation()
+        withContext(ioDispatcher) {
+            repository.getFeeStructure()
+            repository.getSchoolInformation()
+        }
     }
-    fun updateClassTeacherName(classID : Long, name : String) = viewModelScope.launch {
+
+    fun updateClassTeacherName(classID: Long, name: String) = viewModelScope.launch {
         _nameUpdateFlow.value = Resource.Loading
-        _nameUpdateFlow.value = repository.updateClassTeacher(classID.convertIdToPath(),name)
+        _nameUpdateFlow.value = withContext(ioDispatcher) {
+            repository.updateClassTeacher(classID.convertIdToPath(), name)
+        }
     }
 }

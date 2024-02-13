@@ -54,20 +54,20 @@ fun RemarkSection(
         modifier = modifier
             .fillMaxSize()
             .background(Color.LightGray.copy(0.5f))
-            .padding(top = 20.dp, end = 15.dp)
+            .padding(top = 20.dp, end = 4.dp)
     ) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .requiredHeight(250.dp)
+                .requiredHeight(280.dp)
                 .background(Color.White)
-                .padding(top = 5.dp, start = 3.dp, end = 3.dp)
+                .padding(top = 5.dp, start = 0.dp, end = 0.dp)
         ) {
             items(remarks) { msg ->
                 Text(
                     text = msg,
                     style = TextStyle(
-                        fontFamily = regularFont, fontSize = 18.sp, fontWeight = FontWeight.SemiBold
+                        fontFamily = regularFont, fontSize = 13.sp, fontWeight = FontWeight.SemiBold
                     ),
                     color = Color.DarkGray,
                     maxLines = 2,
@@ -96,10 +96,13 @@ fun RemarkSection(
                 autoCorrect = false,
                 capitalization = KeyboardCapitalization.None,
             ),
+            textStyle = TextStyle(
+                fontFamily = regularFont, fontSize = 13.sp, fontWeight = FontWeight.SemiBold
+            ),
             modifier = Modifier
                 .fillMaxWidth()
                 .requiredHeight(80.dp)
-                .padding(top = 5.dp, start = 5.dp, end = 5.dp)
+                .padding(top = 5.dp, start = 0.dp, end = 0.dp)
         )
         Row(
             modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End
@@ -130,12 +133,12 @@ fun RemarkSection(
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 20.dp, start = 5.dp, end = 5.dp)
+                    .padding(top = 20.dp, start = 0.dp, end = 0.dp)
             ) {
                 Text(
                     text = "Settle Invoice",
                     color = Color.White,
-                    style = TextStyle(fontSize = 20.sp)
+                    style = TextStyle(fontSize = 15.sp)
                 )
             }
         }

@@ -6,14 +6,18 @@ import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.auth.AuthRepository
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val repository: AuthRepository
+    private val repository: AuthRepository,
+    private val ioDispatcher: CoroutineDispatcher
+
 ) : ViewModel() {
     private val _loginFlow = MutableStateFlow<Resource<FirebaseUser>?>(null)
     val loginFlow: StateFlow<Resource<FirebaseUser>?> = _loginFlow
@@ -29,8 +33,9 @@ class AuthViewModel @Inject constructor(
 
     fun login(email: String, password: String) = viewModelScope.launch {
         _loginFlow.value = Resource.Loading
-        val result = repository.login(email, password)
-        _loginFlow.value = result
+        _loginFlow.value = withContext(ioDispatcher) {
+            repository.login(email, password)
+        }
     }
 
 

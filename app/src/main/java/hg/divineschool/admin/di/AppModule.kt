@@ -17,6 +17,9 @@ import hg.divineschool.admin.data.dashboard.DashboardRepositoryImpl
 import hg.divineschool.admin.data.dashboard.settings.SettingRepository
 import hg.divineschool.admin.data.dashboard.settings.SettingRepositoryImpl
 import hg.divineschool.admin.data.dashboard.student.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import okhttp3.Dispatcher
 import javax.inject.Qualifier
 
 @Module
@@ -57,6 +60,9 @@ object AppModule {
     fun provideSettingsRepository(impl: SettingRepositoryImpl): SettingRepository = impl
     @Provides
     fun providePendingInvoiceRepository(impl: PendingInvoiceRepositoryImpl): PendingInvoiceRepository = impl
+
+    @Provides
+    fun provideDispatcher(): CoroutineDispatcher = Dispatchers.IO
 
 }
 

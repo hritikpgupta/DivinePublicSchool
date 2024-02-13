@@ -7,14 +7,18 @@ import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.dashboard.student.StudentInvoiceRepository
 import hg.divineschool.admin.data.models.Invoice
 import hg.divineschool.admin.data.models.StudentMonthFee
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class StudentInvoiceViewModel @Inject constructor(
     private val repository: StudentInvoiceRepository,
+    private val ioDispatcher: CoroutineDispatcher
+
 ) : ViewModel() {
 
     private var _studentInformation = MutableStateFlow<Resource<StudentMonthFee>?>(null)
@@ -29,21 +33,24 @@ class StudentInvoiceViewModel @Inject constructor(
 
     fun getStudent(classID: String, scholarNumber: String) = viewModelScope.launch {
         _studentInformation.value = Resource.Loading
-        val result = repository.getStudent(classID, scholarNumber)
-        _studentInformation.value = result
+        _studentInformation.value = withContext(ioDispatcher) {
+            repository.getStudent(classID, scholarNumber)
+        }
     }
 
     fun saveInvoice(classID: String, scholarNumber: String, invoice: Invoice) =
         viewModelScope.launch {
             _saveInvoice.value = Resource.Loading
-            val result = repository.saveInvoice(classID, scholarNumber, invoice)
-            _saveInvoice.value = result
+            _saveInvoice.value = withContext(ioDispatcher) {
+                repository.saveInvoice(classID, scholarNumber, invoice)
+            }
         }
 
     fun getAllInvoices(classID: String, studentScholarNumber: String) = viewModelScope.launch {
         _studentInvoices.value = Resource.Loading
-        val result = repository.getAllInvoices(classID, studentScholarNumber)
-        _studentInvoices.value = result
+        _studentInvoices.value = withContext(ioDispatcher) {
+            repository.getAllInvoices(classID, studentScholarNumber)
+        }
     }
 
 }

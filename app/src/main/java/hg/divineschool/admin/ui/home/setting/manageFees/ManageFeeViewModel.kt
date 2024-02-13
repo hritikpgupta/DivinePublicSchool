@@ -6,21 +6,27 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.dashboard.settings.SettingRepository
 import hg.divineschool.admin.data.models.FeeStructure
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
 @HiltViewModel
 class ManageFeeViewModel @Inject constructor(
     private val repository: SettingRepository,
+    private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private var _priceUpdateFlow = MutableStateFlow<Resource<Boolean>?>(null)
     val priceUpdateFlow: StateFlow<Resource<Boolean>?> = _priceUpdateFlow
 
     fun updatePrice(feeStructure: FeeStructure) = viewModelScope.launch {
         _priceUpdateFlow.value = Resource.Loading
-        _priceUpdateFlow.value = repository.updatePrice(feeStructure)
+        _priceUpdateFlow.value = withContext(ioDispatcher) {
+            repository.updatePrice(feeStructure)
+        }
+
     }
 }

@@ -21,20 +21,21 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import hg.divineschool.admin.data.models.PendingInvoice
 import hg.divineschool.admin.ui.utils.INR
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun InvoiceCard(bgColor: Color ,invoice: PendingInvoice, onItemSelected: (PendingInvoice) -> Unit) {
+fun InvoiceCard(bgColor: Color, invoice: PendingInvoice, onItemSelected: (PendingInvoice) -> Unit) {
     Card(
         onClick = { onItemSelected(invoice) },
         shape = RoundedCornerShape(2.dp),
         backgroundColor = bgColor,
         elevation = 1.dp,
         modifier = Modifier
-            .requiredHeight(95.dp)
-            .requiredWidth(200.dp)
+            .requiredHeight(85.dp)
+            .requiredWidth(190.dp)
             .padding(vertical = 4.dp)
     ) {
         Column(
@@ -46,7 +47,7 @@ fun InvoiceCard(bgColor: Color ,invoice: PendingInvoice, onItemSelected: (Pendin
                 Text(
                     text = "Invoice No: ${invoice.invoice.invoiceNumber}",
                     maxLines = 1,
-                    style = TextStyle(fontWeight = FontWeight.Bold)
+                    style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 12.sp),
                 )
             }
             Divider(
@@ -62,16 +63,22 @@ fun InvoiceCard(bgColor: Color ,invoice: PendingInvoice, onItemSelected: (Pendin
                     text = invoice.invoice.studentName,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
+                    style = TextStyle(fontSize = 12.sp),
                     modifier = Modifier.weight(0.55f)
                 )
                 Text(
                     text = invoice.invoice.className,
                     maxLines = 1,
+                    style = TextStyle(fontSize = 12.sp),
                     modifier = Modifier.weight(0.45f)
+
                 )
             }
             Text(
-                text = invoice.invoice.guardianName, maxLines = 1, overflow = TextOverflow.Ellipsis
+                text = invoice.invoice.guardianName,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = TextStyle(fontSize = 12.sp)
             )
             Divider(
                 thickness = 1.5.dp,
@@ -81,13 +88,9 @@ fun InvoiceCard(bgColor: Color ,invoice: PendingInvoice, onItemSelected: (Pendin
             Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = "Total $INR ${invoice.invoice.total}",
-                    style = TextStyle(fontWeight = FontWeight.Medium)
-                )
+                    style = TextStyle(fontWeight = FontWeight.Medium, fontSize = 12.sp),
+                    )
             }
-
         }
-
     }
-
-
 }

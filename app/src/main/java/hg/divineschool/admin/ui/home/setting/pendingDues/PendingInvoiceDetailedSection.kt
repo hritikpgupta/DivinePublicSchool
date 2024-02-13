@@ -3,6 +3,7 @@ package hg.divineschool.admin.ui.home.setting.pendingDues
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -45,8 +46,8 @@ fun PendingInvoiceDetailedSection(
     Row(modifier = modifier.fillMaxWidth()) {
         LazyColumn(
             modifier = Modifier
+                .weight(0.2f)
                 .fillMaxHeight()
-                .weight(0.18f)
                 .padding(bottom = 0.dp)
         ) {
             items(invoiceList) { data ->
@@ -60,31 +61,30 @@ fun PendingInvoiceDetailedSection(
                 }
             }
         }
-        androidx.compose.material.Divider(
-            color = Color.LightGray, modifier = Modifier
-                .fillMaxHeight()
-                .width(3.dp)
-        )
+        Spacer(modifier = Modifier.width(0.3.dp))
+
         Column(
             modifier = Modifier
+                .weight(0.8f)
                 .fillMaxSize()
-                .weight(0.85f)
                 .padding(bottom = 0.dp)
         ) {
             if (selectedMonthFee.value.remarks.isNotEmpty()) {
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(bottom = 2.dp)
+                        .padding(bottom = 1.dp)
                 ) {
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .weight(0.6f)
+                            .weight(0.75f)
                     ) {
                         InvoiceLayout(invoice = selectedMonthFee.value.invoice)
                     }
-                    RemarkSection(modifier = Modifier.weight(0.4f),
+                    Spacer(modifier = Modifier.width(0.1.dp))
+
+                    RemarkSection(modifier = Modifier.weight(0.25f),
                         selectedMonthFee.value.remarks,
                         {
                             pushRemark(

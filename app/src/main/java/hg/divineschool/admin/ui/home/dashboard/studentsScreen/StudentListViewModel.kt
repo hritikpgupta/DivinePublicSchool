@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.dashboard.student.StudentListRepository
 import hg.divineschool.admin.data.models.Student
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -15,12 +16,15 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
 @HiltViewModel
 class StudentListViewModel @Inject constructor(
-    private val repository: StudentListRepository
+    private val repository: StudentListRepository,
+    private val ioDispatcher: CoroutineDispatcher
+
 ) : ViewModel() {
 
     private var _studentListFlow = MutableStateFlow<Resource<List<Student>>?>(null)
@@ -32,34 +36,36 @@ class StudentListViewModel @Inject constructor(
     private val _isSearching = MutableStateFlow(false)
     val isSearching = _isSearching.asStateFlow()
 
-    private var studentList : List<Student> = emptyList()
+    private var studentList: List<Student> = emptyList()
 
     private var _students = MutableStateFlow(studentList)
 
     @OptIn(FlowPreview::class)
-    val students = searchText.debounce(50L).combine(_students){ text, students ->
-        if (text.isBlank()){
+    val students = searchText.debounce(50L).combine(_students) { text, students ->
+        if (text.isBlank()) {
             students
-        }else{
+        } else {
             students.filter {
                 it.doesMatchSearchQuery(text)
             }
         }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000),_students.value)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), _students.value)
 
-    fun onSearchTextChange(text:String){
+    fun onSearchTextChange(text: String) {
         _searchText.value = text
     }
 
-    fun onClearSearchText(){
-        _searchText.value =""
+    fun onClearSearchText() {
+        _searchText.value = ""
     }
 
 
-     fun getAllStudents(id: Long) = viewModelScope.launch {
+    fun getAllStudents(id: Long) = viewModelScope.launch {
         _studentListFlow.value = Resource.Loading
-        val result = repository.getStudentList(id)
-         _students.value = repository.students!!
+        val result = withContext(ioDispatcher) {
+            repository.getStudentList(id)
+        }
+        _students.value = repository.students!!
         _studentListFlow.value = result
     }
 

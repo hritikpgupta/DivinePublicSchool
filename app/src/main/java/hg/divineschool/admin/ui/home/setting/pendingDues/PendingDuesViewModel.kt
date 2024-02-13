@@ -6,14 +6,18 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import hg.divineschool.admin.data.Resource
 import hg.divineschool.admin.data.dashboard.student.PendingInvoiceRepository
 import hg.divineschool.admin.data.models.PendingInvoice
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class PendingDuesViewModel @Inject constructor(
-    private val repository: PendingInvoiceRepository
+    private val repository: PendingInvoiceRepository,
+    private val ioDispatcher: CoroutineDispatcher
+
 ) : ViewModel() {
 
     private val _pendingInvoiceListFlow = MutableStateFlow<Resource<List<String>>?>(null)
@@ -28,19 +32,33 @@ class PendingDuesViewModel @Inject constructor(
 
     private fun getPendingInvoices() = viewModelScope.launch {
         _pendingInvoiceListFlow.value = Resource.Loading
-        _pendingInvoiceListFlow.value = repository.getPendingInvoices()
+        _pendingInvoiceListFlow.value = withContext(ioDispatcher) {
+            repository.getPendingInvoices()
+        }
     }
 
     fun getPendingInvoiceForYear(yearId: String) = viewModelScope.launch {
         _pendingInvoiceFlow.value = Resource.Loading
-        _pendingInvoiceFlow.value = repository.getPendingInvoiceForYear(yearId)
+        _pendingInvoiceFlow.value = withContext(ioDispatcher) {
+            repository.getPendingInvoiceForYear(yearId)
+        }
     }
 
-    fun addRemark(remark: String, invoiceId: String,yearId: String, currentRemarkList: List<String>) = viewModelScope.launch {
+    fun addRemark(
+        remark: String,
+        invoiceId: String,
+        yearId: String,
+        currentRemarkList: List<String>
+    ) = viewModelScope.launch {
         _pendingInvoiceFlow.value = Resource.Loading
-        _pendingInvoiceFlow.value = repository.addRemark(remark, invoiceId,yearId,currentRemarkList)
+        _pendingInvoiceFlow.value = withContext(ioDispatcher) {
+            repository.addRemark(remark, invoiceId, yearId, currentRemarkList)
+        }
     }
 
-    fun settleInvoice(invoice: PendingInvoice,yearId: String) = viewModelScope.launch {
+    fun settleInvoice(invoice: PendingInvoice, yearId: String) = viewModelScope.launch {
+        withContext(ioDispatcher) {
+            repository.settleInvoice(invoice, yearId)
+        }
     }
 }
