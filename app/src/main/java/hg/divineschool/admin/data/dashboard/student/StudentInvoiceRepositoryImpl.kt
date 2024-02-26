@@ -131,7 +131,7 @@ class StudentInvoiceRepositoryImpl @Inject constructor(
                 val year = calendar.get(Calendar.YEAR)
 
                 if (invoice.systemPaid) {
-                    val pendingInvoice = PendingInvoice(listOf("Fee Collection Remarks"), invoice)
+                    val pendingInvoice = PendingInvoice(listOf("Fee Collection Remarks"), invoice,false)
                     val data = hashMapOf(
                         "session" to "${year-1}-$year",
                     )

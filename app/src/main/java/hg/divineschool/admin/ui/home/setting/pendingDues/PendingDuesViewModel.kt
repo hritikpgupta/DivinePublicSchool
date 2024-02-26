@@ -26,6 +26,9 @@ class PendingDuesViewModel @Inject constructor(
     private val _pendingInvoiceFlow = MutableStateFlow<Resource<List<PendingInvoice>>?>(null)
     val pendingInvoiceFlow: StateFlow<Resource<List<PendingInvoice>>?> = _pendingInvoiceFlow
 
+    private val _settleInvoiceFlow = MutableStateFlow<Resource<List<PendingInvoice>>?>(null)
+    val settleInvoiceFlow: StateFlow<Resource<List<PendingInvoice>>?> = _settleInvoiceFlow
+
     init {
         getPendingInvoices()
     }
@@ -57,8 +60,12 @@ class PendingDuesViewModel @Inject constructor(
     }
 
     fun settleInvoice(invoice: PendingInvoice, yearId: String) = viewModelScope.launch {
+        _settleInvoiceFlow.value = Resource.Loading
         withContext(ioDispatcher) {
             repository.settleInvoice(invoice, yearId)
         }
+        getPendingInvoiceForYear(yearId)
+        _settleInvoiceFlow.value = Resource.FailureMessage("Invoice settled successfully")
+
     }
 }

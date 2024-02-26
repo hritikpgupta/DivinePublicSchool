@@ -40,6 +40,7 @@ fun PendingDues(viewModel: PendingDuesViewModel, navController: NavController) {
 
     val pendingInvoiceYears = viewModel.pendingInvoiceListFlow.collectAsStateWithLifecycle()
     val pendingInvoice = viewModel.pendingInvoiceFlow.collectAsStateWithLifecycle()
+    val settleInvoice = viewModel.settleInvoiceFlow.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -53,7 +54,20 @@ fun PendingDues(viewModel: PendingDuesViewModel, navController: NavController) {
             }, className = "Pending Dues")
         }, modifier = Modifier.fillMaxSize()
     ) { padding ->
-
+        settleInvoice.value.let {
+            when (it) {
+                is Resource.Loading -> {
+                    pendingInvoiceList = emptyList()
+                }
+                is Resource.Failure -> {
+                }
+                is Resource.FailureMessage -> {
+                }
+                is Resource.Success -> {
+                }
+                else -> {}
+            }
+        }
         pendingInvoice.value.let {
             when (it) {
                 is Resource.Loading -> {

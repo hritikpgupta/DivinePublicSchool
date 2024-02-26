@@ -56,7 +56,9 @@ class PendingInvoiceRepositoryImpl @Inject constructor(
     override suspend fun getPendingInvoiceForYear(yearId: String): Resource<List<PendingInvoice>> {
         return try {
             val pendingInvoices =
-                db.collection("pendingDues").document(yearId).collection("transactions").get()
+                db.collection("pendingDues").document(yearId).collection("transactions")
+                    .whereEqualTo("duesCleared", false)
+                    .get()
                     .awaitDocument()
 
             val invoiceList = ArrayList<PendingInvoice>()
@@ -116,6 +118,8 @@ class PendingInvoiceRepositoryImpl @Inject constructor(
 
             if (currentInvoiceClassId == 10) {
                 // Class Eight Student, Take Different Approach
+                db.collection("pendingDues").document(yearId).collection("transactions")
+                    .document(invoice.invoice.invoiceNumber).update("duesCleared", true).awaitDocument()
             } else {
                 for (i in currentInvoiceClassId + 1..9) {
                     val futureClassInvoiceId = i.convertIdToPath()
@@ -133,8 +137,7 @@ class PendingInvoiceRepositoryImpl @Inject constructor(
                             .awaitDocument()
 
                         db.collection("pendingDues").document(yearId).collection("transactions")
-                            .document(invoice.invoice.invoiceNumber).delete().awaitDocument()
-
+                            .document(invoice.invoice.invoiceNumber).update("duesCleared", true).awaitDocument()
                         break
                     }
                 }
