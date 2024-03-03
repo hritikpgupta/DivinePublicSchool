@@ -1,5 +1,6 @@
 package hg.divineschool.admin.ui.home.setting.transactions
 
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.DateRangePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.lifecycle.ViewModel
@@ -29,10 +30,10 @@ class TransactionsViewModel @Inject constructor(
     val invoiceFlow: StateFlow<Resource<Invoice>?> = _invoiceFlow
 
     @OptIn(ExperimentalMaterial3Api::class)
-    fun getAllTransaction(dateRangeState: DateRangePickerState) = viewModelScope.launch {
+    fun getAllTransaction(fromDateRangeState: DatePickerState, toDateRangeState: DatePickerState) = viewModelScope.launch {
         _transactionListFlow.value = Resource.Loading
         _transactionListFlow.value = withContext(ioDispatcher) {
-            repository.getTransactions(dateRangeState)
+            repository.getTransactions(fromDateRangeState, toDateRangeState)
         }
     }
 

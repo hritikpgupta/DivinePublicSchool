@@ -1,5 +1,6 @@
 package hg.divineschool.admin.data.dashboard.settings
 
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.DateRangePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import com.google.firebase.Timestamp
@@ -303,11 +304,10 @@ class SettingRepositoryImpl @Inject constructor(
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
-    override suspend fun getTransactions(dateRangeState: DateRangePickerState): Resource<List<Transaction>> {
+    override suspend fun getTransactions(fromDateRangeState: DatePickerState, toDateRangeState: DatePickerState): Resource<List<Transaction>> {
         return try {
             val list = ArrayList<Transaction>()
-
-            if (dateRangeState.selectedEndDateMillis == null || dateRangeState.selectedStartDateMillis == null) {
+            if (fromDateRangeState.selectedDateMillis == null || toDateRangeState.selectedDateMillis == null) {
                 val data =
                     db.collection("transactions").orderBy("timestamp", Query.Direction.ASCENDING)
                         .limit(50).get().awaitDocument()
@@ -329,8 +329,8 @@ class SettingRepositoryImpl @Inject constructor(
                 }
                 Resource.Success(list)
             } else {
-                val startDate = Date(dateRangeState.selectedStartDateMillis!!)
-                val endDate = Date(dateRangeState.selectedEndDateMillis!!)
+                val startDate = Date(fromDateRangeState.selectedDateMillis!!)
+                val endDate = Date(toDateRangeState.selectedDateMillis!!)
                 val data = db.collection("transactions").whereGreaterThanOrEqualTo(
                     "timestamp", Timestamp(startDate)
                 ).whereLessThanOrEqualTo("timestamp", Timestamp(endDate))
